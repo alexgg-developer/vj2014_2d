@@ -25,3 +25,5 @@
 *.vcproj
 *.vcxproj
 *.vcxproj.*
+*/Debug/*
+*/Release/*
