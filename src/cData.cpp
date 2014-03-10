@@ -8,9 +8,8 @@ int cData::GetID(int img)
 	return texture[img].GetID();
 }
 
-void cData::GetSize(int img, int *w, int *h)
-{
-	texture[img].GetSize(w,h);
+std::tuple<int,int> cData::GetSize(int img) {
+	return texture[img].GetSize();
 }
 
 bool cData::LoadImage(int img, char *filename, int type)

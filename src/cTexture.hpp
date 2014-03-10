@@ -1,20 +1,19 @@
 #pragma once
 
 #include "Globals.hpp"
+#include <tuple>
 
-class cTexture
-{
-public:
-	cTexture(void);
-	~cTexture(void);
+struct cTexture {
+  cTexture();
+  ~cTexture();
 
-	bool Load(char *filename,int type = GL_RGBA,int wraps = GL_REPEAT,int wrapt = GL_REPEAT,
-			  int magf = GL_NEAREST,int minf = GL_NEAREST,bool mipmap = false);
-	int  GetID();
-	void GetSize(int *w,int *h);
+  bool Load(char *filename,int type = GL_RGBA,int wraps = GL_REPEAT,int wrapt = GL_REPEAT,
+	    int magf = GL_NEAREST,int minf = GL_NEAREST,bool mipmap = false);
+  int  GetID();
+  std::tuple<int,int> GetSize();
 
 private:
-	GLuint id;
-	int width;
-	int height;
+  GLuint id;
+  int width;
+  int height;
 };

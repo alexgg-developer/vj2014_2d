@@ -23,7 +23,7 @@ public:
 	~cData(void);
 
 	int  GetID(int img);
-	void GetSize(int img,int *w,int *h);
+	std::tuple<int,int> GetSize(int img);
 	bool LoadImage(int img,char *filename,int type = GL_RGBA);
 
 private:

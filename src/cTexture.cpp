@@ -60,8 +60,7 @@ int cTexture::GetID()
 {
 	return id;
 }
-void cTexture::GetSize(int *w,int *h)
+std::tuple<int,int> cTexture::GetSize()
 {
-	*w = width;
-	*h = height;
+	return std::make_tuple(width, height);
 }
