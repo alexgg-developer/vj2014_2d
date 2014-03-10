@@ -1,5 +1,5 @@
-#include "cScene.h"
-#include "Globals.h"
+#include "cScene.hpp"
+#include "Globals.hpp"
 
 cScene::cScene(void)
 {

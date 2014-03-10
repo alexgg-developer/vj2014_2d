@@ -1,6 +1,6 @@
 
-#include "Globals.h"
-#include "cGame.h"
+#include "Globals.hpp"
+#include "cGame.hpp"
 
 //Delete console
 #pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")

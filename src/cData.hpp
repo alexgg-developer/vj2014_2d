@@ -1,7 +1,7 @@
 #pragma once
 
-#include "cTexture.h"
-#include "Globals.h"
+#include "cTexture.hpp"
+#include "Globals.hpp"
 
 //Image array size
 #define NUM_IMG		2

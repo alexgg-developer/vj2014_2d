@@ -1,6 +1,6 @@
-#include "cBicho.h"
-#include "cScene.h"
-#include "Globals.h"
+#include "cBicho.hpp"
+#include "cScene.hpp"
+#include "Globals.hpp"
 
 cBicho::cBicho(void)
 {

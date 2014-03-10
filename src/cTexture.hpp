@@ -1,8 +1,6 @@
 #pragma once
 
-#pragma comment(lib,"corona")
-
-#include "Globals.h"
+#include "Globals.hpp"
 
 class cTexture
 {

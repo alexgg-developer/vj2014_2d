@@ -1,5 +1,5 @@
 
-#include "cPlayer.h"
+#include "cPlayer.hpp"
 
 cPlayer::cPlayer() {}
 cPlayer::~cPlayer(){}

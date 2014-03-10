@@ -1,7 +1,7 @@
 #pragma once
 
-#include "cTexture.h"
-#include "Globals.h"
+#include "cTexture.hpp"
+#include "Globals.hpp"
 
 #define FRAME_DELAY		8
 #define STEP_LENGTH		2

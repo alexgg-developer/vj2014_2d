@@ -1,8 +1,8 @@
 #pragma once
 
-#include "cScene.h"
-#include "cPlayer.h"
-#include "cData.h"
+#include "cScene.hpp"
+#include "cPlayer.hpp"
+#include "cData.hpp"
 
 #define GAME_WIDTH	640
 #define GAME_HEIGHT 480

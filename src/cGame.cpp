@@ -1,5 +1,5 @@
-#include "cGame.h"
-#include "Globals.h"
+#include "cGame.hpp"
+#include "Globals.hpp"
 
 
 cGame::cGame(void)

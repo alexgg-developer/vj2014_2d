@@ -1,6 +1,6 @@
 #pragma once
 
-#include "cBicho.h"
+#include "cBicho.hpp"
 
 #define PLAYER_START_CX		3
 #define PLAYER_START_CY		2

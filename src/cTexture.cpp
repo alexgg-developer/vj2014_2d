@@ -1,7 +1,7 @@
 
-#include "cTexture.h"
-#include "corona.h"
-#include "Globals.h"
+#include "cTexture.hpp"
+#include "external/corona.h"
+#include "Globals.hpp"
 
 cTexture::cTexture(void)
 {
