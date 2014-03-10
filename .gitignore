@@ -27,3 +27,4 @@
 *.vcxproj.*
 */Debug/*
 */Release/*
+Thumbs.db
