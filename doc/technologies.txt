@@ -1,7 +1,7 @@
 CMake
 	Windows: Visual Studio 2013
 	Linux: g++ or clang++ with make
-Sound: SDL/fmod?
+Sound: fmod
 
 
 For later stages:
