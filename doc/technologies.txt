@@ -1,0 +1,10 @@
+CMake
+	Windows: Visual Studio 2013
+	Linux: g++ or clang++ with make
+Sound: SDL/fmod?
+
+
+For later stages:
+shaders
+installer
+Box2D

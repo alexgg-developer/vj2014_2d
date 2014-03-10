@@ -1,0 +1,16 @@
+Reparticion de tareas:
+  *(0) Render, suelo*mapa, obstaculo(puerta), movimiento(prota), fisica
+    Garcia: fisica
+    Velasco: render, suelo, obstaculo, movimiento prota
+  *(1) 2 tipos enemigos, proyectiles, arma
+    Garcia: 2 tipos enemigos, proyectiles, arma
+    Velasco: -
+  *(2) Bloques&explosiones, bomba explosiona
+    Garcia: -
+    Velasco: Bloques&explosiones, bomba explosiona
+  *(3) Puerta, obstaculos, bloque interruptor
+    Garcia: -
+    Velasco: Puerta, obstaculos, bloque interruptor
+---------First objective
+  *(4) Mapa complejo para debugar.
+  *(infinity) sonido, mas enemigos, mas armas, sprites, boss1
