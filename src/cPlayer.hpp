@@ -1,17 +1,13 @@
 #pragma once
-
 #include "cBicho.hpp"
 #include "cTexture.hpp"
 
-#define PLAYER_START_CX		3
-#define PLAYER_START_CY		2
-
 struct cPlayer: public cBicho {
-	cPlayer();
+	cPlayer(unsigned int const aTileSize);
 	~cPlayer();
 
 	bool Init();
-	void Draw();
+	void Draw(int sceneOriginX, int sceneOriginY, int blocksize);
 protected:
 	cTexture mText;
 };

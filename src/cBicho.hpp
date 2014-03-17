@@ -15,8 +15,8 @@ struct cRect {
 };
 
 struct cBicho {
-	cBicho();
-	cBicho(int x,int y,int w,int h);
+	cBicho(unsigned int const aTileSize);
+	cBicho(unsigned int const aTileSize, int x,int y,int w,int h);
 	~cBicho();
 
 	void SetPosition(int x,int y);
@@ -27,11 +27,11 @@ struct cBicho {
 	std::tuple<int, int> GetWidthHeight() const;
 
 	bool Collides(cRect const& rc) const;
-	bool CollidesMapWall(cScene const& map,bool right) const;
+	bool CollidesMapWall(cScene const& map, bool right) const;
 	///TODO This function modifies the object. It's not a query, be careful!
 	bool CollidesMapFloor(cScene const& map);
 	cRect GetArea() const;
-	void DrawRect(int tex_id,float xo,float yo,float xf,float yf) const;
+	void DrawRect(int tex_id,float xo,float yo,float xf,float yf, int sceneOriginX, int sceneOriginY, int blocksize) const;
 
 	void MoveRight(cScene const& map);
 	void MoveLeft(cScene const& map);
@@ -46,6 +46,7 @@ struct cBicho {
 	int  GetFrame() const;
 	
 private:
+	unsigned int const mTileSize;
 	int x,y;
 	int w,h;
 	BichoState state;

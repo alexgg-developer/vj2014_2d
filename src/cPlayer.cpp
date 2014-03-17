@@ -1,10 +1,10 @@
 
 #include "cPlayer.hpp"
 
-cPlayer::cPlayer() {}
+cPlayer::cPlayer(unsigned int const aTileSize) : cBicho(aTileSize) {}
 cPlayer::~cPlayer(){}
 
-void cPlayer::Draw() {
+void cPlayer::Draw(int sceneOriginX, int sceneOriginY, int blocksize) {
 	float xo,yo,xf,yf;
 
 	switch(GetState())
@@ -27,7 +27,7 @@ void cPlayer::Draw() {
 	xf = xo + 0.25f;
 	yf = yo - 0.25f;
 
-	DrawRect(mText.GetID(),xo,yo,xf,yf);
+	DrawRect(mText.GetID(),xo,yo,xf,yf, sceneOriginX, sceneOriginY, blocksize);
 }
 bool cPlayer::Init() {
 	return mText.Load("bub.png",GL_RGBA); }

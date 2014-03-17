@@ -2,13 +2,11 @@
 #include "Globals.hpp"
 
 
-cGame::cGame(void) { }
+cGame::cGame(void) : Scene(), Player(Scene.getTileSize()) { }
 
 cGame::~cGame(void) { }
 
 bool cGame::Init() {
-	bool res=true;
-
 	//Graphics initialization
 	glClearColor(0.0f,0.0f,0.0f,0.0f);
 	glMatrixMode(GL_PROJECTION);
@@ -33,33 +31,26 @@ bool cGame::Init() {
 	return true;
 }
 
-bool cGame::Loop()
-{
-	bool res=true;
-
-	res = Process();
+bool cGame::Loop() {
+	bool res = Process();
 	if(res) Render();
 
 	return res;
 }
 
-void cGame::Finalize()
-{
+void cGame::Finalize() {
 }
 
 //Input
-void cGame::ReadKeyboard(unsigned char key, int x, int y, bool press)
-{
+void cGame::ReadKeyboard(unsigned char key, int x, int y, bool press) {
 	keys[key] = press;
 }
 
-void cGame::ReadMouse(int button, int state, int x, int y)
-{
+void cGame::ReadMouse(int button, int state, int x, int y) {
 }
 
 //Process
-bool cGame::Process()
-{
+bool cGame::Process() {
 	bool res=true;
 	
 	//Process Input
@@ -78,14 +69,13 @@ bool cGame::Process()
 }
 
 //Output
-void cGame::Render()
-{
+void cGame::Render() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	
 	glLoadIdentity();
 
 	Scene.Draw();
-	Player.Draw();
+	Player.Draw(Scene.getOriginX(), Scene.getOriginY(), Scene.getBlockSize());
 
 	glutSwapBuffers();
 }

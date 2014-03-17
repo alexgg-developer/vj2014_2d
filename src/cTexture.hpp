@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Globals.hpp"
 #include <tuple>
 
