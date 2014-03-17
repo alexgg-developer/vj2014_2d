@@ -4,8 +4,7 @@
 cPlayer::cPlayer() {}
 cPlayer::~cPlayer(){}
 
-void cPlayer::Draw(int tex_id)
-{	
+void cPlayer::Draw() {
 	float xo,yo,xf,yf;
 
 	switch(GetState())
@@ -28,5 +27,7 @@ void cPlayer::Draw(int tex_id)
 	xf = xo + 0.25f;
 	yf = yo - 0.25f;
 
-	DrawRect(tex_id,xo,yo,xf,yf);
+	DrawRect(mText.GetID(),xo,yo,xf,yf);
 }
+bool cPlayer::Init() {
+	return mText.Load("bub.png",GL_RGBA); }

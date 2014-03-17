@@ -1,61 +1,54 @@
 #pragma once
-
-#include "cTexture.hpp"
 #include "Globals.hpp"
+#include <tuple>
+struct cScene;
 
-#define FRAME_DELAY		8
-#define STEP_LENGTH		2
-#define JUMP_HEIGHT		96
-#define JUMP_STEP		4
+enum BichoState {
+ STATE_LOOKLEFT  =0,
+ STATE_LOOKRIGHT =1,
+ STATE_WALKLEFT  =2,
+ STATE_WALKRIGHT =3};
 
-#define STATE_LOOKLEFT		0
-#define STATE_LOOKRIGHT		1
-#define STATE_WALKLEFT		2
-#define STATE_WALKRIGHT		3
-
-class cRect
-{
-public:
+struct cRect {
 	int left,top,
 		right,bottom;
 };
 
-class cBicho
-{
-public:
-	cBicho(void);
+struct cBicho {
+	cBicho();
 	cBicho(int x,int y,int w,int h);
-	~cBicho(void);
+	~cBicho();
 
 	void SetPosition(int x,int y);
-	void GetPosition(int *x,int *y);
+	std::tuple<int,int> GetPosition() const;
 	void SetTile(int tx,int ty);
-	void GetTile(int *tx,int *ty);
+	std::tuple<int,int> GetTile() const;
 	void SetWidthHeight(int w,int h);
-	void GetWidthHeight(int *w,int *h);
+	std::tuple<int, int> GetWidthHeight() const;
 
-	bool Collides(cRect *rc);
-	bool CollidesMapWall(int *map,bool right);
-	bool CollidesMapFloor(int *map);
-	void GetArea(cRect *rc);
-	void DrawRect(int tex_id,float xo,float yo,float xf,float yf);
+	bool Collides(cRect const& rc) const;
+	bool CollidesMapWall(cScene const& map,bool right) const;
+	///TODO This function modifies the object. It's not a query, be careful!
+	bool CollidesMapFloor(cScene const& map);
+	cRect GetArea() const;
+	void DrawRect(int tex_id,float xo,float yo,float xf,float yf) const;
 
-	void MoveRight(int *map);
-	void MoveLeft(int *map);
-	void Jump(int *map);
+	void MoveRight(cScene const& map);
+	void MoveLeft(cScene const& map);
+	void Jump(cScene const& map);
 	void Stop();
-	void Logic(int *map);
+	void Logic(cScene const& map);
 
-	int  GetState();
-	void SetState(int s);
+	BichoState GetState() const;
+	void SetState(BichoState s);
 
 	void NextFrame(int max);
-	int  GetFrame();
+	int  GetFrame() const;
 	
 private:
 	int x,y;
 	int w,h;
-	int state;
+	BichoState state;
 
 	bool jumping;
 	int jump_alfa;

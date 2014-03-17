@@ -3,27 +3,20 @@
 #include "external/corona.h"
 #include "Globals.hpp"
 
-cTexture::cTexture(void)
-{
-}
+cTexture::cTexture(void) { }
 
-cTexture::~cTexture(void)
-{
-}
+cTexture::~cTexture(void) { }
 
-bool cTexture::Load(char *filename,int type,int wraps,int wrapt,int magf,int minf,bool mipmap)
-{
+bool cTexture::Load(char *filename,int type,int wraps,int wrapt,int magf,int minf,bool mipmap) {
 	corona::Image* img;
 	int components;
 
 	img = corona::OpenImage(filename);
-	if(type==GL_RGB)
-	{
+	if(type==GL_RGB) {
 		//img = corona::OpenImage(filename,corona::PF_R8G8B8);
 		components = 3;
 	}
-	else if(type==GL_RGBA)
-	{
+	else if(type==GL_RGBA) {
 		//img = corona::OpenImage(filename,corona::PF_R8G8B8A8);
 		components = 4;
 	}
@@ -43,24 +36,17 @@ bool cTexture::Load(char *filename,int type,int wraps,int wrapt,int magf,int min
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,magf);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,minf);
 
-	if(!mipmap)
-	{
+	if(!mipmap)	{
 		glTexImage2D(GL_TEXTURE_2D,0,components,width,height,0,type,
 					 GL_UNSIGNED_BYTE,img->getPixels());
-	}
-	else
-	{
+	} else {
 		gluBuild2DMipmaps(GL_TEXTURE_2D,components,width,height,type,
 						  GL_UNSIGNED_BYTE,img->getPixels());
 	}
 
 	return true;
 }
-int cTexture::GetID()
-{
-	return id;
-}
-std::tuple<int,int> cTexture::GetSize()
-{
-	return std::make_tuple(width, height);
-}
+GLuint cTexture::GetID() const {
+	return id; }
+std::tuple<int,int> cTexture::GetSize() const {
+	return std::make_tuple(width, height); }

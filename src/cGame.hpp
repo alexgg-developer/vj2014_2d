@@ -1,17 +1,13 @@
 #pragma once
-
 #include "cScene.hpp"
 #include "cPlayer.hpp"
-#include "cData.hpp"
 
 #define GAME_WIDTH	640
 #define GAME_HEIGHT 480
 
-class cGame
-{
-public:
-	cGame(void);
-	virtual ~cGame(void);
+struct cGame {
+	cGame();
+	virtual ~cGame();
 
 	bool Init();
 	bool Loop();
@@ -25,9 +21,8 @@ public:
 	//Output
 	void Render();
 
-private:
+protected:
 	unsigned char keys[256];
 	cScene Scene;
 	cPlayer Player;
-	cData Data;
 };

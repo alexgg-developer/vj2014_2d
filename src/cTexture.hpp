@@ -9,8 +9,8 @@ struct cTexture {
 
   bool Load(char *filename,int type = GL_RGBA,int wraps = GL_REPEAT,int wrapt = GL_REPEAT,
 	    int magf = GL_NEAREST,int minf = GL_NEAREST,bool mipmap = false);
-  int  GetID();
-  std::tuple<int,int> GetSize();
+  GLuint GetID() const;
+  std::tuple<int,int> GetSize() const;
 
 private:
   GLuint id;

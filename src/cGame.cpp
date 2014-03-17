@@ -2,16 +2,11 @@
 #include "Globals.hpp"
 
 
-cGame::cGame(void)
-{
-}
+cGame::cGame(void) { }
 
-cGame::~cGame(void)
-{
-}
+cGame::~cGame(void) { }
 
-bool cGame::Init()
-{
+bool cGame::Init() {
 	bool res=true;
 
 	//Graphics initialization
@@ -25,20 +20,17 @@ bool cGame::Init()
 	glEnable(GL_ALPHA_TEST);
 
 	//Scene initialization
-	res = Data.LoadImage(IMG_BLOCKS,"blocks.png",GL_RGBA);
-	if(!res) return false;
-	res = Scene.LoadLevel(1);
-	if(!res) return false;
+	Scene.Init();
+	if(!Scene.LoadLevel(1)) return false;
 
 	//Player initialization
-	res = Data.LoadImage(IMG_PLAYER,"bub.png",GL_RGBA);
-	if(!res) return false;
+	Player.Init();
 	Player.SetWidthHeight(32,32);
 	Player.SetTile(4,1);
 	Player.SetWidthHeight(32,32);
 	Player.SetState(STATE_LOOKRIGHT);
 
-	return res;
+	return true;
 }
 
 bool cGame::Loop()
@@ -73,14 +65,14 @@ bool cGame::Process()
 	//Process Input
 	if(keys[27])	res=false;
 	
-	if(keys[GLUT_KEY_UP])			Player.Jump(Scene.GetMap());
-	if(keys[GLUT_KEY_LEFT])			Player.MoveLeft(Scene.GetMap());
-	else if(keys[GLUT_KEY_RIGHT])	Player.MoveRight(Scene.GetMap());
+	if(keys[GLUT_KEY_UP])			Player.Jump(Scene);
+	if(keys[GLUT_KEY_LEFT])			Player.MoveLeft(Scene);
+	else if(keys[GLUT_KEY_RIGHT])	Player.MoveRight(Scene);
 	else Player.Stop();
 	
 	
 	//Game Logic
-	Player.Logic(Scene.GetMap());
+	Player.Logic(Scene);
 
 	return res;
 }
@@ -92,8 +84,8 @@ void cGame::Render()
 	
 	glLoadIdentity();
 
-	Scene.Draw(Data.GetID(IMG_BLOCKS));
-	Player.Draw(Data.GetID(IMG_PLAYER));
+	Scene.Draw();
+	Player.Draw();
 
 	glutSwapBuffers();
 }
