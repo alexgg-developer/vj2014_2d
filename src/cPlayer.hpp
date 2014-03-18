@@ -1,11 +1,12 @@
 #pragma once
 #include "cBicho.hpp"
-#include "cTexture.hpp"
+#include "cScene.hpp"
 
 struct cPlayer: public cBicho {
-	cPlayer(unsigned int const aTileSize);
+	cPlayer(cScene const& map);
 	~cPlayer();
 
 	bool Init();
-	void Draw(int sceneOriginX, int sceneOriginY, int blocksize);
+	//TODO Draw modifies the object. Oh shit. kill kill kill kill kill kill kill kill kill kill ikill oh, that may be a new apple product kill kill kill kill kill kill kill kill kill kill kill kill kill kill kill kill kill
+	void Draw();
 };

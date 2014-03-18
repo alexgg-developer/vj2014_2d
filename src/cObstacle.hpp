@@ -4,9 +4,9 @@
 #include "cBicho.hpp"
 
 struct cObstacle : public cBicho {
-	cObstacle(unsigned int const aTileSize);
+	cObstacle(cScene const& map);
 	bool Init();
-	void Draw(int const sceneOriginX, int const sceneOriginY, int const blocksize) const;
+	void Draw() const;
 
 	friend std::istream& operator>>(std::istream& is, cObstacle& obs) {
 	  int mPosX, mPosY;
@@ -14,6 +14,7 @@ struct cObstacle : public cBicho {
       obs.SetTile(mPosX,mPosY);	
 	  return is;
 	}
+
   protected:
 	std::string mFilename;
 };

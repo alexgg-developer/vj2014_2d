@@ -17,41 +17,56 @@ struct cRect {
 };
 
 struct cBicho {
-	cBicho(unsigned int const aTileSize);
-	cBicho(unsigned int const aTileSize, int x,int y,int w,int h);
+	cBicho(cScene const& map);
+	cBicho(cScene const& map, int x,int y,int w,int h);
 	~cBicho();
 
-	void SetPosition(int x,int y);
+	void SetPosition(int xW,int yW);
 	std::tuple<int,int> GetPosition() const;
 	void SetTile(int tx,int ty);
 	std::tuple<int,int> GetTile() const;
 	void SetWidthHeight(int w,int h);
 	std::tuple<int, int> GetWidthHeight() const;
 
-	bool Collides(cRect const& rc) const;
-	bool CollidesMapWall(cScene const& map, bool right) const;
+	bool Collides(cRect const& rcW) const;
+	bool CollidesMapWall(bool right) const;
 	///TODO This function modifies the object. It's not a query, be careful!
-	bool CollidesMapFloor(cScene const& map);
+	bool CollidesMapFloor();
 	cRect GetArea() const;
 	void DrawRect(float xo,float yo,float xf,float yf,
 				  float const screen_x, float const screen_y) const;
 
-	void MoveRight(cScene const& map);
-	void MoveLeft(cScene const& map);
-	void Jump(cScene const& map);
+	void MoveRight();
+	void MoveLeft();
+	void Jump();
 	void Stop();
-	void Logic(cScene const& map);
+	void Logic();
 
 	BichoState GetState() const;
 	void SetState(BichoState s);
 
 	void NextFrame(int max);
 	int  GetFrame() const;
+
+	cBicho& operator=(cBicho const& other) {
+		mText=other.mText;
+		xW=other.xW;
+		yW=other.yW;
+		w = other.w;
+		h = other.h;
+		state = other.state;
+		jumping = other.jumping;
+		jump_alfa = other.jump_alfa;
+		jump_y = other.jump_y;
+		seq = other.seq;
+		delay = other.delay;
+		return *this;
+	}
 	
 protected:
+	cScene const& mMap;
 	cTexture mText;
-	unsigned int mTileSize; //TODO: WTF?
-	int x,y;
+	int xW,yW;
 	int w,h;
 	BichoState state;
 

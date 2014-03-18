@@ -2,7 +2,7 @@
 #include "Globals.hpp"
 
 
-cGame::cGame(void) : Scene(), Player(Scene.getTileSize()) { }
+cGame::cGame(void) : Scene(), Player(Scene) { }
 
 cGame::~cGame(void) { }
 
@@ -55,14 +55,14 @@ bool cGame::Process() {
 	//Process Input
 	if(keys[27])	res=false;
 	
-	if(keys[GLUT_KEY_UP])			Player.Jump(Scene);
-	if(keys[GLUT_KEY_LEFT])			Player.MoveLeft(Scene);
-	else if(keys[GLUT_KEY_RIGHT])	Player.MoveRight(Scene);
+	if(keys[GLUT_KEY_UP])			Player.Jump();
+	if(keys[GLUT_KEY_LEFT])			Player.MoveLeft();
+	else if(keys[GLUT_KEY_RIGHT])	Player.MoveRight();
 	else Player.Stop();
 	
 	
 	//Game Logic
-	Player.Logic(Scene);
+	Player.Logic();
 
 	return res;
 }
@@ -74,7 +74,7 @@ void cGame::Render() {
 	glLoadIdentity();
 
 	Scene.Draw();
-	Player.Draw(Scene.getOriginX(), Scene.getOriginY(), Scene.getBlockSize());
+	Player.Draw();
 
 	glutSwapBuffers();
 }

@@ -7,29 +7,28 @@
 #define JUMP_HEIGHT		96
 #define JUMP_STEP		4
 
-cBicho::cBicho(unsigned int const aTileSize) : mTileSize(aTileSize), delay(0), seq(0), jumping(false) {}
+cBicho::cBicho(cScene const& map) : mMap(map), delay(0), seq(0), jumping(false) {}
 cBicho::~cBicho(void){}
 
-cBicho::cBicho(unsigned int const aTileSize, int posx,int posy,int width,int height) : mTileSize(aTileSize) {
-	x = posx;
-	y = posy;
+cBicho::cBicho(cScene const& map, int posxW,int posyW,int width,int height) : mMap(map) {
+	xW = posxW;
+	yW = posyW;
 	w = width;
 	h = height;
 }
-void cBicho::SetPosition(int posx,int posy) {
-	x = posx;
-	y = posy;
+void cBicho::SetPosition(int posxW,int posyW) {
+	xW = posxW;
+	yW = posyW;
 }
 
 std::tuple<int,int> cBicho::GetPosition() const {
-	return std::make_tuple(x,y); }
+	return std::make_tuple(xW,yW); }
 void cBicho::SetTile(int tx,int ty) {
-	x = tx * mTileSize;
-	y = ty * mTileSize;
+	std::tie(xW,yW) = mMap.TileToWorld(tx,ty);
 }
 
 std::tuple<int,int> cBicho::GetTile() const {
-	return std::make_tuple(x / mTileSize, y / mTileSize); }
+	return std::make_tuple(xW / mMap.getTileSize(), yW / mMap.getTileSize()); }
 void cBicho::SetWidthHeight(int width,int height) {
 	w = width;
 	h = height; }
@@ -37,62 +36,62 @@ void cBicho::SetWidthHeight(int width,int height) {
 std::tuple<int, int> cBicho::GetWidthHeight() const {
 	return std::make_tuple(w,h); }
 
-bool cBicho::Collides(cRect const& rc) const {
-	return ((x>rc.left) && (x+w<rc.right) && (y>rc.bottom) && (y+h<rc.top));
+bool cBicho::Collides(cRect const& rcW) const {
+	return ((xW>rcW.left) && (xW+w<rcW.right) && (yW>rcW.bottom) && (yW+h<rcW.top));
 }
-bool cBicho::CollidesMapWall(cScene const& map,bool right) const {
-	int tile_x = x / mTileSize;
-	int const tile_y = y / mTileSize;
-	int const width_tiles  = w / mTileSize;
-	int const height_tiles = h / mTileSize;
+bool cBicho::CollidesMapWall(bool right) const {
+	float tile_x, tile_y;
+	std::tie(tile_x, tile_y) = mMap.WorldToTile(xW,yW);
+	int const width_tiles  = w / mMap.getTileSize();
+	int const height_tiles = h / mMap.getTileSize();
 
 	if(right) tile_x += width_tiles;
 	
-	bool collides = map.CollisionInClosedArea(tile_x, tile_x, tile_y, tile_y+height_tiles-1);
+	bool collides = mMap.CollisionInClosedArea(tile_x, tile_x, tile_y, tile_y+height_tiles-1);
 	return collides;
 }
 
-bool cBicho::CollidesMapFloor(cScene const& map) {
-	int const tile_x = x / mTileSize;
-	int const tile_y = y / mTileSize;
+bool cBicho::CollidesMapFloor() {
+	float tile_x, tile_y;
+	std::tie(tile_x, tile_y) = mMap.WorldToTile(xW,yW);
 
-	int width_tiles = w / mTileSize;
-	if( (x % mTileSize) != 0) width_tiles++;
+	int width_tiles = w / mMap.getTileSize();
+	if( (xW % mMap.getTileSize()) != 0) width_tiles++;
 
 	bool on_base = false;
-	if( (y % mTileSize) == 0 )
-		on_base = map.CollisionInClosedArea(tile_x, tile_x+width_tiles-1, tile_y-1, tile_y-1);
+	if( (yW % mMap.getTileSize()) == 0 )
+		on_base = mMap.CollisionInClosedArea(tile_x, tile_x+width_tiles-1, tile_y-1, tile_y-1);
 	else {
-		on_base = map.CollisionInClosedArea(tile_x, tile_x+width_tiles-1, tile_y, tile_y);
+		on_base = mMap.CollisionInClosedArea(tile_x, tile_x+width_tiles-1, tile_y, tile_y);
 		if(on_base)
-		  y = (tile_y + 1) * mTileSize;
+		  yW = (tile_y + 1) * mMap.getTileSize();
 	}
 
 	return on_base;
 }
 
 cRect cBicho::GetArea() const {
-	return cRect(x, x+w, y, y+h);;
+	return cRect(xW, xW+w, yW, yW+h);
 }
 void cBicho::DrawRect(float const xo,float const yo,float const xf,float const yf,
 					  float const screen_x, float const screen_y) const {
 	mText.Draw(xo, yo, xf, yf, screen_x, screen_y, screen_x+w, screen_y+h);
 }
 
-void cBicho::MoveLeft(cScene const& map) {
+void cBicho::MoveLeft() {
 	//Whats next tile?
-	if( (x % mTileSize) == 0) {
-		int xaux = x;
-		x -= STEP_LENGTH;
+	if( (xW % mMap.getTileSize()) == 0) {
+		int xaux = xW;
+		xW -= STEP_LENGTH;
 
-		if(CollidesMapWall(map,false)) {
-			x = xaux;
+		if(CollidesMapWall(false)) {
+			xW = xaux;
 			state = STATE_LOOKLEFT;
 		}
 	}
 	//Advance, no problem
 	else {
-		x -= STEP_LENGTH;
+		xW -= STEP_LENGTH;
 		if(state != STATE_WALKLEFT) {
 			state = STATE_WALKLEFT;
 			seq = 0;
@@ -100,21 +99,21 @@ void cBicho::MoveLeft(cScene const& map) {
 		}
 	}
 }
-void cBicho::MoveRight(cScene const& map) {
+void cBicho::MoveRight() {
 	//Whats next tile?
-	if( (x % mTileSize) == 0) {
+	if( (xW % mMap.getTileSize()) == 0) {
 		int xaux;
-		xaux = x;
-		x += STEP_LENGTH;
+		xaux = xW;
+		xW += STEP_LENGTH;
 
-		if(CollidesMapWall(map,true)) {
-			x = xaux;
+		if(CollidesMapWall(true)) {
+			xW = xaux;
 			state = STATE_LOOKRIGHT;
 		}
 	}
 	//Advance, no problem
 	else {
-		x += STEP_LENGTH;
+		xW += STEP_LENGTH;
 
 		if(state != STATE_WALKRIGHT) {
 			state = STATE_WALKRIGHT;
@@ -130,38 +129,38 @@ void cBicho::Stop() {
 		case STATE_WALKRIGHT:	state = STATE_LOOKRIGHT;	break;
 	}
 }
-void cBicho::Jump(cScene const& map) {
+void cBicho::Jump() {
 	if(!jumping) {
-		if(CollidesMapFloor(map)) {
+		if(CollidesMapFloor()) {
 			jumping = true;
 			jump_alfa = 0;
-			jump_y = y;
+			jump_y = yW;
 		}
 	}
 }
-void cBicho::Logic(cScene const& map) {
+void cBicho::Logic() {
 	if(jumping)	{
 		jump_alfa += JUMP_STEP;
 		
 		if(jump_alfa == 180) {
 			jumping = false;
-			y = jump_y;
+			yW = jump_y;
 		}
 		else {
 			/// I really love magic constants. I love them until I puke.
 			float alfa = ((float)jump_alfa) * 0.017453f;
-			y = jump_y + (int)( ((float)JUMP_HEIGHT) * sin(alfa) );
+			yW = jump_y + (int)( ((float)JUMP_HEIGHT) * sin(alfa) );
 		
 			if(jump_alfa > 90) {
 				//Over floor?
-				jumping = !CollidesMapFloor(map);
+				jumping = !CollidesMapFloor();
 			}
 		}
 	}
 	else {
 		//Over floor?
-		if(!CollidesMapFloor(map))
-			y -= (2*STEP_LENGTH);
+		if(!CollidesMapFloor())
+			yW -= (2*STEP_LENGTH);
 	}
 }
 void cBicho::NextFrame(int max) {

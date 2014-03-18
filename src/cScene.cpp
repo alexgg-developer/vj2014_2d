@@ -3,9 +3,21 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <assert.h>
+
 
 cScene::cScene(void) : mTileSize(16), mBlockSize(24), mOriginX(2*mTileSize), mOriginY(mTileSize) {}
 cScene::~cScene(void) {}
+std::tuple<float,float> cScene::WorldToScreen(float const x, float const y) const {
+	return std::make_tuple(x + float(mOriginX), y+float(mOriginY+(mBlockSize-mTileSize))); }
+std::tuple<int  ,  int> cScene::WorldToTile  (float const x, float const y) const {
+	return std::make_tuple(static_cast<int>(x/mTileSize), static_cast<int>(y/mTileSize)); }
+std::tuple<float,float> cScene::ScreenToWorld(float const x, float const y) const {
+	assert(0 && "Not yet implemented");
+	return std::make_tuple(float(0),float(0)); }
+std::tuple<float,float> cScene::TileToWorld(float const tx, float const ty) const {
+	return std::make_tuple(tx * mTileSize, ty * mTileSize); }
+
 
 bool cScene::Init() {
   return mText.Load("blocks.png",GL_RGBA);
@@ -76,7 +88,7 @@ bool cScene::LoadLevel(int level) {
   mObstacles.clear();
   mObstacles.reserve(obstacles);
   for(unsigned int i=0; i<obstacles; ++i) {
-	  mObstacles.push_back(cObstacle(getTileSize()));
+	  mObstacles.push_back(cObstacle(*this));
 	  fd >> mObstacles[i];
 	  mObstacles[i].Init();
 	  mObstacles[i].SetWidthHeight(24,24);///TODO Extract from the texture automagically.
@@ -94,7 +106,7 @@ void cScene::Draw() const {
   glCallList(id_DL);
   glDisable(GL_TEXTURE_2D);
   std::for_each(mObstacles.begin(), mObstacles.end(), [&](cObstacle const& obs){
-	  obs.Draw(getOriginX(), getOriginY(), getBlockSize());});
+	  obs.Draw();});
 }
 bool cScene::CollisionInClosedArea(int const x0, int const x1, int const y0, int const y1) const {
   ///Scenery

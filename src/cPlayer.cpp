@@ -1,10 +1,9 @@
-
 #include "cPlayer.hpp"
 
-cPlayer::cPlayer(unsigned int const aTileSize) : cBicho(aTileSize) {}
+cPlayer::cPlayer(cScene const& map) : cBicho(map) {}
 cPlayer::~cPlayer(){}
 
-void cPlayer::Draw(int sceneOriginX, int sceneOriginY, int blocksize) {
+void cPlayer::Draw() {
 	float xo,yo,xf,yf;
 
 	switch(GetState()) {
@@ -25,8 +24,8 @@ void cPlayer::Draw(int sceneOriginX, int sceneOriginY, int blocksize) {
 	}
 	xf = xo + 0.25f;
 	yf = yo - 0.25f;
-	float const screen_x = x + sceneOriginX;
-	float const screen_y = y + sceneOriginY + (blocksize - mTileSize);
+	float screen_x, screen_y;
+	std::tie(screen_x, screen_y) = mMap.WorldToScreen(xW,yW);
 
 	DrawRect(xo,yo,xf,yf, screen_x, screen_y);
 }
