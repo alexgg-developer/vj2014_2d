@@ -96,3 +96,19 @@ void cScene::Draw() const {
   std::for_each(mObstacles.begin(), mObstacles.end(), [&](cObstacle const& obs){
 	  obs.Draw(getOriginX(), getOriginY(), getBlockSize());});
 }
+bool cScene::CollisionInClosedArea(int const x0, int const x1, int const y0, int const y1) const {
+  ///Scenery
+  for(int i=x0; i<=x1; ++i) {
+    for(int j=y0;j<=y1;j++)	{
+      if(operator()(i, j) != 0)  return true;
+    }
+  }
+  ///Obstacles
+  for(auto it = mObstacles.begin(); it!=mObstacles.end(); ++it) {
+	  if(it->Collides(cRect(x0,x1,y0,y1)))
+		  return true;
+  }
+
+  ///Other
+  return false;
+}

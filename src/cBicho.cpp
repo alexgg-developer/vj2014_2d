@@ -7,12 +7,7 @@
 #define JUMP_HEIGHT		96
 #define JUMP_STEP		4
 
-cBicho::cBicho(unsigned int const aTileSize) : mTileSize(aTileSize) {
-	seq=0;
-	delay=0;
-
-	jumping = false;
-}
+cBicho::cBicho(unsigned int const aTileSize) : mTileSize(aTileSize), delay(0), seq(0), jumping(false) {}
 cBicho::~cBicho(void){}
 
 cBicho::cBicho(unsigned int const aTileSize, int posx,int posy,int width,int height) : mTileSize(aTileSize) {
@@ -53,11 +48,8 @@ bool cBicho::CollidesMapWall(cScene const& map,bool right) const {
 
 	if(right) tile_x += width_tiles;
 	
-	for(int j=0;j<height_tiles;j++)	{
-		if(map(tile_x, (tile_y+j)) != 0)	return true;
-	}
-	
-	return false;
+	bool collides = map.CollisionInClosedArea(tile_x, tile_x, tile_y, tile_y+height_tiles-1);
+	return collides;
 }
 
 bool cBicho::CollidesMapFloor(cScene const& map) {
@@ -68,30 +60,19 @@ bool cBicho::CollidesMapFloor(cScene const& map) {
 	if( (x % mTileSize) != 0) width_tiles++;
 
 	bool on_base = false;
-	int i=0;
-	while((i<width_tiles) && !on_base) {
-		if( (y % mTileSize) == 0 ) {
-			if(map((tile_x + i), (tile_y - 1)) != 0)
-				on_base = true;
-		}
-		else {
-			if(map((tile_x + i), tile_y) != 0) {
-				y = (tile_y + 1) * mTileSize;
-				on_base = true;
-			}
-		}
-		i++;
+	if( (y % mTileSize) == 0 )
+		on_base = map.CollisionInClosedArea(tile_x, tile_x+width_tiles-1, tile_y-1, tile_y-1);
+	else {
+		on_base = map.CollisionInClosedArea(tile_x, tile_x+width_tiles-1, tile_y, tile_y);
+		if(on_base)
+		  y = (tile_y + 1) * mTileSize;
 	}
+
 	return on_base;
 }
 
 cRect cBicho::GetArea() const {
-	cRect rc;
-	rc.left   = x;
-	rc.right  = x+w;
-	rc.bottom = y;
-	rc.top    = y+h;
-	return rc;
+	return cRect(x, x+w, y, y+h);;
 }
 void cBicho::DrawRect(float const xo,float const yo,float const xf,float const yf,
 					  float const screen_x, float const screen_y) const {
@@ -167,6 +148,7 @@ void cBicho::Logic(cScene const& map) {
 			y = jump_y;
 		}
 		else {
+			/// I really love magic constants. I love them until I puke.
 			float alfa = ((float)jump_alfa) * 0.017453f;
 			y = jump_y + (int)( ((float)JUMP_HEIGHT) * sin(alfa) );
 		
@@ -190,6 +172,7 @@ void cBicho::NextFrame(int max) {
 		delay = 0;
 	}
 }
+
 int cBicho::GetFrame() const {
 	return seq; }
 BichoState cBicho::GetState() const {

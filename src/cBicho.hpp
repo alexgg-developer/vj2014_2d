@@ -11,6 +11,7 @@ enum BichoState {
  STATE_WALKRIGHT =3};
 
 struct cRect {
+	cRect(int const l, int const r, int const b, int const t) : left(l), right(r), top(t), bottom(b) {}
 	int left,top,
 		right,bottom;
 };

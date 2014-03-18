@@ -11,6 +11,7 @@ struct cScene {
   bool Init();
   bool LoadLevel(int level);
   void Draw() const;
+  bool CollisionInClosedArea(int const x0, int const x1, int const y0, int const y1) const;
 
   int operator()(unsigned int x, unsigned int y) const {
 	  return map[x][y]; }
