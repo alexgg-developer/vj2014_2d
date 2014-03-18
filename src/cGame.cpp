@@ -25,7 +25,6 @@ bool cGame::Init() {
 	Player.Init();
 	Player.SetWidthHeight(32,32);
 	Player.SetTile(4,1);
-	Player.SetWidthHeight(32,32);
 	Player.SetState(STATE_LOOKRIGHT);
 
 	return true;

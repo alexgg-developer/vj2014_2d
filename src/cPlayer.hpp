@@ -8,6 +8,4 @@ struct cPlayer: public cBicho {
 
 	bool Init();
 	void Draw(int sceneOriginX, int sceneOriginY, int blocksize);
-protected:
-	cTexture mText;
 };

@@ -1,5 +1,6 @@
 #pragma once
 #include "Globals.hpp"
+#include "cTexture.hpp"
 #include <tuple>
 struct cScene;
 
@@ -31,7 +32,8 @@ struct cBicho {
 	///TODO This function modifies the object. It's not a query, be careful!
 	bool CollidesMapFloor(cScene const& map);
 	cRect GetArea() const;
-	void DrawRect(int tex_id,float xo,float yo,float xf,float yf, int sceneOriginX, int sceneOriginY, int blocksize) const;
+	void DrawRect(float xo,float yo,float xf,float yf,
+				  float const screen_x, float const screen_y) const;
 
 	void MoveRight(cScene const& map);
 	void MoveLeft(cScene const& map);
@@ -45,8 +47,9 @@ struct cBicho {
 	void NextFrame(int max);
 	int  GetFrame() const;
 	
-private:
-	unsigned int const mTileSize;
+protected:
+	cTexture mText;
+	unsigned int mTileSize; //TODO: WTF?
 	int x,y;
 	int w,h;
 	BichoState state;

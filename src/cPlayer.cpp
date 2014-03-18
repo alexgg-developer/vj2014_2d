@@ -7,8 +7,7 @@ cPlayer::~cPlayer(){}
 void cPlayer::Draw(int sceneOriginX, int sceneOriginY, int blocksize) {
 	float xo,yo,xf,yf;
 
-	switch(GetState())
-	{
+	switch(GetState()) {
 		//1
 		case STATE_LOOKLEFT:	xo = 0.0f;	yo = 0.25f;
 								break;
@@ -26,8 +25,10 @@ void cPlayer::Draw(int sceneOriginX, int sceneOriginY, int blocksize) {
 	}
 	xf = xo + 0.25f;
 	yf = yo - 0.25f;
+	float const screen_x = x + sceneOriginX;
+	float const screen_y = y + sceneOriginY + (blocksize - mTileSize);
 
-	DrawRect(mText.GetID(),xo,yo,xf,yf, sceneOriginX, sceneOriginY, blocksize);
+	DrawRect(xo,yo,xf,yf, screen_x, screen_y);
 }
 bool cPlayer::Init() {
 	return mText.Load("bub.png",GL_RGBA); }

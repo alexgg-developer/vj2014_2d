@@ -46,19 +46,14 @@ bool cBicho::Collides(cRect const& rc) const {
 	return ((x>rc.left) && (x+w<rc.right) && (y>rc.bottom) && (y+h<rc.top));
 }
 bool cBicho::CollidesMapWall(cScene const& map,bool right) const {
-	int tile_x,tile_y;
-	int j;
-	int width_tiles,height_tiles;
+	int tile_x = x / mTileSize;
+	int const tile_y = y / mTileSize;
+	int const width_tiles  = w / mTileSize;
+	int const height_tiles = h / mTileSize;
 
-	tile_x = x / mTileSize;
-	tile_y = y / mTileSize;
-	width_tiles  = w / mTileSize;
-	height_tiles = h / mTileSize;
-
-	if(right)	tile_x += width_tiles;
+	if(right) tile_x += width_tiles;
 	
-	for(j=0;j<height_tiles;j++)
-	{
+	for(int j=0;j<height_tiles;j++)	{
 		if(map(tile_x, (tile_y+j)) != 0)	return true;
 	}
 	
@@ -66,19 +61,14 @@ bool cBicho::CollidesMapWall(cScene const& map,bool right) const {
 }
 
 bool cBicho::CollidesMapFloor(cScene const& map) {
-	int tile_x,tile_y;
-	int width_tiles;
-	bool on_base;
-	int i;
+	int const tile_x = x / mTileSize;
+	int const tile_y = y / mTileSize;
 
-	tile_x = x / mTileSize;
-	tile_y = y / mTileSize;
-
-	width_tiles = w / mTileSize;
+	int width_tiles = w / mTileSize;
 	if( (x % mTileSize) != 0) width_tiles++;
 
-	on_base = false;
-	i=0;
+	bool on_base = false;
+	int i=0;
 	while((i<width_tiles) && !on_base) {
 		if( (y % mTileSize) == 0 ) {
 			if(map((tile_x + i), (tile_y - 1)) != 0)
@@ -103,32 +93,15 @@ cRect cBicho::GetArea() const {
 	rc.top    = y+h;
 	return rc;
 }
-void cBicho::DrawRect(int tex_id,float xo,float yo,float xf,float yf, int sceneOriginX, int sceneOriginY, int blocksize) const {
-	int screen_x,screen_y;
-
-	screen_x = x + sceneOriginX;
-	screen_y = y + sceneOriginY + (blocksize - mTileSize);
-
-	glEnable(GL_TEXTURE_2D);
-	
-	glBindTexture(GL_TEXTURE_2D,tex_id);
-	glBegin(GL_QUADS);	
-		glTexCoord2f(xo,yo);	glVertex2i(screen_x  ,screen_y);
-		glTexCoord2f(xf,yo);	glVertex2i(screen_x+w,screen_y);
-		glTexCoord2f(xf,yf);	glVertex2i(screen_x+w,screen_y+h);
-		glTexCoord2f(xo,yf);	glVertex2i(screen_x  ,screen_y+h);
-	glEnd();
-
-	glDisable(GL_TEXTURE_2D);
+void cBicho::DrawRect(float const xo,float const yo,float const xf,float const yf,
+					  float const screen_x, float const screen_y) const {
+	mText.Draw(xo, yo, xf, yf, screen_x, screen_y, screen_x+w, screen_y+h);
 }
 
-void cBicho::MoveLeft(cScene const& map)
-{
-	int xaux;
-	
+void cBicho::MoveLeft(cScene const& map) {
 	//Whats next tile?
 	if( (x % mTileSize) == 0) {
-		xaux = x;
+		int xaux = x;
 		x -= STEP_LENGTH;
 
 		if(CollidesMapWall(map,false)) {
@@ -139,8 +112,7 @@ void cBicho::MoveLeft(cScene const& map)
 	//Advance, no problem
 	else {
 		x -= STEP_LENGTH;
-		if(state != STATE_WALKLEFT)
-		{
+		if(state != STATE_WALKLEFT) {
 			state = STATE_WALKLEFT;
 			seq = 0;
 			delay = 0;

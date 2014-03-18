@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
+#include <string>
 #include "cTexture.hpp"
+#include "cObstacle.hpp"
 
 struct cScene {
   cScene();
@@ -8,7 +10,7 @@ struct cScene {
 
   bool Init();
   bool LoadLevel(int level);
-  void Draw();
+  void Draw() const;
 
   int operator()(unsigned int x, unsigned int y) const {
 	  return map[x][y]; }
@@ -19,6 +21,7 @@ struct cScene {
   unsigned int const getOriginY() const { return mOriginY;}
 private:
   std::vector<std::vector<int>> map;
+  std::vector<cObstacle> mObstacles;
   int id_DL;				//actual level display list
   cTexture mText;
   unsigned int const mTileSize;

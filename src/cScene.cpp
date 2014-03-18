@@ -71,15 +71,28 @@ bool cScene::LoadLevel(int level) {
   glEnd();
   glEndList();
 
+  unsigned int obstacles;
+  fd >> obstacles;
+  mObstacles.clear();
+  mObstacles.reserve(obstacles);
+  for(unsigned int i=0; i<obstacles; ++i) {
+	  mObstacles.push_back(cObstacle(getTileSize()));
+	  fd >> mObstacles[i];
+	  mObstacles[i].Init();
+	  mObstacles[i].SetWidthHeight(24,24);///TODO Extract from the texture automagically.
+      mObstacles[i].SetState(STATE_LOOKRIGHT);
+  }
   fd.close();
 
   return true;
 }
 
-void cScene::Draw() {
+void cScene::Draw() const {
   int tex_id = mText.GetID();
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D,tex_id);
   glCallList(id_DL);
   glDisable(GL_TEXTURE_2D);
+  std::for_each(mObstacles.begin(), mObstacles.end(), [&](cObstacle const& obs){
+	  obs.Draw(getOriginX(), getOriginY(), getBlockSize());});
 }
