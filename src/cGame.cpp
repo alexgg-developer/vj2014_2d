@@ -19,13 +19,16 @@ bool cGame::Init() {
 
 	//Scene initialization
 	Scene.Init();
-	if(!Scene.LoadLevel(1)) return false;
+	if(!Scene.LoadLevel(4)) return false;
 
 	//Player initialization
 	Player.Init();
 	Player.SetWidthHeight(32,32);
-	Player.SetTile(4,1);
+	Player.SetTile(4,1); //Initial tile
 	Player.SetState(STATE_LOOKRIGHT);
+
+	//Enemy initialization
+	mEnemies.push_back(cEnemy(Scene, 3));
 
 	return true;
 }
@@ -58,11 +61,10 @@ bool cGame::Process() {
 	if(keys[GLUT_KEY_UP])			Player.Jump();
 	if(keys[GLUT_KEY_LEFT])			Player.MoveLeft();
 	else if(keys[GLUT_KEY_RIGHT])	Player.MoveRight();
-	else Player.Stop();
-	
-	
+	else Player.Stop();	
 	//Game Logic
 	Player.Logic();
+	//for (int i = 0; i < mEnemies.size(); ++i) mEnemies[i].doLogic();
 
 	return res;
 }
@@ -75,6 +77,7 @@ void cGame::Render() {
 
 	Scene.Draw();
 	Player.Draw();
+	for (size_t i = 0; i < mEnemies.size(); ++i) mEnemies[i].draw();
 
 	glutSwapBuffers();
 }

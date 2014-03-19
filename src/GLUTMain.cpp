@@ -1,9 +1,9 @@
 
 #include "Globals.hpp"
 #include "cGame.hpp"
-
+#include <iostream>
 //Delete console
-#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
+//#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 
 cGame Game;
 
@@ -42,7 +42,6 @@ void main(int argc, char** argv)
 
 	//GLUT initialization
 	glutInit(&argc, argv);
-
 	//RGBA with double buffer
 	glutInitDisplayMode(GLUT_RGBA | GLUT_ALPHA | GLUT_DOUBLE);
 
@@ -54,7 +53,7 @@ void main(int argc, char** argv)
 	
 	glutInitWindowPosition(pos_x,pos_y);
 	glutInitWindowSize(GAME_WIDTH,GAME_HEIGHT);
-	glutCreateWindow("Bubble returns!");
+	glutCreateWindow("Elemental Samurai!");
 
 	/*glutGameModeString("800x600:32");
 	glutEnterGameMode();*/
