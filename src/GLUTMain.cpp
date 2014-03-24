@@ -1,7 +1,11 @@
 
 #include "Globals.hpp"
 #include "cGame.hpp"
+#include "Timer.hpp"
+
 #include <iostream>
+#include <chrono>
+
 //Delete console
 //#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 
@@ -33,7 +37,15 @@ void AppMouse(int button, int state, int x, int y)
 }
 void AppIdle()
 {
-	if(!Game.Loop()) exit(0);
+
+	Timer t;
+
+	t.startTime();
+
+	if (!Game.Loop()) exit(0);
+
+	std::cout << "Time elapsed: " << t.getTime() << std::endl;
+
 }
 
 void main(int argc, char** argv)
