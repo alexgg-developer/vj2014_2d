@@ -8,16 +8,6 @@
 
 cScene::cScene(void) : mTileSize(16), mBlockSize(24), mOriginX(2*mTileSize), mOriginY(mTileSize) {}
 cScene::~cScene(void) {}
-std::tuple<float,float> cScene::WorldToScreen(float const x, float const y) const {
-	return std::make_tuple(x + float(mOriginX), y+float(mOriginY+(mBlockSize-mTileSize))); }
-std::tuple<int  ,  int> cScene::WorldToTile  (float const x, float const y) const {
-	return std::make_tuple(static_cast<int>(x/mTileSize), static_cast<int>(y/mTileSize)); }
-std::tuple<float,float> cScene::ScreenToWorld(float const x, float const y) const {
-	assert(0 && "Not yet implemented");
-	return std::make_tuple(float(0),float(0)); }
-std::tuple<float,float> cScene::TileToWorld(float const tx, float const ty) const {
-	return std::make_tuple(tx * mTileSize, ty * mTileSize); }
-
 
 bool cScene::Init() {
   return mText.Load("blocks.png",GL_RGBA);
@@ -60,7 +50,7 @@ bool cScene::LoadLevel(int level) {
 	      map[i][j]=0;
 	  } else {
 	      //Tiles = 1,2,3,...
-	      map[i][j] = tile-48;
+	      map[i][j] = tile-48;//'0'
 		  
 	      float coordx_tile, coordy_tile;
 	      if(map[i][j]%2) coordx_tile = 0.0f;

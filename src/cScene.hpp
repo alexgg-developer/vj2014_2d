@@ -13,10 +13,6 @@ struct cScene {
   bool LoadLevel(int level);
   void Draw() const;
   bool CollisionInClosedArea(int const x0, int const x1, int const y0, int const y1) const;
-  std::tuple<float,float> WorldToScreen(float const x, float const y) const;
-  std::tuple<int  ,  int> WorldToTile  (float const x, float const y) const;
-  std::tuple<float,float> ScreenToWorld(float const x, float const y) const;
-  std::tuple<float,float> TileToWorld(float const tx, float const ty) const;
 
   int operator()(unsigned int x, unsigned int y) const {
 	  return map[x][y]; }

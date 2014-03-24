@@ -1,8 +1,8 @@
 Reparticion de tareas:
   *(0) Render, suelo*mapa, obstaculo(puerta), movimiento(prota), fisica
-    Garcia: fisica
-    Velasco: obstaculo
-    Done: colisiones, render, suelo, movimiento prota
+    Garcia: fisica, colisiones, rotacones
+    Velasco: obstaculo, cambio de sistemas de coordenadas
+    Done: render, suelo, movimiento prota
   *(1) 2 tipos enemigos, proyectiles, arma
     Garcia: 2 tipos enemigos, proyectiles, arma
     Velasco: -
@@ -16,5 +16,5 @@ Reparticion de tareas:
     Velasco: Puerta, obstaculos, bloque interruptor
     Done: -
 ---------First objective
-  * HUD, sonido, sprites, boss1, armas, scroll lateral, layers
+  * Capas, menu, HUD
   *(4) Mapa complejo para debugar.
