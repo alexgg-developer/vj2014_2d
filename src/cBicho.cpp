@@ -3,7 +3,7 @@
 #include "Globals.hpp"
 
 #define FRAME_DELAY		8
-#define STEP_LENGTH		2
+#define STEP_LENGTH		4
 #define JUMP_HEIGHT		96
 #define JUMP_STEP		4
 
@@ -47,7 +47,7 @@ bool cBicho::CollidesMapWall(bool right) const {
 	return collides;
 }
 
-bool cBicho::CollidesMapFloor() {
+bool cBicho::CollidesMapFloor() const {
 	int w2 = w;
 	if( (int(posW.x) % mCoordChange.GetTileSize()) != 0) w2++;
 
@@ -56,8 +56,6 @@ bool cBicho::CollidesMapFloor() {
 		on_base = mMap.CollisionInClosedArea(Vec3(posW.x, posW.y-1), Vec3(posW.x+w2-1, posW.y-1));
 	else {
 		on_base = mMap.CollisionInClosedArea(Vec3(posW.x, posW.y  ), Vec3(posW.x+w2-1, posW.y  ));
-		if(on_base)
-		  posW.y = (posW.y + 1) * mCoordChange.GetTileSize();
 	}
 
 	return on_base;
@@ -131,6 +129,7 @@ void cBicho::Jump() {
 		}
 	}
 }
+#include <iostream>
 void cBicho::Logic() {
 	if(jumping)	{
 		jump_alfa += JUMP_STEP;
@@ -142,18 +141,27 @@ void cBicho::Logic() {
 		else {
 			/// I really love magic constants. I love them until I puke.
 			float alfa = ((float)jump_alfa) * 0.017453f;
-			posW.y = jump_y + (int)( ((float)JUMP_HEIGHT) * sin(alfa) );
+			float oldy = posW.y;
+			posW.y = jump_y + ( float(JUMP_HEIGHT) * sin(alfa) );
 		
 			if(jump_alfa > 90) {
 				//Over floor?
 				jumping = !CollidesMapFloor();
+				// Colócalo en el suelo, motherfucker
+				if(!jumping) {
+					int const w2 = w;
+					//if( (int(posW.x) % mCoordChange.GetTileSize()) != 0) w2++;//No sé que hace. Estaba en el código original.
+					while(mMap.CollisionInClosedArea(Vec3(posW.x, posW.y  ), Vec3(posW.x+w2-1, posW.y  ))) {
+						posW.y +=1;
+					}
+				}
 			}
 		}
 	}
 	else {
-		//Over floor?
+		//Caída libre muy cutre
 		if(!CollidesMapFloor())
-			posW.y -= (2*STEP_LENGTH);
+			posW.y -= (STEP_LENGTH);
 	}
 }
 void cBicho::NextFrame(int max) {

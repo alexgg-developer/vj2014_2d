@@ -110,7 +110,6 @@ bool cScene::CollisionInClosedArea(Vec3 const& world0, Vec3 const& world1) const
   }
 
   ///Obstacles
-  std::cout << "Object ranges from (" << world0.x  << ", " << world0.y << ") to (" << world1.x << ", " << world1.y << ")\n";
   for(auto it = mObstacles.begin(); it!=mObstacles.end(); ++it) {
 	  if(it->Collides_W(cRect(world0.x,world1.x,world0.y,world1.y)))
 		  return true;

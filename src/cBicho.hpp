@@ -32,7 +32,7 @@ struct cBicho {
 	bool Collides_W(cRect const& rcW) const;
 	bool CollidesMapWall(bool right) const;
 	///TODO This function modifies the object. It's not a query, be careful!
-	bool CollidesMapFloor();
+	bool CollidesMapFloor() const;
 	cRect GetArea_W() const;
 	void DrawRect(Vec3 const& tex0, Vec3 const& tex1,
 				Vec3 const& screen) const;
