@@ -34,33 +34,30 @@ void cBicho::SetWidthHeight_W(int width,int height) {
 
 int cBicho::GetWidth_W() const { return w;}
 int cBicho::GetHeight_W() const{ return h;}
-bool cBicho::Collides(cRect const& rcW) const {
-	return ((posW.x>rcW.left) && (posW.x+w<rcW.right) && (posW.y>rcW.bottom) && (posW.y+h<rcW.top));
+bool cBicho::Collides_W(cRect const& rcW) const {
+	return !((posW.x > rcW.right) || (rcW.left > (posW.x+w)) || (posW.y > rcW.top) || (rcW.bottom > (posW.y+h)));
 }
 bool cBicho::CollidesMapWall(bool right) const {
-	Vec3 tile = mCoordChange.WorldToTile(posW);
-	int const width_tiles  = w / mCoordChange.GetTileSize();
-	int const height_tiles = h / mCoordChange.GetTileSize();
+	Vec3 posW2 = posW;
+	int const w2  = w;
 
-	if(right) tile.x += width_tiles;
+	if(right) posW2.x += w2;
 	
-	bool collides = mMap.CollisionInClosedArea(tile.x, tile.x, tile.y, tile.y+height_tiles-1);
+	bool collides = mMap.CollisionInClosedArea(posW2, Vec3(posW2.x, posW2.y+h-1));
 	return collides;
 }
 
 bool cBicho::CollidesMapFloor() {
-	Vec3 const tile = mCoordChange.WorldToTile(posW);
-
-	int width_tiles = w / mCoordChange.GetTileSize();
-	if( (int(posW.x) % mCoordChange.GetTileSize()) != 0) width_tiles++;
+	int w2 = w;
+	if( (int(posW.x) % mCoordChange.GetTileSize()) != 0) w2++;
 
 	bool on_base = false;
 	if( (int(posW.y) % mCoordChange.GetTileSize()) == 0 )
-		on_base = mMap.CollisionInClosedArea(tile.x, tile.x+width_tiles-1, tile.y-1, tile.y-1);
+		on_base = mMap.CollisionInClosedArea(Vec3(posW.x, posW.y-1), Vec3(posW.x+w2-1, posW.y-1));
 	else {
-		on_base = mMap.CollisionInClosedArea(tile.x, tile.x+width_tiles-1, tile.y, tile.y);
+		on_base = mMap.CollisionInClosedArea(Vec3(posW.x, posW.y  ), Vec3(posW.x+w2-1, posW.y  ));
 		if(on_base)
-		  posW.y = (tile.y + 1) * mCoordChange.GetTileSize();
+		  posW.y = (posW.y + 1) * mCoordChange.GetTileSize();
 	}
 
 	return on_base;

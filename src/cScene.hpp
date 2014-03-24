@@ -13,7 +13,7 @@ struct cScene {
   bool Init();
   bool LoadLevel(int level);
   void Draw() const;
-  bool CollisionInClosedArea(int const x0, int const x1, int const y0, int const y1) const;
+  bool CollisionInClosedArea(Vec3 const& world0, Vec3 const& world1) const;
 
   int operator()(int const x, int const y) const {
 	  return map[std::max<int>(0,x)][std::max<int>(0,y)]; }

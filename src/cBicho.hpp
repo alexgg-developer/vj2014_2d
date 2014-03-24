@@ -29,7 +29,7 @@ struct cBicho {
 	int GetWidth_W() const;
 	int GetHeight_W() const;
 
-	bool Collides(cRect const& rcW) const;
+	bool Collides_W(cRect const& rcW) const;
 	bool CollidesMapWall(bool right) const;
 	///TODO This function modifies the object. It's not a query, be careful!
 	bool CollidesMapFloor();

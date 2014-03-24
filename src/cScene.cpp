@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <assert.h>
-
+#include <iostream>
 
 cScene::cScene(cCoordChanges const& cc) : mCoordChanges(cc) {}
 cScene::~cScene() {}
@@ -98,16 +98,21 @@ void cScene::Draw() const {
   std::for_each(mObstacles.begin(), mObstacles.end(), [&](cObstacle const& obs){
 	  obs.Draw();});
 }
-bool cScene::CollisionInClosedArea(int const x0, int const x1, int const y0, int const y1) const {
+bool cScene::CollisionInClosedArea(Vec3 const& world0, Vec3 const& world1) const {
+  Vec3 const tile0 = mCoordChanges.WorldToTile(world0);
+  Vec3 const tile1 = mCoordChanges.WorldToTile(world1);
+
   ///Scenery
-  for(int i=x0; i<=x1; ++i) {
-    for(int j=y0;j<=y1;j++)	{
+  for(int i=tile0.x; i<=tile1.x; ++i) {
+    for(int j=tile0.y;j<=tile1.y;j++)	{
       if(operator()(i, j) != 0)  return true;
     }
   }
+
   ///Obstacles
+  std::cout << "Object ranges from (" << world0.x  << ", " << world0.y << ") to (" << world1.x << ", " << world1.y << ")\n";
   for(auto it = mObstacles.begin(); it!=mObstacles.end(); ++it) {
-	  if(it->Collides(cRect(x0,x1,y0,y1)))
+	  if(it->Collides_W(cRect(world0.x,world1.x,world0.y,world1.y)))
 		  return true;
   }
 
