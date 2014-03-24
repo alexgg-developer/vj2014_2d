@@ -23,8 +23,8 @@ struct cBicho {
 
 	void SetPosition_W(Vec3 apos);
 	Vec3 GetPosition_W() const; //TODO: Which position? Which coordinate system?
-	void SetTile(Vec3 tile);
-	Vec3 GetTile() const;
+	void SetPosition_T(Vec3 tile);
+	Vec3 GetPosition_T() const;
 	void SetWidthHeight_W(int w,int h);
 	int GetWidth_W() const;
 	int GetHeight_W() const;
@@ -34,8 +34,8 @@ struct cBicho {
 	///TODO This function modifies the object. It's not a query, be careful!
 	bool CollidesMapFloor();
 	cRect GetArea_W() const;
-	void DrawRect(float xo,float yo,float xf,float yf,
-				  Vec3 screen) const;
+	void DrawRect(Vec3 const& tex0, Vec3 const& tex1,
+				Vec3 const& screen) const;
 
 	void MoveRight();
 	void MoveLeft();

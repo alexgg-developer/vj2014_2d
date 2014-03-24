@@ -10,6 +10,6 @@ cEnemy::cEnemy(cScene const& map, cCoordChanges const& ch, int life) : mMap(map)
 
 void cEnemy::draw()
 {
-	Vec3 screen = mCoordChanges.WorldToScreen(mInitialWPosition);
-	mTexture.Draw(0, 0, 1, 1, screen, Vec3(screen.x + mWidth, screen.y + mHeight));
+	Vec3 const screen = mCoordChanges.WorldToScreen(mInitialWPosition);
+	mTexture.Draw(Vec3(0,0), Vec3(1,1), screen, Vec3(screen.x + mWidth, screen.y + mHeight));
 }

@@ -4,7 +4,7 @@ cPlayer::cPlayer(cScene const& map, cCoordChanges const& ch) : cBicho(map, ch) {
 cPlayer::~cPlayer(){}
 
 void cPlayer::Draw() {
-	float xo,yo,xf,yf;
+	float xo,yo;
 
 	switch(GetState()) {
 		//1
@@ -22,11 +22,9 @@ void cPlayer::Draw() {
 								NextFrame(3);
 								break;
 	}
-	xf = xo + 0.25f;
-	yf = yo - 0.25f;
-	Vec3 const screen = mCoordChange.WorldToScreen(posW);
+	Vec3 const texf(xo + 0.25f, yo - 0.25f);
 
-	DrawRect(xo,yo,xf,yf, screen);
+	DrawRect(Vec3(xo,yo), texf, mCoordChange.WorldToScreen(posW));
 }
 bool cPlayer::Init() {
 	return mText.Load("bub.png",GL_RGBA); }

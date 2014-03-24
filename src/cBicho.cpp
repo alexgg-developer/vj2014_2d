@@ -22,11 +22,11 @@ void cBicho::SetPosition_W(Vec3 apos) {
 
 Vec3 cBicho::GetPosition_W() const {
 	return posW; }
-void cBicho::SetTile(Vec3 tile) {
+void cBicho::SetPosition_T(Vec3 tile) {
 	 posW = mCoordChange.TileToWorld(tile);
 }
 
-Vec3 cBicho::GetTile() const {
+Vec3 cBicho::GetPosition_T() const {
 	return mCoordChange.WorldToTile(posW); }
 void cBicho::SetWidthHeight_W(int width,int height) {
 	w = width;
@@ -39,8 +39,8 @@ bool cBicho::Collides(cRect const& rcW) const {
 }
 bool cBicho::CollidesMapWall(bool right) const {
 	Vec3 tile = mCoordChange.WorldToTile(posW);
-	int const width_tiles  = w / mCoordChange.getTileSize();
-	int const height_tiles = h / mCoordChange.getTileSize();
+	int const width_tiles  = w / mCoordChange.GetTileSize();
+	int const height_tiles = h / mCoordChange.GetTileSize();
 
 	if(right) tile.x += width_tiles;
 	
@@ -51,16 +51,16 @@ bool cBicho::CollidesMapWall(bool right) const {
 bool cBicho::CollidesMapFloor() {
 	Vec3 const tile = mCoordChange.WorldToTile(posW);
 
-	int width_tiles = w / mCoordChange.getTileSize();
-	if( (int(posW.x) % mCoordChange.getTileSize()) != 0) width_tiles++;
+	int width_tiles = w / mCoordChange.GetTileSize();
+	if( (int(posW.x) % mCoordChange.GetTileSize()) != 0) width_tiles++;
 
 	bool on_base = false;
-	if( (int(posW.y) % mCoordChange.getTileSize()) == 0 )
+	if( (int(posW.y) % mCoordChange.GetTileSize()) == 0 )
 		on_base = mMap.CollisionInClosedArea(tile.x, tile.x+width_tiles-1, tile.y-1, tile.y-1);
 	else {
 		on_base = mMap.CollisionInClosedArea(tile.x, tile.x+width_tiles-1, tile.y, tile.y);
 		if(on_base)
-		  posW.y = (tile.y + 1) * mCoordChange.getTileSize();
+		  posW.y = (tile.y + 1) * mCoordChange.GetTileSize();
 	}
 
 	return on_base;
@@ -69,14 +69,14 @@ bool cBicho::CollidesMapFloor() {
 cRect cBicho::GetArea_W() const {
 	return cRect(posW.x, posW.x+w, posW.y, posW.y+h);
 }
-void cBicho::DrawRect(float const xo,float const yo,float const xf,float const yf,
-					  Vec3 screen) const {
-	mText.Draw(xo, yo, xf, yf, screen, Vec3(screen.x+w, screen.y+h));
+void cBicho::DrawRect(Vec3 const& tex0, Vec3 const& tex1,
+					  Vec3 const& screen) const {
+	mText.Draw(tex0, tex1, screen, Vec3(screen.x+w, screen.y+h));
 }
 
 void cBicho::MoveLeft() {
 	//Whats next tile?
-	if( (int(posW.x) % mCoordChange.getTileSize()) == 0) {
+	if( (int(posW.x) % mCoordChange.GetTileSize()) == 0) {
 		int xaux = posW.x;
 		posW.x -= STEP_LENGTH;
 
@@ -97,7 +97,7 @@ void cBicho::MoveLeft() {
 }
 void cBicho::MoveRight() {
 	//Whats next tile?
-	if( (int(posW.x) % mCoordChange.getTileSize()) == 0) {
+	if( (int(posW.x) % mCoordChange.GetTileSize()) == 0) {
 		int xaux;
 		xaux = posW.x;
 		posW.x += STEP_LENGTH;

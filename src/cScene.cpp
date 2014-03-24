@@ -41,7 +41,7 @@ bool cScene::LoadLevel(int level) {
   for(int j=scene_height-1;j>=0;j--) {
 	char tile;
 	px=mCoordChanges.getOriginX();
-	py=mCoordChanges.getOriginY()+(j*mCoordChanges.getTileSize());
+	py=mCoordChanges.getOriginY()+(j*mCoordChanges.GetTileSize());
 
     for(unsigned int i=0;i<scene_width;i++) {
 	  fd.get(tile);
@@ -65,7 +65,7 @@ bool cScene::LoadLevel(int level) {
 	      glTexCoord2f(coordx_tile+0.375f,coordy_tile       );	glVertex2i(px+mCoordChanges.getBlockSize(),py+mCoordChanges.getBlockSize());
 	      glTexCoord2f(coordx_tile       ,coordy_tile       );	glVertex2i(px           ,py+mCoordChanges.getBlockSize());
 	  }
-	  px+=mCoordChanges.getTileSize();
+	  px+=mCoordChanges.GetTileSize();
 	}
 	fd.get(tile);//pass enter
   }

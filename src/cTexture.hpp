@@ -12,8 +12,8 @@ struct cTexture {
   GLuint GetID() const;
   int GetWidth_W() const { return widthW; }
   int GetHeight_W() const { return heightW; }
-  void Draw(float const texX0, float const texY0, float const texX1, float const texY1,
-			Vec3 screen0, Vec3 screen1) const;
+  void Draw(Vec3 const& tex0, Vec3 const& tex1,
+			Vec3 const& screen0, Vec3 const& screen1) const;
 
 private:
   GLuint id;
