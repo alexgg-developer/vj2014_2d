@@ -1,7 +1,7 @@
 #pragma once
 #include "cTexture.hpp"
 #include "cCoordChanges.hpp"
-#include <tuple>
+#include "Vec3.hpp"
 struct cScene;
 
 enum BichoState {
@@ -21,10 +21,10 @@ struct cBicho {
 	cBicho(cScene const& map, cCoordChanges const& ch, int x,int y,int w,int h);
 	~cBicho();
 
-	void SetPosition(int xW,int yW);
-	std::tuple<int,int> GetPosition() const;
-	void SetTile(int tx,int ty);
-	std::tuple<int,int> GetTile() const;
+	void SetPosition_W(Vec3 apos);
+	Vec3 GetPosition_W() const; //TODO: Which position? Which coordinate system?
+	void SetTile(Vec3 tile);
+	Vec3 GetTile() const;
 	void SetWidthHeight(int w,int h);
 	std::tuple<int, int> GetWidthHeight() const;
 
@@ -50,8 +50,8 @@ struct cBicho {
 
 	cBicho& operator=(cBicho const& other) {
 		mText=other.mText;
-		xW=other.xW;
-		yW=other.yW;
+		posW.x=other.posW.x;
+		posW.y=other.posW.y;
 		w = other.w;
 		h = other.h;
 		state = other.state;
@@ -67,7 +67,7 @@ protected:
 	cScene const& mMap;
   cCoordChanges const& mCoordChange;
 	cTexture mText;
-	int xW,yW;
+	Vec3 posW;
 	int w,h;
 	BichoState state;
 

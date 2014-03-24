@@ -1,5 +1,5 @@
 * refactoring
-  - [-] extract coordinate systems and transformations from cScene  -> Velasco
+  - [+] extract coordinate systems and transformations from cScene  -> Velasco
   - [-] extract collision from cScene and cBicho                    -> Garcia
   - [-] try to kill teachers                                        -> Both
   - [-] extract animations from cBicho                              -> Velasco

@@ -10,7 +10,7 @@ struct cObstacle : public cBicho {
 	friend std::istream& operator>>(std::istream& is, cObstacle& obs) {
 	  int mPosX, mPosY;
 	  is >> obs.mFilename >> mPosX >> mPosY;
-      obs.SetTile(mPosX,mPosY);	
+      obs.SetTile(Vec3(mPosX,mPosY));	
 	  return is;
 	}
 

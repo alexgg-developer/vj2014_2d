@@ -19,12 +19,12 @@ bool cGame::Init() {
 
 	//Scene initialization
 	Scene.Init();
-	if(!Scene.LoadLevel(4)) return false;
+	if(!Scene.LoadLevel(1)) return false;
 
 	//Player initialization
 	Player.Init();
 	Player.SetWidthHeight(32,32);
-	Player.SetTile(4,1); //Initial tile
+	Player.SetTile(Vec3(2,1)); //Initial tile
 	Player.SetState(STATE_LOOKRIGHT);
 
 	//Enemy initialization

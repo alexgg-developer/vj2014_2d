@@ -24,7 +24,7 @@ void cPlayer::Draw() {
 	}
 	xf = xo + 0.25f;
 	yf = yo - 0.25f;
-	Vec3 const screen = mCoordChange.WorldToScreen(xW,yW);
+	Vec3 const screen = mCoordChange.WorldToScreen(posW);
 
 	DrawRect(xo,yo,xf,yf, screen.x, screen.y);
 }

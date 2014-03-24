@@ -10,6 +10,6 @@ bool cObstacle::Init() {
 	return mText.Load(mFilename.c_str(), GL_RGBA);
 }
 void cObstacle::Draw() const {
-	Vec3 const screen = mCoordChange.WorldToScreen(xW,yW);
+	Vec3 const screen = mCoordChange.WorldToScreen(posW);
 	mText.Draw(0,0,1,1,  screen.x, screen.y, screen.x+w, screen.y+h);
 }

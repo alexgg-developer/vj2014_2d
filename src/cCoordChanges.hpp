@@ -4,11 +4,11 @@
 struct cCoordChanges {
   cCoordChanges();
 
-  Vec3 WorldToScreen(float const x, float const y) const;
+  Vec3 WorldToScreen(Vec3 const& v) const;
   /// In integer units
-  Vec3 WorldToTile  (float const x, float const y) const;
-  Vec3 ScreenToWorld(float const x, float const y) const;
-  Vec3 TileToWorld  (float const tx, float const ty) const;
+  Vec3 WorldToTile  (Vec3 const& v) const;
+  Vec3 ScreenToWorld(Vec3 const& v) const;
+  Vec3 TileToWorld  (Vec3 const& v) const;
   
   unsigned int const getTileSize() const { return mTileSize;}
   unsigned int const getBlockSize() const { return mBlockSize;}
