@@ -11,7 +11,9 @@ struct cEnemy {
 	Vec3 mInitialWPosition;
 	int mWidth, mHeight;
 	cScene const& mMap;
-	cEnemy(cScene const& map): mMap(map) {};
-	cEnemy(cScene const& map, int life);
+	cEnemy(cScene const& map, cCoordChanges const& ch): mMap(map), mCoordChanges(ch) {};
+	cEnemy(cScene const& map, cCoordChanges const& ch, int life);
 	void draw();
+protected:
+	cCoordChanges const& mCoordChanges;
 };

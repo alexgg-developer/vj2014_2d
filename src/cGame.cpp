@@ -2,7 +2,7 @@
 #include "Globals.hpp"
 
 
-cGame::cGame(void) : Scene(), Player(Scene) { }
+cGame::cGame(void) : CoordChanges(), Scene(CoordChanges), Player(Scene, CoordChanges) { }
 
 cGame::~cGame(void) { }
 
@@ -28,7 +28,7 @@ bool cGame::Init() {
 	Player.SetState(STATE_LOOKRIGHT);
 
 	//Enemy initialization
-	mEnemies.push_back(cEnemy(Scene, 3));
+	mEnemies.push_back(cEnemy(Scene, CoordChanges, 3));
 
 	return true;
 }

@@ -1,6 +1,6 @@
 #pragma once
-#include "Globals.hpp"
 #include "cTexture.hpp"
+#include "cCoordChanges.hpp"
 #include <tuple>
 struct cScene;
 
@@ -17,8 +17,8 @@ struct cRect {
 };
 
 struct cBicho {
-	cBicho(cScene const& map);
-	cBicho(cScene const& map, int x,int y,int w,int h);
+  cBicho(cScene const& map, cCoordChanges const& ch);
+	cBicho(cScene const& map, cCoordChanges const& ch, int x,int y,int w,int h);
 	~cBicho();
 
 	void SetPosition(int xW,int yW);
@@ -65,6 +65,7 @@ struct cBicho {
 	
 protected:
 	cScene const& mMap;
+  cCoordChanges const& mCoordChange;
 	cTexture mText;
 	int xW,yW;
 	int w,h;

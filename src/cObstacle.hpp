@@ -1,10 +1,9 @@
 #pragma once
-#include <vector>
 #include <string>
 #include "cBicho.hpp"
 
 struct cObstacle : public cBicho {
-	cObstacle(cScene const& map);
+  cObstacle(cScene const& map, cCoordChanges const& ch);
 	bool Init();
 	void Draw() const;
 

@@ -1,6 +1,6 @@
 #include "cPlayer.hpp"
 
-cPlayer::cPlayer(cScene const& map) : cBicho(map) {}
+cPlayer::cPlayer(cScene const& map, cCoordChanges const& ch) : cBicho(map, ch) {}
 cPlayer::~cPlayer(){}
 
 void cPlayer::Draw() {
@@ -24,10 +24,9 @@ void cPlayer::Draw() {
 	}
 	xf = xo + 0.25f;
 	yf = yo - 0.25f;
-	float screen_x, screen_y;
-	std::tie(screen_x, screen_y) = mMap.WorldToScreen(xW,yW);
+	Vec3 const screen = mCoordChange.WorldToScreen(xW,yW);
 
-	DrawRect(xo,yo,xf,yf, screen_x, screen_y);
+	DrawRect(xo,yo,xf,yf, screen.x, screen.y);
 }
 bool cPlayer::Init() {
 	return mText.Load("bub.png",GL_RGBA); }

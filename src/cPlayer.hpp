@@ -3,7 +3,7 @@
 #include "cScene.hpp"
 
 struct cPlayer: public cBicho {
-	cPlayer(cScene const& map);
+  cPlayer(cScene const& map, cCoordChanges const& ch);
 	~cPlayer();
 
 	bool Init();

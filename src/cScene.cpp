@@ -6,8 +6,8 @@
 #include <assert.h>
 
 
-cScene::cScene(void) : mTileSize(16), mBlockSize(24), mOriginX(2*mTileSize), mOriginY(mTileSize) {}
-cScene::~cScene(void) {}
+cScene::cScene(cCoordChanges const& cc) : mCoordChanges(cc) {}
+cScene::~cScene() {}
 
 bool cScene::Init() {
   return mText.Load("blocks.png",GL_RGBA);
@@ -40,8 +40,8 @@ bool cScene::LoadLevel(int level) {
   int px,py;
   for(int j=scene_height-1;j>=0;j--) {
 	char tile;
-	px=mOriginX;
-	py=mOriginY+(j*mTileSize);
+	px=mCoordChanges.getOriginX();
+	py=mCoordChanges.getOriginY()+(j*mCoordChanges.getTileSize());
 
     for(unsigned int i=0;i<scene_width;i++) {
 	  fd.get(tile);
@@ -61,11 +61,11 @@ bool cScene::LoadLevel(int level) {
 	      //BLOCK_SIZE = 24, FILE_SIZE = 64
 	      // 24 / 64 = 0.375
 	      glTexCoord2f(coordx_tile       ,coordy_tile+0.375f);	glVertex2i(px           ,py           );
-	      glTexCoord2f(coordx_tile+0.375f,coordy_tile+0.375f);	glVertex2i(px+mBlockSize,py           );
-	      glTexCoord2f(coordx_tile+0.375f,coordy_tile       );	glVertex2i(px+mBlockSize,py+mBlockSize);
-	      glTexCoord2f(coordx_tile       ,coordy_tile       );	glVertex2i(px           ,py+mBlockSize);
+	      glTexCoord2f(coordx_tile+0.375f,coordy_tile+0.375f);	glVertex2i(px+mCoordChanges.getBlockSize(),py           );
+	      glTexCoord2f(coordx_tile+0.375f,coordy_tile       );	glVertex2i(px+mCoordChanges.getBlockSize(),py+mCoordChanges.getBlockSize());
+	      glTexCoord2f(coordx_tile       ,coordy_tile       );	glVertex2i(px           ,py+mCoordChanges.getBlockSize());
 	  }
-	  px+=mTileSize;
+	  px+=mCoordChanges.getTileSize();
 	}
 	fd.get(tile);//pass enter
   }
@@ -78,7 +78,7 @@ bool cScene::LoadLevel(int level) {
   mObstacles.clear();
   mObstacles.reserve(obstacles);
   for(unsigned int i=0; i<obstacles; ++i) {
-	  mObstacles.push_back(cObstacle(*this));
+	  mObstacles.push_back(cObstacle(*this, mCoordChanges));
 	  fd >> mObstacles[i];
 	  mObstacles[i].Init();
 	  mObstacles[i].SetWidthHeight(24,24);///TODO Extract from the texture automagically.

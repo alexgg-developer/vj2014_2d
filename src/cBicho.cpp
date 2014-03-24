@@ -7,10 +7,10 @@
 #define JUMP_HEIGHT		96
 #define JUMP_STEP		4
 
-cBicho::cBicho(cScene const& map) : mMap(map), delay(0), seq(0), jumping(false) {}
+cBicho::cBicho(cScene const& map, cCoordChanges const& ch) : mMap(map), mCoordChange(ch), delay(0), seq(0), jumping(false) {}
 cBicho::~cBicho(void){}
 
-cBicho::cBicho(cScene const& map, int posxW,int posyW,int width,int height) : mMap(map) {
+cBicho::cBicho(cScene const& map, cCoordChanges const& ch, int posxW,int posyW,int width,int height) : mMap(map), mCoordChange(ch) {
 	xW = posxW;
 	yW = posyW;
 	w = width;
@@ -24,11 +24,12 @@ void cBicho::SetPosition(int posxW,int posyW) {
 std::tuple<int,int> cBicho::GetPosition() const {
 	return std::make_tuple(xW,yW); }
 void cBicho::SetTile(int tx,int ty) {
-	std::tie(xW,yW) = mMap.TileToWorld(tx,ty);
+	 Vec3 posW = mCoordChange.TileToWorld(tx,ty);
+	 std::tie(xW,yW);
 }
 
 std::tuple<int,int> cBicho::GetTile() const {
-	return std::make_tuple(xW / mMap.getTileSize(), yW / mMap.getTileSize()); }
+	return std::make_tuple(xW / mCoordChange.getTileSize(), yW / mCoordChange.getTileSize()); }
 void cBicho::SetWidthHeight(int width,int height) {
 	w = width;
 	h = height; }
@@ -40,31 +41,29 @@ bool cBicho::Collides(cRect const& rcW) const {
 	return ((xW>rcW.left) && (xW+w<rcW.right) && (yW>rcW.bottom) && (yW+h<rcW.top));
 }
 bool cBicho::CollidesMapWall(bool right) const {
-	float tile_x, tile_y;
-	std::tie(tile_x, tile_y) = mMap.WorldToTile(xW,yW);
-	int const width_tiles  = w / mMap.getTileSize();
-	int const height_tiles = h / mMap.getTileSize();
+	Vec3 tile = mCoordChange.WorldToTile(xW,yW);
+	int const width_tiles  = w / mCoordChange.getTileSize();
+	int const height_tiles = h / mCoordChange.getTileSize();
 
-	if(right) tile_x += width_tiles;
+	if(right) tile.x += width_tiles;
 	
-	bool collides = mMap.CollisionInClosedArea(tile_x, tile_x, tile_y, tile_y+height_tiles-1);
+	bool collides = mMap.CollisionInClosedArea(tile.x, tile.x, tile.y, tile.y+height_tiles-1);
 	return collides;
 }
 
 bool cBicho::CollidesMapFloor() {
-	float tile_x, tile_y;
-	std::tie(tile_x, tile_y) = mMap.WorldToTile(xW,yW);
+	Vec3 const tile = mCoordChange.WorldToTile(xW,yW);
 
-	int width_tiles = w / mMap.getTileSize();
-	if( (xW % mMap.getTileSize()) != 0) width_tiles++;
+	int width_tiles = w / mCoordChange.getTileSize();
+	if( (xW % mCoordChange.getTileSize()) != 0) width_tiles++;
 
 	bool on_base = false;
-	if( (yW % mMap.getTileSize()) == 0 )
-		on_base = mMap.CollisionInClosedArea(tile_x, tile_x+width_tiles-1, tile_y-1, tile_y-1);
+	if( (yW % mCoordChange.getTileSize()) == 0 )
+		on_base = mMap.CollisionInClosedArea(tile.x, tile.x+width_tiles-1, tile.y-1, tile.y-1);
 	else {
-		on_base = mMap.CollisionInClosedArea(tile_x, tile_x+width_tiles-1, tile_y, tile_y);
+		on_base = mMap.CollisionInClosedArea(tile.x, tile.x+width_tiles-1, tile.y, tile.y);
 		if(on_base)
-		  yW = (tile_y + 1) * mMap.getTileSize();
+		  yW = (tile.y + 1) * mCoordChange.getTileSize();
 	}
 
 	return on_base;
@@ -80,7 +79,7 @@ void cBicho::DrawRect(float const xo,float const yo,float const xf,float const y
 
 void cBicho::MoveLeft() {
 	//Whats next tile?
-	if( (xW % mMap.getTileSize()) == 0) {
+	if( (xW % mCoordChange.getTileSize()) == 0) {
 		int xaux = xW;
 		xW -= STEP_LENGTH;
 
@@ -101,7 +100,7 @@ void cBicho::MoveLeft() {
 }
 void cBicho::MoveRight() {
 	//Whats next tile?
-	if( (xW % mMap.getTileSize()) == 0) {
+	if( (xW % mCoordChange.getTileSize()) == 0) {
 		int xaux;
 		xaux = xW;
 		xW += STEP_LENGTH;
