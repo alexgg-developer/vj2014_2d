@@ -2,13 +2,13 @@
 #include "Globals.hpp"
 #include "cTexture.hpp"
 #include <iostream>
-#include "Position.hpp"
+#include "Vec3.hpp"
 #include "cScene.hpp"
 
 struct cEnemy {
 	int mLife;
 	cTexture mTexture;
-	Position mInitialWPosition;
+	Vec3 mInitialWPosition;
 	int mWidth, mHeight;
 	cScene const& mMap;
 	cEnemy(cScene const& map): mMap(map) {};

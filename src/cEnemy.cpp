@@ -4,7 +4,7 @@ cEnemy::cEnemy(cScene const& map, int life) : mMap(map), mLife(life), mWidth(64)
 { 
 	int x, y; 
 	std::tie(x, y) = map.TileToWorld(10, 10);
-	mInitialWPosition = Position(x, y); 
+	mInitialWPosition = Vec3(x, y); 
 	if (!mTexture.Load("enemy1.png", GL_RGBA)) {
 		std::cerr << "Texture did not load" << std::endl;
 	}
