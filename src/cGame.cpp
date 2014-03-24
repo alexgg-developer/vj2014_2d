@@ -23,7 +23,7 @@ bool cGame::Init() {
 
 	//Player initialization
 	Player.Init();
-	Player.SetWidthHeight(32,32);
+	Player.SetWidthHeight_W(32,32);
 	Player.SetTile(Vec3(2,1)); //Initial tile
 	Player.SetState(STATE_LOOKRIGHT);
 

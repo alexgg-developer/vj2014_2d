@@ -25,8 +25,8 @@ bool cTexture::Load(char const*const filename,int const type,int const wraps,int
 
 	if(img==NULL) return false;
 
-	width  = img->getWidth();
-	height = img->getHeight();
+	widthW  = img->getWidth();
+	heightW = img->getHeight();
 
 	glGenTextures(1, &id);
 	glBindTexture(GL_TEXTURE_2D,id);
@@ -38,10 +38,10 @@ bool cTexture::Load(char const*const filename,int const type,int const wraps,int
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,minf);
 
 	if(!mipmap)	{
-		glTexImage2D(GL_TEXTURE_2D,0,components,width,height,0,type,
+		glTexImage2D(GL_TEXTURE_2D,0,components,widthW,heightW,0,type,
 					 GL_UNSIGNED_BYTE,img->getPixels());
 	} else {
-		gluBuild2DMipmaps(GL_TEXTURE_2D,components,width,height,type,
+		gluBuild2DMipmaps(GL_TEXTURE_2D,components,widthW,heightW,type,
 						  GL_UNSIGNED_BYTE,img->getPixels());
 	}
 
@@ -49,19 +49,17 @@ bool cTexture::Load(char const*const filename,int const type,int const wraps,int
 }
 GLuint cTexture::GetID() const {
 	return id; }
-std::tuple<int,int> cTexture::GetSize() const {
-	return std::make_tuple(width, height); }
 
 void cTexture::Draw(float const texX0, float const texY0, float const texX1, float const texY1,
-					float const verX0, float const verY0, float const verX1, float const verY1) const {
+					Vec3 screen0, Vec3 screen1) const {
 	glEnable(GL_TEXTURE_2D);
 	
 	glBindTexture(GL_TEXTURE_2D, GetID());
 	glBegin(GL_QUADS);	
-		glTexCoord2f(texX0, texY0);	glVertex2i(verX0, verY0);
-		glTexCoord2f(texX1, texY0);	glVertex2i(verX1, verY0);
-		glTexCoord2f(texX1, texY1);	glVertex2i(verX1, verY1);
-		glTexCoord2f(texX0, texY1);	glVertex2i(verX0, verY1);
+		glTexCoord2f(texX0, texY0);	glVertex2i(screen0.x, screen0.y);
+		glTexCoord2f(texX1, texY0);	glVertex2i(screen1.x, screen0.y);
+		glTexCoord2f(texX1, texY1);	glVertex2i(screen1.x, screen1.y);
+		glTexCoord2f(texX0, texY1);	glVertex2i(screen0.x, screen1.y);
 	glEnd();
 
 	glDisable(GL_TEXTURE_2D);

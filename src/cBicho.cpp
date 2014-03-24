@@ -28,13 +28,12 @@ void cBicho::SetTile(Vec3 tile) {
 
 Vec3 cBicho::GetTile() const {
 	return mCoordChange.WorldToTile(posW); }
-void cBicho::SetWidthHeight(int width,int height) {
+void cBicho::SetWidthHeight_W(int width,int height) {
 	w = width;
 	h = height; }
 
-std::tuple<int, int> cBicho::GetWidthHeight() const {
-	return std::make_tuple(w,h); }
-
+int cBicho::GetWidth_W() const { return w;}
+int cBicho::GetHeight_W() const{ return h;}
 bool cBicho::Collides(cRect const& rcW) const {
 	return ((posW.x>rcW.left) && (posW.x+w<rcW.right) && (posW.y>rcW.bottom) && (posW.y+h<rcW.top));
 }
@@ -67,12 +66,12 @@ bool cBicho::CollidesMapFloor() {
 	return on_base;
 }
 
-cRect cBicho::GetArea() const {
+cRect cBicho::GetArea_W() const {
 	return cRect(posW.x, posW.x+w, posW.y, posW.y+h);
 }
 void cBicho::DrawRect(float const xo,float const yo,float const xf,float const yf,
-					  float const screen_x, float const screen_y) const {
-	mText.Draw(xo, yo, xf, yf, screen_x, screen_y, screen_x+w, screen_y+h);
+					  Vec3 screen) const {
+	mText.Draw(xo, yo, xf, yf, screen, Vec3(screen.x+w, screen.y+h));
 }
 
 void cBicho::MoveLeft() {

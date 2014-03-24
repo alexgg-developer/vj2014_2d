@@ -11,5 +11,5 @@ bool cObstacle::Init() {
 }
 void cObstacle::Draw() const {
 	Vec3 const screen = mCoordChange.WorldToScreen(posW);
-	mText.Draw(0,0,1,1,  screen.x, screen.y, screen.x+w, screen.y+h);
+	mText.Draw(0,0,1,1,  screen, Vec3(screen.x+w, screen.y+h));
 }

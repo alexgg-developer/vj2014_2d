@@ -26,7 +26,7 @@ void cPlayer::Draw() {
 	yf = yo - 0.25f;
 	Vec3 const screen = mCoordChange.WorldToScreen(posW);
 
-	DrawRect(xo,yo,xf,yf, screen.x, screen.y);
+	DrawRect(xo,yo,xf,yf, screen);
 }
 bool cPlayer::Init() {
 	return mText.Load("bub.png",GL_RGBA); }

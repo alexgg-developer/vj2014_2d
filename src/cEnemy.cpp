@@ -11,5 +11,5 @@ cEnemy::cEnemy(cScene const& map, cCoordChanges const& ch, int life) : mMap(map)
 void cEnemy::draw()
 {
 	Vec3 screen = mCoordChanges.WorldToScreen(mInitialWPosition);
-	mTexture.Draw(0, 0, 1, 1, screen.x, screen.y, screen.x + mWidth, screen.y + mHeight);
+	mTexture.Draw(0, 0, 1, 1, screen, Vec3(screen.x + mWidth, screen.y + mHeight));
 }

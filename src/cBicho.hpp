@@ -25,16 +25,17 @@ struct cBicho {
 	Vec3 GetPosition_W() const; //TODO: Which position? Which coordinate system?
 	void SetTile(Vec3 tile);
 	Vec3 GetTile() const;
-	void SetWidthHeight(int w,int h);
-	std::tuple<int, int> GetWidthHeight() const;
+	void SetWidthHeight_W(int w,int h);
+	int GetWidth_W() const;
+	int GetHeight_W() const;
 
 	bool Collides(cRect const& rcW) const;
 	bool CollidesMapWall(bool right) const;
 	///TODO This function modifies the object. It's not a query, be careful!
 	bool CollidesMapFloor();
-	cRect GetArea() const;
+	cRect GetArea_W() const;
 	void DrawRect(float xo,float yo,float xf,float yf,
-				  float const screen_x, float const screen_y) const;
+				  Vec3 screen) const;
 
 	void MoveRight();
 	void MoveLeft();
