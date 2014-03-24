@@ -5,11 +5,12 @@ using namespace std::chrono;
 
 struct Timer
 {
-	time_point<system_clock> mStartTime;
+	steady_clock::time_point mStartTime;
 
-	Timer() : mStartTime(system_clock::duration::zero()) {};
+	Timer() : mStartTime(steady_clock::duration::zero()) {};
 	void startTime();
-	float getTime();
+	float getDeltaTime();
+	void reset();
 
 };
 

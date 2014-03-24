@@ -10,6 +10,7 @@
 //#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 
 cGame Game;
+Timer t;
 
 void AppRender()
 {
@@ -37,14 +38,10 @@ void AppMouse(int button, int state, int x, int y)
 }
 void AppIdle()
 {
+	float dt = t.getDeltaTime();
+	if (!Game.Loop(dt)) exit(0);
 
-	Timer t;
-
-	t.startTime();
-
-	if (!Game.Loop()) exit(0);
-
-	std::cout << "Time elapsed: " << t.getTime() << std::endl;
+	std::cout << "Time elapsed: " << dt << std::endl;
 
 }
 
@@ -84,7 +81,8 @@ void main(int argc, char** argv)
 
 	//Game initializations
 	Game.Init();
-
+	//StartTimer
+	t.startTime();
 	//Application loop
 	glutMainLoop();	
 }

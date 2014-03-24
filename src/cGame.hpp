@@ -14,14 +14,14 @@ struct cGame {
 	virtual ~cGame();
 
 	bool Init();
-	bool Loop();
+	bool Loop(float dt);
 	void Finalize();
 
 	//Input
 	void ReadKeyboard(unsigned char key, int x, int y, bool press);
 	void ReadMouse(int button, int state, int x, int y);
 	//Process
-	bool Process();
+	bool Process(float dt);
 	//Output
 	void Render();
 

@@ -28,13 +28,13 @@ bool cGame::Init() {
 	Player.SetState(STATE_LOOKRIGHT);
 
 	//Enemy initialization
-	mEnemies.push_back(cEnemy(Scene, CoordChanges, 3));
+	mEnemies.push_back(cEnemy(Scene, CoordChanges, 1));
 
 	return true;
 }
 
-bool cGame::Loop() {
-	bool res = Process();
+bool cGame::Loop(float dt) {
+	bool res = Process(dt);
 	if(res) Render();
 
 	return res;
@@ -52,7 +52,7 @@ void cGame::ReadMouse(int button, int state, int x, int y) {
 }
 
 //Process
-bool cGame::Process() {
+bool cGame::Process(float dt) {
 	bool res=true;
 	
 	//Process Input
@@ -64,7 +64,7 @@ bool cGame::Process() {
 	else Player.Stop();	
 	//Game Logic
 	Player.Logic();
-	//for (int i = 0; i < mEnemies.size(); ++i) mEnemies[i].doLogic();
+	//for (int i = 0; i < mEnemies.size(); ++i) mEnemies[i].doLogic(dt);
 
 	return res;
 }
