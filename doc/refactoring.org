@@ -2,6 +2,6 @@
   - [+] extract coordinate systems and transformations from cScene  -> Velasco
   - [-] extract collision from cScene and cBicho                    -> Garcia
   - [-] try to kill teachers                                        -> Both
-  - [-] extract animations from cBicho                              -> Velasco
+  - [+] extract animations from cBicho                              -> Velasco
   - [+] separate width and height getters (delete tuples)           -> Velasco
   - [+] use position class instead of std::pair<int,int>            -> Velasco

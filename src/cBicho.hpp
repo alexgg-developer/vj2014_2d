@@ -10,9 +10,12 @@ struct cScene;
 
 enum BichoState {
   STATE_LOOKLEFT  =0,
-  STATE_LOOKRIGHT =1,
-  STATE_WALKLEFT  =2,
-  STATE_WALKRIGHT =3};
+  STATE_LOOKRIGHT = 1,
+  STATE_WALKLEFT = 2,
+  STATE_WALKRIGHT = 3,
+  STATE_JUMPLEFT = 4,
+  STATE_JUMPRIGHT = 5
+};
 
 struct cRect {
   cRect(int const l, int const r, int const b, int const t) : left(l), right(r), top(t), bottom(b) {}
@@ -74,7 +77,7 @@ protected:
   int jump_alfa;
   int jump_y;
   cState* mActualState;
-  std::array<std::shared_ptr<cState>, 4> mStates;
+  std::array<std::shared_ptr<cState>, 6> mStates;
 private:
   void initStates();
 };

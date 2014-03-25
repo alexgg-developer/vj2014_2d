@@ -24,8 +24,31 @@ void cBicho::initStates() {
   mStates[STATE_LOOKRIGHT] = std::make_shared<cState>(*this);
   mStates[STATE_WALKLEFT ] = std::make_shared<cState>(*this);
   mStates[STATE_WALKRIGHT] = std::make_shared<cState>(*this);
-  mStates[STATE_WALKLEFT ]->setNextOnStop(mStates[STATE_LOOKLEFT ].get());
+  mStates[STATE_JUMPLEFT ] = std::make_shared<cState>(*this);
+  mStates[STATE_JUMPRIGHT] = std::make_shared<cState>(*this);
+
+  mStates[STATE_WALKLEFT]->setNextOnStop(mStates[STATE_LOOKLEFT].get());
   mStates[STATE_WALKRIGHT]->setNextOnStop(mStates[STATE_LOOKRIGHT].get());
+  
+  mStates[STATE_LOOKLEFT]->setNextOnRight(mStates[STATE_LOOKRIGHT].get());
+  mStates[STATE_LOOKRIGHT]->setNextOnLeft(mStates[STATE_LOOKLEFT].get());
+  mStates[STATE_LOOKLEFT]->setNextOnLeft(mStates[STATE_WALKLEFT].get());
+  mStates[STATE_LOOKRIGHT]->setNextOnRight(mStates[STATE_WALKRIGHT].get());
+  mStates[STATE_WALKLEFT]->setNextOnRight(mStates[STATE_WALKRIGHT].get());
+  mStates[STATE_WALKRIGHT]->setNextOnLeft(mStates[STATE_WALKLEFT].get());
+  mStates[STATE_JUMPLEFT]->setNextOnRight(mStates[STATE_JUMPRIGHT].get());
+  mStates[STATE_JUMPRIGHT]->setNextOnLeft(mStates[STATE_JUMPLEFT].get());
+  
+  mStates[STATE_LOOKLEFT]->setNextOnJump(mStates[STATE_JUMPLEFT].get());
+  mStates[STATE_LOOKRIGHT]->setNextOnJump(mStates[STATE_JUMPRIGHT].get());
+  mStates[STATE_WALKLEFT]->setNextOnJump(mStates[STATE_JUMPLEFT].get());
+  mStates[STATE_WALKRIGHT]->setNextOnJump(mStates[STATE_JUMPRIGHT].get());
+  mStates[STATE_LOOKLEFT]->setNextOnJump(mStates[STATE_JUMPLEFT].get());
+  mStates[STATE_LOOKRIGHT]->setNextOnJump(mStates[STATE_JUMPRIGHT].get());
+  
+  mStates[STATE_JUMPLEFT]->setNextOnUnJump(mStates[STATE_LOOKLEFT].get());
+  mStates[STATE_JUMPRIGHT]->setNextOnUnJump(mStates[STATE_LOOKRIGHT].get());
+
   mActualState = mStates[STATE_LOOKLEFT].get();
 }
 void cBicho::SetPosition_W(Vec3 apos) {
@@ -89,15 +112,13 @@ void cBicho::MoveLeft() {
 
     if(CollidesMapWall(false)) {
       posW.x = xaux;
-      mActualState = mStates[STATE_LOOKLEFT].get();
+      mActualState->Stop();
     }
   }
   //Advance, no problem
   else {
     posW.x -= STEP_LENGTH;
-    if(&*mActualState != &*(mStates[STATE_WALKLEFT])) {
-      mActualState = mStates[STATE_WALKLEFT].get();
-    }
+    mActualState->Left();
   }
 }
 void cBicho::MoveRight() {
@@ -109,15 +130,13 @@ void cBicho::MoveRight() {
 
     if(CollidesMapWall(true)) {
       posW.x = xaux;
-      SetState(mStates[STATE_LOOKRIGHT].get());
+      mActualState->Stop();
     }
   }
   //Advance, no problem
   else {
     posW.x += STEP_LENGTH;
-
-    if(&*mActualState != &*(mStates[STATE_WALKRIGHT]))
-      SetState(mStates[STATE_WALKRIGHT].get());
+    mActualState->Right();
   }
 }
 
@@ -128,10 +147,11 @@ void cBicho::Jump() {
   if(!jumping) {
     if(CollidesMapFloor()) {
       jumping = true;
+      mActualState->Jump();
       jump_alfa = 0;
       jump_y = posW.y;
     }
-  }
+  } else mActualState->Stop();
 }
 #include <iostream>
 void cBicho::Logic() {
@@ -140,6 +160,7 @@ void cBicho::Logic() {
 		
     if(jump_alfa == 180) {
       jumping = false;
+      mActualState->UnJump();
       posW.y = jump_y;
     }
     else {
@@ -149,23 +170,26 @@ void cBicho::Logic() {
       posW.y = jump_y + ( float(JUMP_HEIGHT) * sin(alfa) );
 		
       if(jump_alfa > 90) {
-	//Over floor?
-	jumping = !CollidesMapFloor();
-	// Colócalo en el suelo, motherfucker
-	if(!jumping) {
-	  int const w2 = w;
-	  //if( (int(posW.x) % mCoordChange.GetTileSize()) != 0) w2++;//No sé que hace. Estaba en el código original.
-	  while(mMap.CollisionInClosedArea(Vec3(posW.x, posW.y  ), Vec3(posW.x+w2-1, posW.y  ))) {
-	    posW.y +=1;
-	  }
-	}
+	      //Over floor?
+	      jumping = !CollidesMapFloor();
+	      // Colócalo en el suelo, motherfucker
+	      if(!jumping) {
+          mActualState->UnJump();
+	        int const w2 = w;
+	        //if( (int(posW.x) % mCoordChange.GetTileSize()) != 0) w2++;//No sé que hace. Estaba en el código original.
+	        while(mMap.CollisionInClosedArea(Vec3(posW.x, posW.y  ), Vec3(posW.x+w2-1, posW.y  ))) {
+	          posW.y +=1;
+	        }
+	      }
       }
     }
   }
   else {
     //Caída libre muy cutre
-    if(!CollidesMapFloor())
+    if(!CollidesMapFloor()) {
+      mActualState->Jump();
       posW.y -= (STEP_LENGTH);
+    } else mActualState->UnJump();
   }
 }
 cState* cBicho::GetState() const {
