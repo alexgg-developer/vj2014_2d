@@ -4,9 +4,9 @@
 
 struct cPlayer: public cBicho {
   cPlayer(cScene const& map, cCoordChanges const& ch);
-	~cPlayer();
+  ~cPlayer();
 
-	bool Init();
-	//TODO Draw modifies the object. Oh shit. kill kill kill kill kill kill kill kill kill kill ikill oh, that may be a new apple product kill kill kill kill kill kill kill kill kill kill kill kill kill kill kill kill kill
-	void Draw();
+  bool Init();
+  //TODO Draw modifies the object. Oh shit. kill kill kill kill kill kill kill kill kill kill ikill oh, that may be a new apple product kill kill kill kill kill kill kill kill kill kill kill kill kill kill kill kill kill
+  void Draw();
 };

@@ -1,30 +1,27 @@
 #include "cPlayer.hpp"
+#include "cState.hpp"
 
-cPlayer::cPlayer(cScene const& map, cCoordChanges const& ch) : cBicho(map, ch) {}
+cPlayer::cPlayer(cScene const& map, cCoordChanges const& ch) : cBicho(map, ch) {
+  mStates[STATE_LOOKLEFT ]->getAni().setNumberOfFrames(1);
+  mStates[STATE_LOOKRIGHT]->getAni().setNumberOfFrames(1);
+  mStates[STATE_WALKLEFT ]->getAni().setNumberOfFrames(3);
+  mStates[STATE_WALKRIGHT]->getAni().setNumberOfFrames(3);
+
+  mStates[STATE_LOOKLEFT ]->getAni().setInitialFrame(Vec3(0.0f , 0.25f));
+  mStates[STATE_LOOKRIGHT]->getAni().setInitialFrame(Vec3(0.25f, 0.25f));
+  mStates[STATE_WALKLEFT ]->getAni().setInitialFrame(Vec3(0.0f , 0.25f));
+  mStates[STATE_WALKRIGHT]->getAni().setInitialFrame(Vec3(0.25f, 0.25f));
+
+  mStates[STATE_WALKLEFT ]->getAni().setDeltaFrame(Vec3(0.0f, 0.25f));
+  mStates[STATE_WALKRIGHT]->getAni().setDeltaFrame(Vec3(0.0f, 0.25f));
+}
 cPlayer::~cPlayer(){}
 
 void cPlayer::Draw() {
-	float xo,yo;
+  cFrame const fr = mActualState->getAni().Generate();
+  mActualState->getAni().NextFrame();
 
-	switch(GetState()) {
-		//1
-		case STATE_LOOKLEFT:	xo = 0.0f;	yo = 0.25f;
-								break;
-		//4
-		case STATE_LOOKRIGHT:	xo = 0.25f;	yo = 0.25f;
-								break;
-		//1..3
-		case STATE_WALKLEFT:	xo = 0.0f;	yo = 0.25f + (GetFrame()*0.25f);
-								NextFrame(3);
-								break;
-		//4..6
-		case STATE_WALKRIGHT:	xo = 0.25f; yo = 0.25f + (GetFrame()*0.25f);
-								NextFrame(3);
-								break;
-	}
-	Vec3 const texf(xo + 0.25f, yo - 0.25f);
-
-	DrawRect(Vec3(xo,yo), texf, mCoordChange.WorldToScreen(posW));
+  DrawRect(fr, mCoordChange.WorldToScreen(posW));
 }
 bool cPlayer::Init() {
-	return mText.Load("bub.png",GL_RGBA); }
+  return mText.Load("bub.png",GL_RGBA); }

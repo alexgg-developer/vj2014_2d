@@ -50,6 +50,10 @@ bool cTexture::Load(char const*const filename,int const type,int const wraps,int
 GLuint cTexture::GetID() const {
 	return id; }
 
+void cTexture::Draw(cFrame const& frame,
+	  Vec3 const& screen0, Vec3 const& screen1) const {
+  this->Draw(frame.mBegin, frame.mEnd, screen0, screen1);
+}
 void cTexture::Draw(Vec3 const& tex0, Vec3 const& tex1,
 					Vec3 const& screen0, Vec3 const& screen1) const {
 	glEnable(GL_TEXTURE_2D);
