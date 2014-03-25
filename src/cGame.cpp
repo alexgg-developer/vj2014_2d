@@ -30,6 +30,8 @@ bool cGame::Init() {
 	//mEnemies.push_back(new cNormalShip(Scene, CoordChanges, 1, Vec3(15, 17), true));
 	mEnemies.push_back(new cNormalShip(Scene, CoordChanges, 1, Vec3(22, 22), true));
 
+  cExplosion::initialize(this);
+
 	return true;
 }
 
@@ -58,13 +60,19 @@ bool cGame::Process(float dt) {
 	//Process Input
 	if(keys[27])	res=false;
 	
+	if(keys[' '])			Player.Attack();
 	if(keys[GLUT_KEY_UP])			Player.Jump();
 	if(keys[GLUT_KEY_LEFT])			Player.MoveLeft();
 	else if(keys[GLUT_KEY_RIGHT])	Player.MoveRight();
 	else Player.Stop();	
 	//Game Logic
 	Player.Logic();
-	for (int i = 0; i < mEnemies.size(); ++i) mEnemies[i]->doLogic(dt);
+	for (std::size_t i = 0; i < mEnemies.size(); ++i) mEnemies[i]->doLogic(dt);
+  for(std::vector<cExplosion>::iterator it = mExplosions.begin(); it!=mExplosions.end();) {
+    if (it->hasFinished())
+      it = mExplosions.erase(it);
+    else it++;
+  }
 
 	return res;
 }
@@ -82,5 +90,7 @@ void cGame::Render() {
 	for (size_t i = 0; i < mEnemies.size(); ++i) {
 		mEnemies[i]->draw();
 	}
+  for(auto& expl: mExplosions)
+    expl.Draw();
 	glutSwapBuffers();
 }

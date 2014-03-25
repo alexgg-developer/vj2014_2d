@@ -17,7 +17,7 @@ struct cScene {
   bool CollisionInClosedArea(Vec3 const& world0, Vec3 const& world1) const;
 
   int operator()(int const x, int const y) const {
-	  return map[std::min<int>(std::max<int>(0,x),map.size())][std::min<int>(std::max<int>(0,y),map[0].size())]; }
+	  return map[std::min<int>(std::max<int>(0,x),map.size()-1)][std::min<int>(std::max<int>(0,y),map[0].size()-1)]; }
 private:
   cCoordChanges const& mCoordChanges;
   std::vector<std::vector<int>> map;

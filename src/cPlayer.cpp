@@ -1,5 +1,6 @@
 #include "cPlayer.hpp"
 #include "cState.hpp"
+#include "cExplosion.hpp"
 
 cPlayer::cPlayer(cScene const& map, cCoordChanges const& ch) : cBicho(map, ch) {
   mStates[STATE_LOOKLEFT ]->getAni().setNumberOfFrames(4);
@@ -43,3 +44,7 @@ void cPlayer::Draw() {
 }
 bool cPlayer::Init() {
   return mText.Load("Zoro.png",GL_RGBA); }
+
+ void cPlayer::Attack() {
+   cExplosion::addExplosion(mMap, mCoordChange, posW);
+ }

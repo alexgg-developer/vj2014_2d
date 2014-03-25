@@ -14,6 +14,8 @@ struct cAni {
   void setNumberOfFrames(unsigned int const aMax) { mMax = aMax; }
   void setFrameSize(Vec3 const& fs) { mFrameSize = fs;  }
   void setFrameDelay(unsigned int const del) { mFrameDelay = del; }
+
+  bool isInLastFrame() const { return seq==(mMax-1); }
 protected:
   int seq,delay;
   unsigned int mFrameDelay;

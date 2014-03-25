@@ -4,6 +4,7 @@
 #include "cEnemy.hpp"
 #include "cNormalShip.hpp"
 #include "cCoordChanges.hpp"
+#include "cExplosion.hpp"
 
 #include <vector>
 
@@ -26,10 +27,13 @@ struct cGame {
 	//Output
 	void Render();
 
+  void addExplosion(cExplosion expl) { mExplosions.push_back(expl); }
+
 protected:
 	unsigned char keys[256];
 	cScene Scene;
 	cPlayer Player;
-   cCoordChanges CoordChanges;
+  cCoordChanges CoordChanges;
 	std::vector<cEnemy*> mEnemies;
+  std::vector<cExplosion> mExplosions;
 };

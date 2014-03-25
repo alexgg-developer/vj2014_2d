@@ -23,4 +23,3 @@ void cPhysics::update(float dt)
 		mSpeed.y += min(speed.y, mMaxSpeed.y);
 	}
 }
-}
