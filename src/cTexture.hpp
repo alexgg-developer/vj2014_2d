@@ -18,7 +18,6 @@ struct cTexture {
 	    Vec3 const& screen0, Vec3 const& screen1) const;
   void Draw(cFrame const& frame,
 	    Vec3 const& screen0, Vec3 const& screen1) const;
-	  Vec3 const& screen0, Vec3 const& screen1) const;
   void drawAlternative(Vec3 const& tex0, Vec3 const& tex1,
 	  Vec3 const& screen0, Vec3 const& screen1) const;
 
