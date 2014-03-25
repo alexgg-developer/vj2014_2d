@@ -8,7 +8,7 @@ cGame::~cGame(void) { }
 
 bool cGame::Init() {
 	//Graphics initialization
-	glClearColor(0.0f,0.0f,0.0f,0.0f);
+	glClearColor(0.5f,0.5f,0.5f,1.0f);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(0,GAME_WIDTH,0,GAME_HEIGHT,0,1);
@@ -28,7 +28,8 @@ bool cGame::Init() {
 	Player.SetState(STATE_LOOKRIGHT);
 
 	//Enemy initialization
-	mEnemies.push_back(cEnemy(Scene, CoordChanges, 1));
+	mEnemies.push_back(new cNormalShip(Scene, CoordChanges, 1, Vec3(15, 17)));
+	mEnemies.push_back(new cNormalShip(Scene, CoordChanges, 1, Vec3(22, 22)));
 
 	return true;
 }
@@ -75,9 +76,26 @@ void cGame::Render() {
 	
 	glLoadIdentity();
 
+	glPushMatrix();
 	Scene.Draw();
 	Player.Draw();
-	for (size_t i = 0; i < mEnemies.size(); ++i) mEnemies[i].draw();
 
+	glPopMatrix();
+
+	glPushMatrix();
+	glLoadIdentity();
+	
+	//glRotatef(45.0f, 0.0f, 0.0f, 1.0f);	
+	for (size_t i = 0; i < mEnemies.size(); ++i) {
+		//Vec3 screen = CoordChanges.WorldToScreen(mEnemies[i]->mInitialWPosition);
+		Vec3 screen(0, 0);
+		glPushMatrix();
+		//glTranslatef(-screen.x, -screen.y, 0);
+		//glRotatef(45, 0, 0, 1);
+		//glTranslatef(screen.x, screen.y, 0);
+		mEnemies[i]->draw();
+		glPopMatrix();
+
+	}
 	glutSwapBuffers();
 }

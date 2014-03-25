@@ -1,5 +1,4 @@
 #include "Timer.hpp"
-#include <omp.h>
 
 void Timer::startTime()
 {
@@ -18,8 +17,5 @@ float Timer::getDeltaTime()
 
 void Timer::reset()
 {
-	//duration<float> t = steady_clock::duration::zero();
-	//time_point<steady_clock> tt(t.);
-	//mStartTime = tt;
-	//steady_clock::time_point<steady_clock, duration<float>> t(steady_clock::duration::zero);
+	mStartTime = steady_clock::now();
 }

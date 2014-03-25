@@ -41,7 +41,7 @@ void AppIdle()
 	float dt = t.getDeltaTime();
 	if (!Game.Loop(dt)) exit(0);
 
-	std::cout << "Time elapsed: " << dt << std::endl;
+	//std::cout << "Time elapsed: " << dt << std::endl;
 
 }
 

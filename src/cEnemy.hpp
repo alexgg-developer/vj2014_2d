@@ -1,20 +1,22 @@
 #pragma once
+#include <iostream>
 #include "Globals.hpp"
 #include "cTexture.hpp"
-#include <iostream>
 #include "Vec3.hpp"
 #include "cScene.hpp"
 
 struct cEnemy {
 	int mLife;
-	cTexture mTexture;
-	Vec3 mInitialWPosition;
 	int mWidth, mHeight;
+	float mOrientation;
+	cTexture mTexture;
 	cScene const& mMap;
+	Vec3 mInitialWPosition;
 	cEnemy(cScene const& map, cCoordChanges const& ch): mMap(map), mCoordChanges(ch), mLife(1) {};
 	cEnemy(cScene const& map, cCoordChanges const& ch, int life);
-	void init(int width, int height, const Vec3 & initialWPosition);
-	void draw();
+	void setInitialTilePosition(Vec3 const& tilePosition);
+	virtual ~cEnemy() {};
+	virtual void draw();
 protected:
 	cCoordChanges const& mCoordChanges;
 };
