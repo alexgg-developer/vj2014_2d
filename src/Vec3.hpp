@@ -10,4 +10,10 @@ struct Vec3 {
     return Vec3(x+ot.x, y+ot.y, z+ot.z); }
   Vec3 operator*(float const f) const {
     return Vec3(x*f, y*f, z*f); }
+  Vec3 & Vec3::operator+=(const Vec3 &v) {
+	  x += v.x;
+	  y += v.y;
+	  z += v.z;
+	  return *this;
+  }
 };
