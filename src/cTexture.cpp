@@ -65,6 +65,19 @@ void cTexture::Draw(Vec3 const& tex0, Vec3 const& tex1,
 		glTexCoord2f(tex1.x, tex1.y);	glVertex2i(screen1.x, screen1.y);
 		glTexCoord2f(tex0.x, tex1.y);	glVertex2i(screen0.x, screen1.y);
 	glEnd();
+	glDisable(GL_TEXTURE_2D);
+}
 
+void cTexture::drawAlternative(Vec3 const& tex0, Vec3 const& tex1,
+	Vec3 const& screen0, Vec3 const& screen1) const {
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, GetID());
+	glBegin(GL_QUADS);
+	glTexCoord2f(tex0.x, tex1.y);	glVertex2i(screen0.x, screen0.y);
+	glTexCoord2f(tex1.x, tex1.y);	glVertex2i(screen1.x, screen0.y);
+	glTexCoord2f(tex1.x, tex0.y);	glVertex2i(screen1.x, screen1.y);
+	glTexCoord2f(tex0.x, tex0.y);	glVertex2i(screen0.x, screen1.y);
+	glEnd();
 	glDisable(GL_TEXTURE_2D);
 }

@@ -8,7 +8,7 @@ cGame::~cGame(void) { }
 
 bool cGame::Init() {
 	//Graphics initialization
-	glClearColor(0.0f,0.0f,0.0f,0.0f);
+	glClearColor(0.5f,0.5f,0.5f,1.0f);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(0,GAME_WIDTH,0,GAME_HEIGHT,0,1);
@@ -27,7 +27,8 @@ bool cGame::Init() {
 	Player.SetPosition_T(Vec3(2,1)); //Initial tile
 
 	//Enemy initialization
-	mEnemies.push_back(cEnemy(Scene, CoordChanges, 1));
+	//mEnemies.push_back(new cNormalShip(Scene, CoordChanges, 1, Vec3(15, 17), true));
+	mEnemies.push_back(new cNormalShip(Scene, CoordChanges, 1, Vec3(22, 22), true));
 
 	return true;
 }
@@ -63,7 +64,7 @@ bool cGame::Process(float dt) {
 	else Player.Stop();	
 	//Game Logic
 	Player.Logic();
-	//for (int i = 0; i < mEnemies.size(); ++i) mEnemies[i].doLogic(dt);
+	for (int i = 0; i < mEnemies.size(); ++i) mEnemies[i]->doLogic(dt);
 
 	return res;
 }
@@ -74,9 +75,12 @@ void cGame::Render() {
 	
 	glLoadIdentity();
 
+	glPushMatrix();
 	Scene.Draw();
 	Player.Draw();
-	for (size_t i = 0; i < mEnemies.size(); ++i) mEnemies[i].draw();
-
+	
+	for (size_t i = 0; i < mEnemies.size(); ++i) {
+		mEnemies[i]->draw();
+	}
 	glutSwapBuffers();
 }

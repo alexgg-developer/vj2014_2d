@@ -2,6 +2,7 @@
 #include "cScene.hpp"
 #include "cPlayer.hpp"
 #include "cEnemy.hpp"
+#include "cNormalShip.hpp"
 #include "cCoordChanges.hpp"
 
 #include <vector>
@@ -29,6 +30,6 @@ protected:
 	unsigned char keys[256];
 	cScene Scene;
 	cPlayer Player;
-  cCoordChanges CoordChanges;
-	std::vector<cEnemy> mEnemies;
+   cCoordChanges CoordChanges;
+	std::vector<cEnemy*> mEnemies;
 };
