@@ -28,3 +28,6 @@
 */Debug/*
 */Release/*
 Thumbs.db
+/src/*.hpp~
+/src/*.cpp~
+/resources/*.txt~

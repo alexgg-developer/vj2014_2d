@@ -82,7 +82,6 @@ bool cScene::LoadLevel(int level) {
 	  fd >> mObstacles[i];
 	  mObstacles[i].Init();
 	  mObstacles[i].SetWidthHeight_W(24,24);///TODO Extract from the texture automagically.
-      mObstacles[i].SetState(STATE_LOOKRIGHT);
   }
   fd.close();
 

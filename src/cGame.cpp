@@ -25,7 +25,6 @@ bool cGame::Init() {
 	Player.Init();
 	Player.SetWidthHeight_W(32,32);
 	Player.SetPosition_T(Vec3(2,1)); //Initial tile
-	Player.SetState(STATE_LOOKRIGHT);
 
 	//Enemy initialization
 	mEnemies.push_back(cEnemy(Scene, CoordChanges, 3));
