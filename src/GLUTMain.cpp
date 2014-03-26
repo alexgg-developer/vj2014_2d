@@ -11,6 +11,7 @@
 
 cGame Game;
 Timer t;
+float timeElapsed;
 
 void AppRender()
 {
@@ -40,6 +41,7 @@ void AppIdle()
 {
 	float dt = t.getDeltaTime();
 	if (!Game.Loop(dt)) exit(0);
+	timeElapsed += dt;
 
 	//std::cout << "Time elapsed: " << dt << std::endl;
 
@@ -82,6 +84,7 @@ void main(int argc, char** argv)
 	//Game initializations
 	Game.Init();
 	//StartTimer
+	timeElapsed = 0.0f;
 	t.startTime();
 	//Application loop
 	glutMainLoop();	

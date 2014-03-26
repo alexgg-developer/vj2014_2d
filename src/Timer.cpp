@@ -12,7 +12,7 @@ float Timer::getDeltaTime()
 	mStartTime = steady_clock::now();
 
 	
-	return elapsed_seconds.count();
+	return (elapsed_seconds.count());
 }
 
 void Timer::reset()

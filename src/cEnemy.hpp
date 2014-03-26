@@ -20,7 +20,8 @@ struct cEnemy {
 	Vec3 mWPosition;
 	std::string mTexturePath;
 	bool mAwake;
-	cEnemy(cScene const& map, cCoordChanges const& ch, std::shared_ptr<cPhysics>& physics) : mMap(map), mCoordChanges(ch), mLife(1), mPhysics(physics) {};
+	cEnemy(cScene const& map, cCoordChanges const& ch) : mMap(map), mCoordChanges(ch), mLife(1){};
+	cEnemy(cScene const& map, cCoordChanges const& ch, int life) : mMap(map), mCoordChanges(ch), mLife(life) {};
 	cEnemy(cScene const& map, cCoordChanges const& ch, int life, std::shared_ptr<cPhysics>& physics);
 	void setInitialTilePosition(Vec3 const& tilePosition);
 	virtual void doLogic(float dt) = 0;

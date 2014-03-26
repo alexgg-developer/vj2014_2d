@@ -3,6 +3,7 @@
 #include "cPlayer.hpp"
 #include "cEnemy.hpp"
 #include "cNormalShip.hpp"
+#include "cWalkingBomb.hpp"
 #include "cCoordChanges.hpp"
 #include "cExplosion.hpp"
 

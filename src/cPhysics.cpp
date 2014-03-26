@@ -1,6 +1,6 @@
 #include "cPhysics.hpp"
 
-cPhysics::cPhysics(std::unique_ptr<cPhysics> const & physics)
+cPhysics::cPhysics(std::shared_ptr<cPhysics> const & physics)
 {
 	mForce = physics->mForce;
 	mMaxSpeed = physics->mMaxSpeed;
@@ -9,6 +9,7 @@ cPhysics::cPhysics(std::unique_ptr<cPhysics> const & physics)
 void cPhysics::update(float dt)
 {
 	Vec3 speed = mForce * dt;
+	//Esta mal hecho pero cuela de momento.
 	if (speed.x < 0.0f) {
 		mSpeed.x += max(speed.x, mMaxSpeed.x);
 	}

@@ -19,7 +19,7 @@ bool cGame::Init() {
 
 	//Scene initialization
 	Scene.Init();
-	if(!Scene.LoadLevel(1)) return false;
+	if(!Scene.LoadLevel(4)) return false;
 
 	//Player initialization
 	Player.Init();
@@ -29,6 +29,8 @@ bool cGame::Init() {
 	//Enemy initialization
 	//mEnemies.push_back(new cNormalShip(Scene, CoordChanges, 1, Vec3(15, 17), true));
 	mEnemies.push_back(new cNormalShip(Scene, CoordChanges, 1, Vec3(22, 22), true));
+	mEnemies.push_back(new cWalkingBomb(Scene, CoordChanges, 1, Vec3(35, 1), true, Player));
+	
 
   cExplosion::initialize(this);
 
