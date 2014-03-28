@@ -3,12 +3,14 @@
 
 /// State for a bicho
 struct cState {
-  cState(cBicho& csm) : mStateMachine(csm), mNextOnUnJump(nullptr), mNextOnStop(nullptr), mNextOnLeft(nullptr), mNextOnRight(nullptr), mNextOnJump(nullptr) {}
+  cState(cBicho& csm) : mStateMachine(csm), mNextOnUnJump(nullptr), mNextOnStop(nullptr), mNextOnLeft(nullptr), mNextOnRight(nullptr), mNextOnJump(nullptr), mNextOnAnimationFinished(nullptr), mNextOnActivate(nullptr) {}
   void setNextOnStop(cState* cs) { mNextOnStop = cs; }
   void setNextOnRight(cState* cs) { mNextOnRight = cs; }
   void setNextOnLeft(cState* cs) { mNextOnLeft = cs; }
   void setNextOnJump(cState* cs) { mNextOnJump = cs; }
   void setNextOnUnJump(cState* cs) { mNextOnUnJump = cs; }
+  void setNextOnActivate(cState* cs) { mNextOnActivate = cs; }
+  void setNextOnAnimationFinished(cState* cs) { mNextOnAnimationFinished = cs; }
 
   virtual void Stop() {
     if(mNextOnStop!=nullptr)
@@ -25,12 +27,19 @@ struct cState {
   virtual void UnJump() {
     if(mNextOnUnJump!=nullptr)
       mStateMachine.SetState(mNextOnUnJump); }
+  virtual void Activate() {
+    if(mNextOnActivate!=nullptr)
+      mStateMachine.SetState(mNextOnActivate); }
   virtual void reset() { mAnimation.reset(); }
-  cFrame getFrame() { return mAnimation.Generate(); }
+  cFrame getFrame() { 
+    if(mNextOnAnimationFinished && mAnimation.isInLastFrame()) {
+      mStateMachine.SetState(mNextOnAnimationFinished);
+    }
+    return mAnimation.Generate(); }
   cAni& getAni() { return mAnimation; }
 
 protected:
   cBicho& mStateMachine;
-  cState* mNextOnStop, *mNextOnRight, *mNextOnLeft, *mNextOnJump, *mNextOnUnJump; //!< Non-ownership semantics not enforced through weak_ptr for locking
+  cState* mNextOnStop, *mNextOnRight, *mNextOnLeft, *mNextOnJump, *mNextOnUnJump, *mNextOnAnimationFinished, *mNextOnActivate; //!< Non-ownership semantics not enforced through weak_ptr for locking
   cAni mAnimation;
 };

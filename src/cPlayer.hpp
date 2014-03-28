@@ -13,7 +13,7 @@ struct cPlayer: public cBicho {
 
   bool Init();
   //TODO Draw modifies the object. Oh shit. kill kill kill kill kill kill kill kill kill kill ikill oh, that may be a new apple product kill kill kill kill kill kill kill kill kill kill kill kill kill kill kill kill kill
-  void doLogic(float dt);
+  virtual void doLogic(float dt) override;
   void Draw();
   void Attack();
   void Attack(Vec3 const & direction, cElementalProjectile::KindOfElement element);

@@ -53,15 +53,14 @@ bool cPlayer::Init() {
  }
 
  void cPlayer::Attack(Vec3 const & direction, cElementalProjectile::KindOfElement element) {
-	 cElementalProjectile eProjectile = cElementalProjectile(mCoordChange, element);
-	 eProjectile.mPhysics->changeDirection(direction);
-	 eProjectile.mWPosition = this->GetPosition_W();
+	 cElementalProjectile eProjectile = cElementalProjectile(mMap, mCoordChange, element);
+	 eProjectile.changeDirection(direction);
+	 eProjectile.SetPosition_W(this->GetPosition_W());
 	 eProjectile.mAwake = true;
 	 mAttacks.push_back(eProjectile);
  }
 
- void cPlayer::doLogic(float dt)
- {
+ void cPlayer::doLogic(float dt) {
 	 Logic();
 	 for (std::size_t i = 0; i < mAttacks.size(); ++i) {
 		 mAttacks[i].doLogic(dt);

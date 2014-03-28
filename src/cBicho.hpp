@@ -6,6 +6,8 @@
 #include <array>
 #include <memory>
 #include <functional>
+#undef min
+#undef max
 struct cState;
 struct cScene;
 
@@ -22,6 +24,12 @@ struct cRect {
   cRect(int const l, int const r, int const b, int const t) : left(l), right(r), top(t), bottom(b) {}
   int left,top,
     right,bottom;
+
+  bool collides(cRect  const& rcW) {
+    return !((left > rcW.right) || (rcW.left > right) || (bottom > rcW.top) || (rcW.bottom > top)); }
+  cRect unite(cRect const& other) const {
+    return cRect(std::min(left,other.left), std::max(right,other.right), std::min(bottom,other.bottom), std::max(top,other.top));
+  }
 };
 
 struct cBicho {
@@ -37,10 +45,10 @@ struct cBicho {
   int GetWidth_W() const;
   int GetHeight_W() const;
 
-  bool Collides_W(cRect const& rcW) const;
   bool CollidesMapWall(bool right) const;
   bool CollidesMapFloor() const;
   cRect GetArea_W() const;
+  cRect GetBBox() const { return GetArea_W();}
   void DrawRect(cFrame const& fr,
 				Vec3 const& screen) const;
 
@@ -53,6 +61,7 @@ struct cBicho {
   void AdjustOverVec(Vec3 const& v, std::function<bool()> const& cond);
   void Stop();
   void Logic();
+	virtual void doLogic(float dt) = 0;
 
   cState* GetState() const;
   void SetState(cState* s);

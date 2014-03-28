@@ -11,6 +11,6 @@ struct cPhysics
 	cPhysics(std::shared_ptr<cPhysics> const & physics);
 	cPhysics(Vec3 const & force, Vec3 const & maxSpeed) : mForce(force), mMaxSpeed(maxSpeed), mSpeed(Vec3(0.0f, 0.0f)), mInitialForce(mForce), mInitialMaxSpeed(mMaxSpeed), mInitialSpeed(mSpeed) {}
 	cPhysics(Vec3 const & force, Vec3 const & maxSpeed, Vec3 const & speed) : mForce(force), mMaxSpeed(maxSpeed), mSpeed(speed), mInitialForce(mForce), mInitialMaxSpeed(mMaxSpeed), mInitialSpeed(mSpeed) {}
-	void update(float dt);
+	void update(float const dt);
 	void changeDirection(Vec3 const & direction);
 };

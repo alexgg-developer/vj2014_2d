@@ -1,21 +1,32 @@
 #include "cEnemy.hpp"
 
-cEnemy::cEnemy(cScene const& map, cCoordChanges const& ch, int life, std::shared_ptr<cPhysics>& physics) : mMap(map), mLife(life), mCoordChanges(ch), mPhysics(physics)
+cEnemy::cEnemy(cScene const& map, cCoordChanges const& ch, int life, std::shared_ptr<cPhysics>& physics)
+ : mLife(life), mPhysics(physics), cBicho(map, ch) 
 {
 	//mInitialWPosition = mCoordChanges.TileToWorld(Vec3(10, 10));
 }
 
 void cEnemy::setInitialTilePosition(Vec3 const& tilePosition)
 {
-	mWPosition = mCoordChanges.TileToWorld(tilePosition);
+	posW = mCoordChange.TileToWorld(tilePosition);
 }
 void cEnemy::draw()
 {
 	if (mAwake) {
-		Vec3 const screen = mCoordChanges.WorldToScreen(mWPosition);
+		Vec3 const screen = mCoordChange.WorldToScreen(posW);
 		glPushMatrix();
 		glTranslatef(screen.x, screen.y, 0);
-		mTexture.drawAlternative(Vec3(0, 0), Vec3(1, 1), Vec3(0, 0), Vec3(mWidth, mHeight));
+		mText.drawAlternative(Vec3(0, 0), Vec3(1, 1), Vec3(0, 0), Vec3(w, h));
 		glPopMatrix();
 	}
+}
+void cEnemy::move(Vec3 const& speed, float dt) {
+  Vec3 const deltaWPos = (speed * dt);
+  Vec3 const backup = posW;
+  cRect const bbox0 = this->GetBBox();
+	posW += deltaWPos;
+  cRect const bbox1 = this->GetBBox();
+  cRect const augmentedBbox = bbox0.unite(bbox1);
+  if(mMap.CollisionInClosedArea(augmentedBbox)) {
+    posW = backup; }
 }

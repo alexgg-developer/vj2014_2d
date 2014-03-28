@@ -4,19 +4,18 @@
 #include "cTexture.hpp"
 #include "Vec3.hpp"
 #include "cCoordChanges.hpp"
+#include "cBicho.hpp"
 
-struct cProjectile
-{
-	std::shared_ptr<cPhysics> mPhysics;
-	cTexture mTexture;
-	cCoordChanges mCoordChanges;
-	Vec3 mWPosition;
-	Vec3 mForce, mMaxSpeed, mSpeed;
+struct cProjectile : public cBicho {
+	void changePhysics(Vec3 const& force, Vec3 const& maxSpeed, Vec3 const& speed);
 	bool mAwake;
 	int mDamage;
-	int mWidth, mHeight;
 
-	cProjectile(cCoordChanges const& ch) : mCoordChanges(ch) {}
+	cProjectile(cScene const& map, cCoordChanges const& ch) : cBicho(map, ch) {}
 	void draw();
-
+  void changeDirection(Vec3 const & direction) { mPhysics->changeDirection(direction);}
+	void doLogic(float dt);
+protected:
+	std::shared_ptr<cPhysics> mPhysics;
+	void move(Vec3 const& speed, float const dt);
 };

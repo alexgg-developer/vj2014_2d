@@ -9,6 +9,7 @@ struct cExplosion : public cBicho {
   void start();
   bool hasFinished() const;
   void Draw();
+	virtual void doLogic(float dt) {}//TODO: Auto-destroy here
 
   static void initialize(cGame* aGame) {
     mGame=aGame; }

@@ -7,9 +7,9 @@ cPhysics::cPhysics(std::shared_ptr<cPhysics> const & physics)
 	mInitialMaxSpeed = mMaxSpeed = physics->mMaxSpeed;
 	mInitialSpeed = mSpeed = physics->mSpeed;
 }
-void cPhysics::update(float dt)
+void cPhysics::update(float const dt)
 {
-	Vec3 speed = mForce * dt;
+	Vec3 const speed = mForce * dt;
 	//Esta mal hecho pero cuela de momento.
 	if (speed.x < 0.0f) {
 		mSpeed.x += max(speed.x, mMaxSpeed.x);

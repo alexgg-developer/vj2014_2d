@@ -2,7 +2,7 @@
 #include "Globals.hpp"
 
 
-cGame::cGame(void) : CoordChanges(), Scene(CoordChanges), Player(Scene, CoordChanges)
+cGame::cGame(void) : CoordChanges(), Scene(CoordChanges, Player), Player(Scene, CoordChanges)
 { 
 	for (unsigned int i = 0; i < NUMKEYS; ++i) mKey[i] = KEY_OFF;
 
@@ -208,6 +208,7 @@ bool cGame::Process(float dt) {
       it = mExplosions.erase(it);
     else it++;
   }
+  Scene.doLogic(dt);
 
 	return res;
 }

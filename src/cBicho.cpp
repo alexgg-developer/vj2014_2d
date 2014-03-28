@@ -69,19 +69,16 @@ void cBicho::SetWidthHeight_W(int width,int height) {
 
 int cBicho::GetWidth_W() const { return w;}
 int cBicho::GetHeight_W() const{ return h;}
-bool cBicho::Collides_W(cRect const& rcW) const {
-  return !((posW.x > rcW.right) || (rcW.left > (posW.x+w)) || (posW.y > rcW.top) || (rcW.bottom > (posW.y+h)));
-}
 bool cBicho::CollidesMapWall(bool right) const {
   Vec3 posW2 = posW;
 
   if(right) posW2.x += w;
 	
-  return mMap.CollisionInClosedArea(posW2, Vec3(posW2.x, posW2.y+h-1));
+  return mMap.CollisionInClosedArea(cRect(posW2.x, posW2.x, posW2.y, posW2.y+h-1));
 }
 
 bool cBicho::CollidesMapFloor() const {
-  return mMap.CollisionInClosedArea(Vec3(posW.x, posW.y-1  ), Vec3(posW.x+w-1, posW.y-1  ));
+  return mMap.CollisionInClosedArea(cRect(posW.x, posW.x+w-1, posW.y-1, posW.y-1));
 }
 
 cRect cBicho::GetArea_W() const {
@@ -125,10 +122,10 @@ void cBicho::AdjustOverEarth() {
   AdjustOverVec(Vec3(0, 1), [&]() { return this->CollidesMapFloor(); }); }
 void cBicho::AdjustOverLeft() { 
   AdjustOverVec(Vec3( 1,0), [&]() { return this->CollidesMapWall(false)
-   || this->mMap.CollisionInClosedArea(Vec3(posW.x, posW.y  ), Vec3(posW.x+w-1, posW.y  )); }); }
+   || this->mMap.CollisionInClosedArea(cRect(posW.x, posW.x+w-1, posW.y, posW.y  )); }); }
 void cBicho::AdjustOverRight() { 
   AdjustOverVec(Vec3(-1,0), [&]() { return this->CollidesMapWall(true)
-   || this->mMap.CollisionInClosedArea(Vec3(posW.x, posW.y  ), Vec3(posW.x+w-1, posW.y  )); }); }
+   || this->mMap.CollisionInClosedArea(cRect(posW.x, posW.x+w-1, posW.y, posW.y  )); }); }
 void cBicho::AdjustOverVec(Vec3 const& v, std::function<bool()> const& cond) {
   int executed_times = 0;
   while(cond()) {

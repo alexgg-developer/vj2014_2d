@@ -8,24 +8,18 @@
 #include "Vec3.hpp"
 #include "cScene.hpp"
 #include "cPhysics.hpp"
+#include "cBicho.hpp"
 
-struct cEnemy {
-	int mLife;
-	int mWidth, mHeight;
-	float mOrientation;
-	cTexture mTexture;
-	cScene const& mMap;
-	//cPhysics mPhysics;
-	std::shared_ptr<cPhysics> mPhysics;
-	Vec3 mWPosition;
-	std::string mTexturePath;
-	bool mAwake;
-	cEnemy(cScene const& map, cCoordChanges const& ch) : mMap(map), mCoordChanges(ch), mLife(1){};
-	cEnemy(cScene const& map, cCoordChanges const& ch, int life) : mMap(map), mCoordChanges(ch), mLife(life) {};
+struct cEnemy: public cBicho {
+	cEnemy(cScene const& map, cCoordChanges const& ch) :  mLife(1), cBicho(map, ch) {};
+	cEnemy(cScene const& map, cCoordChanges const& ch, int life) :  mLife(life), cBicho(map, ch) {};
 	cEnemy(cScene const& map, cCoordChanges const& ch, int life, std::shared_ptr<cPhysics>& physics);
 	void setInitialTilePosition(Vec3 const& tilePosition);
-	virtual void doLogic(float dt) = 0;
 	virtual void draw();
 protected:
-	cCoordChanges const& mCoordChanges;
+	void move(Vec3 const& speed, float dt);
+	int mLife;
+	float mOrientation;
+	std::shared_ptr<cPhysics> mPhysics;
+	bool mAwake;
 };

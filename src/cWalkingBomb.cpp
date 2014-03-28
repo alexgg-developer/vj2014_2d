@@ -5,13 +5,12 @@ cWalkingBomb::cWalkingBomb(cScene const& map, cCoordChanges const& ch, int life,
 : cEnemy(map, ch, life), mPlayer(target)
 {
 	mAwake = awake;
-	mWidth = 16; mHeight = 19;
-	mTexturePath = "WalkingBomb.png";
+	w = 16; h = 19;
 	setInitialTilePosition(tilePosition);
-	if (!mTexture.Load(mTexturePath.c_str(), GL_RGBA)) {
+	if (!mText.Load("WalkingBomb.png", GL_RGBA)) {
 		std::cerr << "Texture did not load" << std::endl;
 	}
-	mPhysics = std::make_shared<cPhysics>(mForce, mMaxSpeed, mSpeed);
+	mPhysics = std::make_shared<cPhysics>(Vec3(-200.0f, 0), Vec3(-100.0f, 0), Vec3(-25.0f, 0));
 	mDamage = 2;
 }
 
@@ -24,25 +23,20 @@ void cWalkingBomb::doLogic(float dt)
 	}
 }
 
-void cWalkingBomb::move(Vec3 const& speed, float dt)
-{
-	mWPosition += (speed * dt);
-}
-
 void cWalkingBomb::draw()
 {
 	if (mAwake) {
-		Vec3 const screen = mCoordChanges.WorldToScreen(mWPosition);
+		Vec3 const screen = mCoordChange.WorldToScreen(posW);
 		glPushMatrix();
 		glTranslatef(screen.x, screen.y, 0);
-		mTexture.drawAlternative(Vec3(0, 0), Vec3(1, 1), Vec3(0, 0), Vec3(mWidth, mHeight));
+		mText.drawAlternative(Vec3(0, 0), Vec3(1, 1), Vec3(0, 0), Vec3(w, h));
 		glPopMatrix();
 	}
 }
 
 void cWalkingBomb::followTheTarget()
 {
-	if (mPlayer.GetPosition_W().x < mWPosition.x) {
+	if (mPlayer.GetPosition_W().x < posW.x) {
 		if (mPhysics->mForce.x > 0) {
 			mPhysics->mSpeed.x = 0.0f;
 			mPhysics->mForce.x = -mPhysics->mForce.x;

@@ -6,10 +6,14 @@
 #include <assert.h>
 #include <iostream>
 
-cScene::cScene(cCoordChanges const& cc) : mCoordChanges(cc) {}
+cScene::cScene(cCoordChanges const& cc, cPlayer& pl) : mCoordChanges(cc), mExitDoor(*this, mCoordChanges, pl), mInterruptor(*this, mCoordChanges, pl, mExitDoor) {}
 cScene::~cScene() {}
 
 bool cScene::Init() {
+  mExitDoor.Init();
+  mExitDoor.SetWidthHeight_W(32,32);
+  mInterruptor.Init();
+  mInterruptor.SetWidthHeight_W(32,32);
   return mText.Load("blocks.png",GL_RGBA);
 }
 bool cScene::LoadLevel(int level) {
@@ -83,6 +87,11 @@ bool cScene::LoadLevel(int level) {
 	  mObstacles[i].Init();
 	  mObstacles[i].SetWidthHeight_W(24,24);///TODO Extract from the texture automagically.
   }
+  float puerta_tile_x, puerta_tile_y;
+  fd >> puerta_tile_x >> puerta_tile_y;
+  mExitDoor.SetPosition_T(Vec3(puerta_tile_x, puerta_tile_y,0));
+  fd >> puerta_tile_x >> puerta_tile_y;
+  mInterruptor.SetPosition_T(Vec3(puerta_tile_x, puerta_tile_y,0));
   fd.close();
 
   return true;
@@ -96,10 +105,16 @@ void cScene::Draw() const {
   glDisable(GL_TEXTURE_2D);
   std::for_each(mObstacles.begin(), mObstacles.end(), [&](cObstacle const& obs){
 	  obs.Draw();});
+  mExitDoor.Draw();
+  mInterruptor.Draw();
 }
-bool cScene::CollisionInClosedArea(Vec3 const& world0, Vec3 const& world1) const {
-  Vec3 const tile0 = mCoordChanges.WorldToTile(world0);
-  Vec3 const tile1 = mCoordChanges.WorldToTile(world1);
+void cScene::doLogic(float const dt) {
+  mExitDoor.doLogic(dt);
+  mInterruptor.doLogic(dt);
+}
+bool cScene::CollisionInClosedArea(cRect const& world) const {
+  Vec3 const tile0 = mCoordChanges.WorldToTile(Vec3(world.left , world.bottom, 0));
+  Vec3 const tile1 = mCoordChanges.WorldToTile(Vec3(world.right, world.top   , 0));
 
   ///Scenery
   for(int i=tile0.x; i<=tile1.x; ++i) {
@@ -110,7 +125,7 @@ bool cScene::CollisionInClosedArea(Vec3 const& world0, Vec3 const& world1) const
 
   ///Obstacles
   for(auto it = mObstacles.begin(); it!=mObstacles.end(); ++it) {
-	  if(it->Collides_W(cRect(world0.x,world1.x,world0.y,world1.y)))
+	  if(it->GetBBox().collides(world))
 		  return true;
   }
 

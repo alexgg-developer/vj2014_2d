@@ -3,18 +3,22 @@
 #include "cTexture.hpp"
 #include "cObstacle.hpp"
 #include "cCoordChanges.hpp"
+#include "cPuerta.hpp"
+#include "cInterruptor.hpp"
 #undef max
 #undef min
 #include <algorithm>
+struct cPlayer;
 
 struct cScene {
-  cScene(cCoordChanges const& cc);
+  cScene(cCoordChanges const& cc, cPlayer& pl);
   virtual ~cScene();
 
   bool Init();
   bool LoadLevel(int level);
   void Draw() const;
-  bool CollisionInClosedArea(Vec3 const& world0, Vec3 const& world1) const;
+  bool CollisionInClosedArea(cRect const& world) const;
+  void doLogic(float const dt);
 
   int operator()(int const x, int const y) const {
 	  return map[std::min<int>(std::max<int>(0,x),map.size()-1)][std::min<int>(std::max<int>(0,y),map[0].size()-1)]; }
@@ -24,4 +28,6 @@ private:
   std::vector<cObstacle> mObstacles;
   int id_DL;				//actual level display list
   cTexture mText;
+  cPuerta mExitDoor;
+  cInterruptor mInterruptor;
 };
