@@ -1,10 +1,11 @@
 #include "cPhysics.hpp"
+#include <cmath>
 
 cPhysics::cPhysics(std::shared_ptr<cPhysics> const & physics)
 {
-	mForce = physics->mForce;
-	mMaxSpeed = physics->mMaxSpeed;
-	mSpeed = physics->mSpeed;
+	mInitialForce = mForce = physics->mForce;
+	mInitialMaxSpeed = mMaxSpeed = physics->mMaxSpeed;
+	mInitialSpeed = mSpeed = physics->mSpeed;
 }
 void cPhysics::update(float dt)
 {
@@ -23,4 +24,19 @@ void cPhysics::update(float dt)
 	else {
 		mSpeed.y += min(speed.y, mMaxSpeed.y);
 	}
+}
+
+void cPhysics::changeDirection(Vec3 const & direction)
+{
+	mForce.x = direction.x * std::fabs(mInitialForce.x);
+	mForce.y = direction.y * std::fabs(mInitialForce.y);
+	mForce.z = direction.z * std::fabs(mInitialForce.z);
+
+	mSpeed.x = direction.x * std::fabs(mInitialSpeed.x);
+	mSpeed.y = direction.y * std::fabs(mInitialSpeed.y);
+	mSpeed.z = direction.z * std::fabs(mInitialSpeed.z);
+
+	mMaxSpeed.x = direction.x * std::fabs(mInitialMaxSpeed.x);
+	mMaxSpeed.y = direction.y * std::fabs(mInitialMaxSpeed.y);
+	mMaxSpeed.z = direction.z * std::fabs(mInitialMaxSpeed.z);
 }

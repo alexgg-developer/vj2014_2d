@@ -2,7 +2,11 @@
 #include "Globals.hpp"
 
 
-cGame::cGame(void) : CoordChanges(), Scene(CoordChanges), Player(Scene, CoordChanges) { }
+cGame::cGame(void) : CoordChanges(), Scene(CoordChanges), Player(Scene, CoordChanges), mSpacePressed(0) 
+{ 
+	for (unsigned int i = 0; i < NUMKEYS; ++i) mKey[i] = KEY_OFF;
+
+}
 
 cGame::~cGame(void) { }
 
@@ -49,7 +53,110 @@ void cGame::Finalize() {
 
 //Input
 void cGame::ReadKeyboard(unsigned char key, int x, int y, bool press) {
-	keys[key] = press;
+	
+	for (unsigned int i = KQ; i < NUMKEYS; ++i) mKey[i] = mKey[i] & 0x0001;
+
+	if (press) {
+		switch (key) {
+		case 'q':
+			if (mKey[KQ] != KEY_ON) {
+				mKey[KQ] = KEY_PRESSED;
+			}
+			break;
+		case 'w':
+			if (mKey[KW] != KEY_ON) {
+				mKey[KW] = KEY_PRESSED;
+			}
+			break;
+		case 'e':
+			if (mKey[KE] != KEY_ON) {
+				mKey[KE] = KEY_PRESSED;
+			}
+			break;
+
+		case 's':
+			if (mKey[KS] != KEY_ON) {
+				mKey[KS] = KEY_PRESSED;
+			}
+			break;
+		case 27: //SCAPE
+			if (mKey[KESC] != KEY_ON) {
+				mKey[KESC] = KEY_PRESSED;
+			}
+			break;
+		}
+	}
+	else {
+		//I'll do key_off directly because we dont need if it's been recently released. So we can avoid a verification
+		switch (key) {
+		case 'q':
+			mKey[KQ] = KEY_OFF;
+			break;
+		case 'w':
+			mKey[KW] = KEY_OFF;
+			break;
+		case 'e':
+			mKey[KE] = KEY_OFF;
+			break;
+		case 's':
+			mKey[KS] = KEY_OFF;
+			break;
+		}
+	}
+	for (unsigned i = KQ; i < NUMKEYS; ++i) {
+		std::cout << "Tecla " << i << " " << "Estado: " << mKey[i] << std::endl;
+	}	
+}
+
+void cGame::ReadKeyboardEspecial(unsigned char key, int x, int y, bool press) 
+{
+	for (unsigned int i = 0; i < KQ; ++i) mKey[i] = mKey[i] & 0x0001;
+	if (press) {
+		switch (key) {
+		case GLUT_KEY_LEFT:
+			if (mKey[KLEFT] != KEY_ON) {
+				mKey[KLEFT] = KEY_PRESSED;
+			}
+			break;
+		case GLUT_KEY_RIGHT:
+			if (mKey[KRIGHT] != KEY_ON) {
+				mKey[KRIGHT] = KEY_PRESSED;
+			}
+			break;
+		case GLUT_KEY_UP:
+			if (mKey[KUP] != KEY_ON) {
+				mKey[KUP] = KEY_PRESSED;
+			}
+			break;
+
+		case GLUT_KEY_DOWN:
+			if (mKey[KDOWN] != KEY_ON) {
+				mKey[KDOWN] = KEY_PRESSED;
+			}
+			break;
+		}
+	}
+	else {
+		//I'll do key_off directly because we dont need if it's been recently released. So we can avoid a verification
+		switch (key) {
+		case GLUT_KEY_LEFT:
+			mKey[KLEFT] = KEY_OFF;
+			break;
+		case GLUT_KEY_RIGHT:
+			mKey[KRIGHT] = KEY_OFF;
+			break;
+		case GLUT_KEY_UP:
+			mKey[KUP] = KEY_OFF;
+			break;
+		case GLUT_KEY_DOWN:
+			mKey[KDOWN] = KEY_OFF;
+			break;
+		}
+	}
+
+	for (unsigned int i = 0; i < KQ; ++i) {
+		std::cout << "Tecla " << i << " " << "Estado: " << mKey[i] << std::endl;
+	}
 }
 
 void cGame::ReadMouse(int button, int state, int x, int y) {
@@ -60,15 +167,47 @@ bool cGame::Process(float dt) {
 	bool res=true;
 	
 	//Process Input
-	if(keys[27])	res=false;
-	
-	if(keys[' '])			Player.Attack();
-	if(keys[GLUT_KEY_UP])			Player.Jump();
-	if(keys[GLUT_KEY_LEFT])			Player.MoveLeft();
-	else if(keys[GLUT_KEY_RIGHT])	Player.MoveRight();
-	else Player.Stop();	
+	Vec3 direction = Vec3(0, 0, 0);
+
+	if (mKey[KESC] == KEY_PRESSED) {
+		res = false;
+	}
+	if (mKey[KS] == KEY_PRESSED || mKey[KS] == KEY_ON) {
+		Player.Jump();
+	}
+	if (mKey[KUP] == KEY_PRESSED || mKey[KUP] == KEY_ON) {
+		direction.y = 1.0;
+		//Player.Jump();
+	}
+	if (mKey[KDOWN] == KEY_PRESSED || mKey[KDOWN] == KEY_ON) {
+		direction.y = -1.0;
+	}
+
+	if (mKey[KLEFT] == KEY_PRESSED || mKey[KLEFT] == KEY_ON) {
+		Player.MoveLeft();
+		direction.x = -1.0;
+	}
+	else if (mKey[KRIGHT] == KEY_PRESSED || mKey[KRIGHT] == KEY_ON)	{
+		Player.MoveRight();
+		direction.x = 1.0;
+	}
+	else Player.Stop();
+
+	if (mKey[KQ] == KEY_PRESSED) {
+		mKey[KQ] = KEY_ON; //This is because process is more called than keyboard
+		Player.Attack(direction, cElementalProjectile::FIRE);
+	}
+	if (mKey[KW] == KEY_PRESSED) {
+		mKey[KW] = KEY_ON;
+		Player.Attack(direction, cElementalProjectile::ICE);
+	}
+	if (mKey[KE] == KEY_PRESSED) {
+		mKey[KE] = KEY_ON;
+		Player.Attack(direction, cElementalProjectile::ELECTRIC);
+	}
+
 	//Game Logic
-	Player.Logic();
+	Player.doLogic(dt);
 	for (std::size_t i = 0; i < mEnemies.size(); ++i) mEnemies[i]->doLogic(dt);
   for(std::vector<cExplosion>::iterator it = mExplosions.begin(); it!=mExplosions.end();) {
     if (it->hasFinished())

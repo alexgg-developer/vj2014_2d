@@ -22,6 +22,7 @@ struct cGame {
 
 	//Input
 	void ReadKeyboard(unsigned char key, int x, int y, bool press);
+	void ReadKeyboardEspecial(unsigned char key, int x, int y, bool press);
 	void ReadMouse(int button, int state, int x, int y);
 	//Process
 	bool Process(float dt);
@@ -32,6 +33,10 @@ struct cGame {
 
 protected:
 	unsigned char keys[256];
+	enum keysDefined { KUP, KDOWN, KRIGHT, KLEFT, KQ, KW, KE, KA, KS, KD, KESC, KSPACE, NUMKEYS };
+	enum keyStatus{ KEY_OFF, KEY_ON, KEY_RELEASED, KEY_PRESSED };
+	unsigned int mKey[NUMKEYS];	
+	unsigned int  mSpacePressed;
 	cScene Scene;
 	cPlayer Player;
   cCoordChanges CoordChanges;

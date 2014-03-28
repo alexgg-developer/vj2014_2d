@@ -41,10 +41,29 @@ void cPlayer::Draw() {
   mActualState->getAni().NextFrame();
 
   DrawRect(fr, mCoordChange.WorldToScreen(posW));
+  for (auto i = 0; i < mAttacks.size(); ++i) {
+	  mAttacks[i].draw();
+  }
 }
 bool cPlayer::Init() {
   return mText.Load("Zoro.png",GL_RGBA); }
 
  void cPlayer::Attack() {
-   cExplosion::addExplosion(mMap, mCoordChange, posW);
+   cExplosion::addExplosion(mMap, mCoordChange, posW);		
+ }
+
+ void cPlayer::Attack(Vec3 const & direction, cElementalProjectile::KindOfElement element) {
+	 cElementalProjectile eProjectile = cElementalProjectile(mCoordChange, element);
+	 eProjectile.mPhysics->changeDirection(direction);
+	 eProjectile.mWPosition = this->GetPosition_W();
+	 eProjectile.mAwake = true;
+	 mAttacks.push_back(eProjectile);
+ }
+
+ void cPlayer::doLogic(float dt)
+ {
+	 Logic();
+	 for (auto i = 0; i < mAttacks.size(); ++i) {
+		 mAttacks[i].doLogic(dt);
+	 }
  }

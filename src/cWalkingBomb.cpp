@@ -26,7 +26,6 @@ void cWalkingBomb::doLogic(float dt)
 
 void cWalkingBomb::move(Vec3 const& speed, float dt)
 {
-	std::cout << "Speed: " << speed.x << " dt: " << dt << std::endl;
 	mWPosition += (speed * dt);
 }
 
@@ -57,8 +56,6 @@ void cWalkingBomb::followTheTarget()
 			mPhysics->mMaxSpeed.x = -mPhysics->mMaxSpeed.x;
 		}
 	}
-	std::cout << "Force: " << mPhysics->mForce.x << std::endl;
-	std::cout << "Speed: " << mPhysics->mSpeed.x << std::endl;
 }
 
 
