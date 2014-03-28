@@ -7,43 +7,49 @@ cTexture::cTexture(void) { }
 
 cTexture::~cTexture(void) { }
 
+std::map<std::string, cTexture> cTexture::sKnownTextures;
 bool cTexture::Load(char const*const filename,int const type,int const wraps,int const wrapt,int const magf,
 					int const minf,bool const mipmap) {
-	corona::Image* img;
-	int components;
+  auto it = sKnownTextures.find(filename);
+  if(it!=sKnownTextures.end()) {
+    *this = it->second;
+  } else {
+	  corona::Image* img = corona::OpenImage(filename);
+	  int components;
 
-	img = corona::OpenImage(filename);
-	if(type==GL_RGB) {
-		//img = corona::OpenImage(filename,corona::PF_R8G8B8);
-		components = 3;
-	}
-	else if(type==GL_RGBA) {
-		//img = corona::OpenImage(filename,corona::PF_R8G8B8A8);
-		components = 4;
-	}
-	else return false;
+	  if(type==GL_RGB) {
+		  //img = corona::OpenImage(filename,corona::PF_R8G8B8);
+		  components = 3;
+	  }
+	  else if(type==GL_RGBA) {
+		  //img = corona::OpenImage(filename,corona::PF_R8G8B8A8);
+		  components = 4;
+	  }
+	  else return false;
 
-	if(img==NULL) return false;
+	  if(img==NULL) return false;
 
-	widthW  = img->getWidth();
-	heightW = img->getHeight();
+	  widthW  = img->getWidth();
+	  heightW = img->getHeight();
 
-	glGenTextures(1, &id);
-	glBindTexture(GL_TEXTURE_2D,id);
+	  glGenTextures(1, &id);
+	  glBindTexture(GL_TEXTURE_2D,id);
 
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,wraps);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,wrapt);
+	  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,wraps);
+	  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,wrapt);
 
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,magf);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,minf);
+	  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,magf);
+	  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,minf);
 
-	if(!mipmap)	{
-		glTexImage2D(GL_TEXTURE_2D,0,components,widthW,heightW,0,type,
-					 GL_UNSIGNED_BYTE,img->getPixels());
-	} else {
-		gluBuild2DMipmaps(GL_TEXTURE_2D,components,widthW,heightW,type,
-						  GL_UNSIGNED_BYTE,img->getPixels());
-	}
+	  if(!mipmap)	{
+		  glTexImage2D(GL_TEXTURE_2D,0,components,widthW,heightW,0,type,
+					   GL_UNSIGNED_BYTE,img->getPixels());
+	  } else {
+		  gluBuild2DMipmaps(GL_TEXTURE_2D,components,widthW,heightW,type,
+						    GL_UNSIGNED_BYTE,img->getPixels());
+	  }
+    sKnownTextures[filename] = *this;
+  }
 
 	return true;
 }

@@ -74,26 +74,14 @@ bool cBicho::Collides_W(cRect const& rcW) const {
 }
 bool cBicho::CollidesMapWall(bool right) const {
   Vec3 posW2 = posW;
-  int const w2  = w;
 
-  if(right) posW2.x += w2;
+  if(right) posW2.x += w;
 	
-  bool collides = mMap.CollisionInClosedArea(posW2, Vec3(posW2.x, posW2.y+h-1));
-  return collides;
+  return mMap.CollisionInClosedArea(posW2, Vec3(posW2.x, posW2.y+h-1));
 }
 
 bool cBicho::CollidesMapFloor() const {
-  int w2 = w;
-  if( (int(posW.x) % mCoordChange.GetTileSize()) != 0) w2++;
-
-  bool on_base = false;
-  if( (int(posW.y) % mCoordChange.GetTileSize()) == 0 )
-    on_base = mMap.CollisionInClosedArea(Vec3(posW.x, posW.y-1), Vec3(posW.x+w2-1, posW.y-1));
-  else {
-    on_base = mMap.CollisionInClosedArea(Vec3(posW.x, posW.y  ), Vec3(posW.x+w2-1, posW.y  ));
-  }
-
-  return on_base;
+  return mMap.CollisionInClosedArea(Vec3(posW.x, posW.y-1  ), Vec3(posW.x+w-1, posW.y-1  ));
 }
 
 cRect cBicho::GetArea_W() const {
@@ -105,38 +93,17 @@ void cBicho::DrawRect(cFrame const& fr,
 }
 
 void cBicho::MoveLeft() {
-  //Whats next tile?
-  if( (int(posW.x) % mCoordChange.GetTileSize()) == 0) {
-    int xaux = posW.x;
-    posW.x -= STEP_LENGTH;
-
-    if(CollidesMapWall(false)) {
-      posW.x = xaux;
-      mActualState->Stop();
-    }
-  }
-  //Advance, no problem
-  else {
+  if (!CollidesMapWall(false)) {
     posW.x -= STEP_LENGTH;
     mActualState->Left();
+    AdjustOverLeft();
   }
 }
 void cBicho::MoveRight() {
-  //Whats next tile?
-  if( (int(posW.x) % mCoordChange.GetTileSize()) == 0) {
-    int xaux;
-    xaux = posW.x;
-    posW.x += STEP_LENGTH;
-
-    if(CollidesMapWall(true)) {
-      posW.x = xaux;
-      mActualState->Stop();
-    }
-  }
-  //Advance, no problem
-  else {
-    posW.x += STEP_LENGTH;
+  if (!CollidesMapWall(true)) {
+    posW.x  += STEP_LENGTH;
     mActualState->Right();
+    AdjustOverRight();
   }
 }
 
@@ -154,11 +121,31 @@ void cBicho::Jump() {
   } else mActualState->Stop();
 }
 #include <iostream>
+void cBicho::AdjustOverEarth() { 
+  AdjustOverVec(Vec3(0, 1), [&]() { return this->CollidesMapFloor(); }); }
+void cBicho::AdjustOverLeft() { 
+  AdjustOverVec(Vec3( 1,0), [&]() { return this->CollidesMapWall(false)
+   || this->mMap.CollisionInClosedArea(Vec3(posW.x, posW.y  ), Vec3(posW.x+w-1, posW.y  )); }); }
+void cBicho::AdjustOverRight() { 
+  AdjustOverVec(Vec3(-1,0), [&]() { return this->CollidesMapWall(true)
+   || this->mMap.CollisionInClosedArea(Vec3(posW.x, posW.y  ), Vec3(posW.x+w-1, posW.y  )); }); }
+void cBicho::AdjustOverVec(Vec3 const& v, std::function<bool()> const& cond) {
+  int executed_times = 0;
+  while(cond()) {
+	  posW += v;
+    executed_times++;
+	}
+  if(executed_times>0) {
+    posW += -v;
+    if(executed_times>1)
+      mActualState->Stop();
+  }
+}
 void cBicho::Logic() {
   if(jumping)	{
     jump_alfa += JUMP_STEP;
 		
-    if(jump_alfa == 180) {
+    if(jump_alfa >= 180) {
       jumping = false;
       mActualState->UnJump();
       posW.y = jump_y;
@@ -175,11 +162,7 @@ void cBicho::Logic() {
 	      // Colócalo en el suelo, motherfucker
 	      if(!jumping) {
           mActualState->UnJump();
-	        int const w2 = w;
-	        //if( (int(posW.x) % mCoordChange.GetTileSize()) != 0) w2++;//No sé que hace. Estaba en el código original.
-	        while(mMap.CollisionInClosedArea(Vec3(posW.x, posW.y  ), Vec3(posW.x+w2-1, posW.y  ))) {
-	          posW.y +=1;
-	        }
+          AdjustOverEarth();
 	      }
       }
     }
@@ -189,7 +172,9 @@ void cBicho::Logic() {
     if(!CollidesMapFloor()) {
       mActualState->Jump();
       posW.y -= (STEP_LENGTH);
+      AdjustOverEarth();
     } else mActualState->UnJump();
+    
   }
 }
 cState* cBicho::GetState() const {

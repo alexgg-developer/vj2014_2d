@@ -31,3 +31,5 @@ Thumbs.db
 /src/*.hpp~
 /src/*.cpp~
 /resources/*.txt~
+.DS_Store
+*.org~

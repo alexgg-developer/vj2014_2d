@@ -17,4 +17,6 @@ struct Vec3 {
 	  z += v.z;
 	  return *this;
   }
+  Vec3 operator-() const {
+    return Vec3(-x,-y,-z); }
 };

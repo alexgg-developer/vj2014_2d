@@ -2,6 +2,7 @@
 #include "Globals.hpp"
 #include "Vec3.hpp"
 #include "cFrame.hpp"
+#include <map>
 
 /// A texture is an atlas
 struct cTexture {
@@ -21,6 +22,7 @@ struct cTexture {
   void drawAlternative(Vec3 const& tex0, Vec3 const& tex1,
 	  Vec3 const& screen0, Vec3 const& screen1) const;
 
+  static std::map<std::string, cTexture> sKnownTextures;
 private:
   GLuint id;
   int widthW;

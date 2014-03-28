@@ -41,7 +41,7 @@ void cPlayer::Draw() {
   mActualState->getAni().NextFrame();
 
   DrawRect(fr, mCoordChange.WorldToScreen(posW));
-  for (auto i = 0; i < mAttacks.size(); ++i) {
+  for (std::size_t i = 0; i < mAttacks.size(); ++i) {
 	  mAttacks[i].draw();
   }
 }
@@ -63,7 +63,7 @@ bool cPlayer::Init() {
  void cPlayer::doLogic(float dt)
  {
 	 Logic();
-	 for (auto i = 0; i < mAttacks.size(); ++i) {
+	 for (std::size_t i = 0; i < mAttacks.size(); ++i) {
 		 mAttacks[i].doLogic(dt);
 	 }
  }

@@ -5,6 +5,7 @@
 #include "cAni.hpp"
 #include <array>
 #include <memory>
+#include <functional>
 struct cState;
 struct cScene;
 
@@ -46,6 +47,10 @@ struct cBicho {
   void MoveRight();
   void MoveLeft();
   void Jump();
+  void AdjustOverEarth();
+  void AdjustOverRight();
+  void AdjustOverLeft();
+  void AdjustOverVec(Vec3 const& v, std::function<bool()> const& cond);
   void Stop();
   void Logic();
 
