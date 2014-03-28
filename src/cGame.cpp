@@ -2,7 +2,7 @@
 #include "Globals.hpp"
 
 
-cGame::cGame(void) : CoordChanges(), Scene(CoordChanges), Player(Scene, CoordChanges), mSpacePressed(0) 
+cGame::cGame(void) : CoordChanges(), Scene(CoordChanges), Player(Scene, CoordChanges)
 { 
 	for (unsigned int i = 0; i < NUMKEYS; ++i) mKey[i] = KEY_OFF;
 
@@ -75,8 +75,8 @@ void cGame::ReadKeyboard(unsigned char key, int x, int y, bool press) {
 			break;
 
 		case 's':
-			if (mKey[KS] != KEY_ON) {
-				mKey[KS] = KEY_PRESSED;
+			if (mKey[KSPACE] != KEY_ON) {
+				mKey[KSPACE] = KEY_PRESSED;
 			}
 			break;
 		case 27: //SCAPE
@@ -99,13 +99,10 @@ void cGame::ReadKeyboard(unsigned char key, int x, int y, bool press) {
 			mKey[KE] = KEY_OFF;
 			break;
 		case 's':
-			mKey[KS] = KEY_OFF;
+			mKey[KSPACE] = KEY_OFF;
 			break;
 		}
 	}
-	for (unsigned i = KQ; i < NUMKEYS; ++i) {
-		std::cout << "Tecla " << i << " " << "Estado: " << mKey[i] << std::endl;
-	}	
 }
 
 void cGame::ReadKeyboardEspecial(unsigned char key, int x, int y, bool press) 
@@ -154,9 +151,6 @@ void cGame::ReadKeyboardEspecial(unsigned char key, int x, int y, bool press)
 		}
 	}
 
-	for (unsigned int i = 0; i < KQ; ++i) {
-		std::cout << "Tecla " << i << " " << "Estado: " << mKey[i] << std::endl;
-	}
 }
 
 void cGame::ReadMouse(int button, int state, int x, int y) {
@@ -172,7 +166,7 @@ bool cGame::Process(float dt) {
 	if (mKey[KESC] == KEY_PRESSED) {
 		res = false;
 	}
-	if (mKey[KS] == KEY_PRESSED || mKey[KS] == KEY_ON) {
+	if (mKey[KSPACE] == KEY_PRESSED || mKey[KSPACE] == KEY_ON) {
 		Player.Jump();
 	}
 	if (mKey[KUP] == KEY_PRESSED || mKey[KUP] == KEY_ON) {

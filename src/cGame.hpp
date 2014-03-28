@@ -32,11 +32,10 @@ struct cGame {
   void addExplosion(cExplosion expl) { mExplosions.push_back(expl); }
 
 protected:
-	unsigned char keys[256];
+	//unsigned char keys[256];
 	enum keysDefined { KUP, KDOWN, KRIGHT, KLEFT, KQ, KW, KE, KA, KS, KD, KESC, KSPACE, NUMKEYS };
 	enum keyStatus{ KEY_OFF, KEY_ON, KEY_RELEASED, KEY_PRESSED };
 	unsigned int mKey[NUMKEYS];	
-	unsigned int  mSpacePressed;
 	cScene Scene;
 	cPlayer Player;
   cCoordChanges CoordChanges;
