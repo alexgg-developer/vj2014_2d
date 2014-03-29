@@ -18,7 +18,7 @@ void AppRender()
   auto const dt = t.getDeltaTime();
   t.reset();
 	//Game.Render(ti, dt);
-  std::cout << "render with " << ti << " and " << dt << std::endl;
+  //std::cout << "render with " << ti << " and " << dt << std::endl;
 
 	if (!Game.Loop(t.getActualTime(), dt)) exit(0);
   glutPostRedisplay();

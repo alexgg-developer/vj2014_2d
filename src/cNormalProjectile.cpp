@@ -1,7 +1,8 @@
 #include "cNormalProjectile.hpp"
 #include <iostream>
 
-cNormalProjectile::cNormalProjectile(cScene const& map, cCoordChanges const& ch) : cProjectile(map, ch)
+cNormalProjectile::cNormalProjectile(cPlayer& pl, cScene const& map, cCoordChanges const& ch)
+ : cProjectile(pl, map, ch)
 {
 	w = 19; h = 19;
 	mAwake = false;

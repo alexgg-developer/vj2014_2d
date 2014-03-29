@@ -29,9 +29,9 @@ cPuerta::cPuerta(cScene const& map, cCoordChanges const& ch, cPlayer& player) : 
   mStates[STATE_CLOSED ]->setNextOnActivate(&*mStates[STATE_OPENING]);
   mStates[STATE_OPENING]->setNextOnAnimationFinished(&*mStates[STATE_OPENED]);
   
-  mStates[STATE_OPENING]->getAni().setRepeat(false);
-  mStates[STATE_OPENED ]->getAni().setRepeat(false);
-  mStates[STATE_CLOSED ]->getAni().setRepeat(false);
+  mStates[STATE_OPENING]->getAni().setRepeat(cAni::AnimationType::SINGLE);
+  mStates[STATE_OPENED ]->getAni().setRepeat(cAni::AnimationType::SINGLE);
+  mStates[STATE_CLOSED ]->getAni().setRepeat(cAni::AnimationType::SINGLE);
 }
 cPuerta::~cPuerta(){}
 

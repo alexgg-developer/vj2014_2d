@@ -1,8 +1,9 @@
 #include "cWalkingBomb.hpp"
 #include <iostream>
+#include "cExplosion.hpp"
 
-cWalkingBomb::cWalkingBomb(cScene const& map, cCoordChanges const& ch, int life, Vec3 const& tilePosition, bool awake, cPlayer const & target)
-: cEnemy(map, ch, life), mPlayer(target)
+cWalkingBomb::cWalkingBomb(cScene const& map, cCoordChanges const& ch, int life, Vec3 const& tilePosition, bool awake, cPlayer& pl)
+: cEnemy(pl, map, ch, life)
 {
 	mAwake = awake;
 	w = 16; h = 19;
@@ -20,17 +21,10 @@ void cWalkingBomb::doLogic(float const t, float const dt)
 		move(mPhysics->mSpeed, dt);
 		followTheTarget();
 		mPhysics->update(dt);
-	}
-}
-
-void cWalkingBomb::draw()
-{
-	if (mAwake) {
-		Vec3 const screen = mCoordChange.WorldToScreen(posW);
-		glPushMatrix();
-		glTranslatef(screen.x, screen.y, 0);
-		mText.drawAlternative(Vec3(0, 0), Vec3(1, 1), Vec3(0, 0), Vec3(w, h));
-		glPopMatrix();
+    if(CollidesWithPlayer()) {
+       cExplosion::addExplosion(mMap, mCoordChange, posW);	
+       mLife=-1;//Delete itself
+    }
 	}
 }
 

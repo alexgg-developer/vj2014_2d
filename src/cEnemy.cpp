@@ -1,7 +1,8 @@
 #include "cEnemy.hpp"
+#include "cPlayer.hpp"
 
-cEnemy::cEnemy(cScene const& map, cCoordChanges const& ch, int life, std::shared_ptr<cPhysics>& physics)
- : mLife(life), mPhysics(physics), cBicho(map, ch) 
+cEnemy::cEnemy(cPlayer& pl, cScene const& map, cCoordChanges const& ch, int life, std::shared_ptr<cPhysics>& physics)
+ : mLife(life), mPhysics(physics), cBicho(map, ch), mPlayer(pl)
 {
 	//mInitialWPosition = mCoordChanges.TileToWorld(Vec3(10, 10));
 }
@@ -29,4 +30,7 @@ void cEnemy::move(Vec3 const& speed, float dt) {
   cRect const augmentedBbox = bbox0.unite(bbox1);
   if(mMap.CollisionInClosedArea(augmentedBbox)) {
     posW = backup; }
+}
+bool cEnemy::CollidesWithPlayer() const {
+  return mPlayer.GetBBox().collides(GetBBox());
 }

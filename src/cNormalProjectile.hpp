@@ -2,5 +2,5 @@
 #include "cProjectile.hpp"
 
 struct cNormalProjectile: public cProjectile {
-	cNormalProjectile(cScene const& map, cCoordChanges const& ch);
+	cNormalProjectile(cPlayer& pl, cScene const& map, cCoordChanges const& ch);
 };

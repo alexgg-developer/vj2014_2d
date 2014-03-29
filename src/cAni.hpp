@@ -2,6 +2,13 @@
 #include "cFrame.hpp"
 
 struct cAni {
+  enum AnimationType {
+    REPEAT,
+    SINGLE,
+    PING_PONG_NORMAL,
+    PING_PONG_REVERSED,
+  };
+
   cAni();
   void reset(float const t);
   cFrame Generate(float const t) const;
@@ -14,8 +21,9 @@ struct cAni {
   void setFrameDelay(float const del) { mDelayBetweenFrames = del; }
   float getDuration() const;
 
-  bool isInLastFrame(float const t) const { return (mInitT>=0) && (GetFrame(t)>=mNumberOfFrames); }
-  void setRepeat(bool const b) { mRepeat = b;}
+  bool isInLastFrame(float const t) const {
+    return mInitT!=-1 && (t-mInitT)>=getDuration(); }
+  void setRepeat(AnimationType const b) { mRepeat = b;}
 protected:
   Vec3 mTex0;
   Vec3 mTexIncrement;
@@ -23,6 +31,6 @@ protected:
   int mNumberOfFrames;
   mutable float mInitT;
   float mDelayBetweenFrames;
-  bool mRepeat=true;
+  mutable AnimationType mRepeat=AnimationType::REPEAT;
   //  Vec3
 };

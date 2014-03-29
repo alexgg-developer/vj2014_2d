@@ -4,7 +4,7 @@
 struct cElementalProjectile: public cProjectile
 {
 	enum KindOfElement{ FIRE, ICE, ELECTRIC };
-	cElementalProjectile(cScene const& map, cCoordChanges const& ch, KindOfElement element);
+	cElementalProjectile(cPlayer& pl, cScene const& map, cCoordChanges const& ch, KindOfElement element);
 protected:
 	KindOfElement mElement;
 

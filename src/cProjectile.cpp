@@ -1,4 +1,5 @@
 #include "cProjectile.hpp"
+#include "cExplosion.hpp"
 
 void cProjectile::Draw(float const t, float const dt) const {
 	if (mAwake) {
@@ -24,5 +25,14 @@ void cProjectile::doLogic(float const t, float const dt)
 	if (mAwake) {
 		move(mPhysics->mSpeed, dt);
 		mPhysics->update(dt);		
+    if(mAffectsProta && CollidesWithPlayer()) {
+       cExplosion::addExplosion(mMap, mCoordChange, posW);	
+       mLife=-1;//Delete itself
+    }
+    //TODO: Delete enemies
+    /* else if(mAffectsEnemies && CollidesWithPlayer()) {
+       cExplosion::addExplosion(mMap, mCoordChange, posW);	
+       mLife=-1;//Delete itself
+    }*/
 	}
 }

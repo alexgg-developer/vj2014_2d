@@ -32,7 +32,7 @@ bool cGame::Init() {
 
 	//Enemy initialization
 	//mEnemies.push_back(new cNormalShip(Scene, CoordChanges, 1, Vec3(15, 17), true));
-	mEnemies.push_back(new cNormalShip(Scene, CoordChanges, 1, Vec3(22, 22), true));
+	mEnemies.push_back(new cNormalShip(Player, Scene, CoordChanges, 1, Vec3(22, 22), true));
 	mEnemies.push_back(new cWalkingBomb(Scene, CoordChanges, 1, Vec3(35, 1), true, Player));
 	
 
@@ -202,10 +202,18 @@ bool cGame::Process(float const t, float const dt) {
 
 	//Game Logic
 	Player.doLogic(t,dt);
-	for (std::size_t i = 0; i < mEnemies.size(); ++i) mEnemies[i]->doLogic(t,dt);
+  for(std::vector<cEnemy*>::iterator it = mEnemies.begin(); it!=mEnemies.end();) {
+    (*it)->doLogic(t,dt);
+    if ( (*it)->WantsToDestroyItself())
+      it = mEnemies.erase(it);
+    else it++;
+
+  }
   for(std::vector<cExplosion>::iterator it = mExplosions.begin(); it!=mExplosions.end();) {
-    if (it->hasFinished(t))
+    if (it->hasFinished(t) || it->WantsToDestroyItself()) {
+    //std::cout << "Una explosion menos";
       it = mExplosions.erase(it);
+    }
     else it++;
   }
   Scene.doLogic(t,dt);

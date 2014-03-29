@@ -6,9 +6,9 @@
 #include <memory>
 
 struct cNormalShip: public cEnemy {
-	cNormalShip(cScene const& map, cCoordChanges const& ch, bool awake);
-	cNormalShip(cScene const& map, cCoordChanges const& ch, int life, bool awake);
-	cNormalShip(cScene const& map, cCoordChanges const& ch, int life, Vec3 const& tilePosition, bool awake);
+	cNormalShip(cPlayer& pl, cScene const& map, cCoordChanges const& ch, bool awake);
+	cNormalShip(cPlayer& pl, cScene const& map, cCoordChanges const& ch, int life, bool awake);
+	cNormalShip(cPlayer& pl, cScene const& map, cCoordChanges const& ch, int life, Vec3 const& tilePosition, bool awake);
 	virtual void doLogic(float const t, float const dt) override;
 	virtual void Draw(float const t, float const dt) const override;
 

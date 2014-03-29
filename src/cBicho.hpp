@@ -63,6 +63,7 @@ struct cBicho {
   void Logic();
 	virtual void doLogic(float const t, float const dt) = 0;
 	virtual void Draw(float const t, float const dt) const = 0;
+  virtual bool WantsToDestroyItself() const { return false; }
 
   cState* GetState() const;
   void SetState(cState* s);

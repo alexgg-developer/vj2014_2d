@@ -1,7 +1,7 @@
 #include "cNormalShip.hpp"
+#include "cNormalProjectile.hpp"
 
-
-cNormalShip::cNormalShip(cScene const& map, cCoordChanges const& ch, bool awake) : cEnemy(map, ch)
+cNormalShip::cNormalShip(cPlayer& pl, cScene const& map, cCoordChanges const& ch, bool awake) : cEnemy(pl, map, ch)
 {
 	w = 64; h = 64;
 	mAwake = awake;
@@ -9,28 +9,27 @@ cNormalShip::cNormalShip(cScene const& map, cCoordChanges const& ch, bool awake)
 		std::cerr << "Texture did not load" << std::endl;
 	}
 	mPhysics = std::make_shared<cPhysics>(Vec3(-100.0f, 0), Vec3(-100.0f, 0), Vec3(-50.0f, 0));
-	mProjectiles.push_back(std::make_shared<cNormalProjectile>(map, ch));
-	mProjectiles.push_back(std::make_shared<cNormalProjectile>(map, ch));
-	mProjectiles.push_back(std::make_shared<cNormalProjectile>(map, ch));
+	mProjectiles.push_back(std::make_shared<cNormalProjectile>(pl, map, ch));
+	mProjectiles.push_back(std::make_shared<cNormalProjectile>(pl, map, ch));
+	mProjectiles.push_back(std::make_shared<cNormalProjectile>(pl, map, ch));
 }
 
 
-cNormalShip::cNormalShip(cScene const& map, cCoordChanges const& ch, int life, bool awake) : cEnemy(map, ch, life)
-{
+cNormalShip::cNormalShip(cPlayer& pl, cScene const& map, cCoordChanges const& ch, int life, bool awake)
+ : cEnemy(pl, map, ch, life) {
 	w = 64; h = 64;
 	mAwake = awake;
 	if (!mText.Load("enemy1.png", GL_RGBA)) {
 		std::cerr << "Texture did not load" << std::endl;
 	}
 	mPhysics = std::make_shared<cPhysics>(Vec3(-100.0f, 0), Vec3(-100.0f, 0), Vec3(-50.0f, 0));
-	mProjectiles.push_back(std::make_shared<cNormalProjectile>(map, ch));
-	mProjectiles.push_back(std::make_shared<cNormalProjectile>(map, ch));
-	mProjectiles.push_back(std::make_shared<cNormalProjectile>(map, ch));
+	mProjectiles.push_back(std::make_shared<cNormalProjectile>(pl, map, ch));
+	mProjectiles.push_back(std::make_shared<cNormalProjectile>(pl, map, ch));
+	mProjectiles.push_back(std::make_shared<cNormalProjectile>(pl, map, ch));
 }
 #include <iostream>
-cNormalShip::cNormalShip(cScene const& map, cCoordChanges const& ch, int life, Vec3 const& tilePosition, bool awake) 
-: cEnemy(map, ch, life)
-{
+cNormalShip::cNormalShip(cPlayer& pl, cScene const& map, cCoordChanges const& ch, int life, Vec3 const& tilePosition, bool awake) 
+: cEnemy(pl, map, ch, life) {
 	w = 64; h = 64;
 	setInitialTilePosition(tilePosition);
 	mAwake = awake;
@@ -38,15 +37,15 @@ cNormalShip::cNormalShip(cScene const& map, cCoordChanges const& ch, int life, V
 		std::cerr << "Texture did not load" << std::endl;
 	}
 	mPhysics = std::make_shared<cPhysics>(Vec3(-100.0f, 0), Vec3(-100.0f, 0), Vec3(-50.0f, 0));
-	mProjectiles.push_back(std::make_shared<cNormalProjectile>(map, ch));
-	mProjectiles.push_back(std::make_shared<cNormalProjectile>(map, ch));
-	mProjectiles.push_back(std::make_shared<cNormalProjectile>(map, ch));
+	mProjectiles.push_back(std::make_shared<cNormalProjectile>(pl, map, ch));
+	mProjectiles.push_back(std::make_shared<cNormalProjectile>(pl, map, ch));
+	mProjectiles.push_back(std::make_shared<cNormalProjectile>(pl, map, ch));
 }
 
 void cNormalShip::doLogic(float const t, float const dt)
 {
 	if (mAwake) {
-		if (!mProjectiles[0]->mAwake) {
+		if (!mProjectiles[0]->Awake()) {
 			mProjectiles[0]->SetPosition_W(this->posW);
 			mProjectiles[1]->SetPosition_W(this->posW);
 			mProjectiles[2]->SetPosition_W(this->posW);

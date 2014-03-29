@@ -6,6 +6,8 @@
 #define STEP_LENGTH		4
 #define JUMP_HEIGHT		96
 #define JUMP_STEP		4
+#define JUMP_HEIGHT		96
+#define JUMP_STEP		1
 
 cBicho::cBicho(cScene const& map, cCoordChanges const& ch) : mMap(map), mCoordChange(ch), jumping(false), w(10), h(10) {
   initStates();
@@ -48,6 +50,13 @@ void cBicho::initStates() {
   
   mStates[STATE_JUMPLEFT]->setNextOnUnJump(mStates[STATE_LOOKLEFT].get());
   mStates[STATE_JUMPRIGHT]->setNextOnUnJump(mStates[STATE_LOOKRIGHT].get());
+  
+  mStates[STATE_JUMPLEFT ]->getAni().setRepeat(cAni::AnimationType::PING_PONG_NORMAL);
+  mStates[STATE_JUMPRIGHT]->getAni().setRepeat(cAni::AnimationType::PING_PONG_NORMAL);
+  mStates[STATE_LOOKLEFT ]->getAni().setRepeat(cAni::AnimationType::REPEAT);
+  mStates[STATE_LOOKRIGHT]->getAni().setRepeat(cAni::AnimationType::REPEAT);
+  mStates[STATE_WALKLEFT ]->getAni().setRepeat(cAni::AnimationType::REPEAT);
+  mStates[STATE_WALKRIGHT]->getAni().setRepeat(cAni::AnimationType::REPEAT);
 
   mActualState = mStates[STATE_LOOKLEFT].get();
 
