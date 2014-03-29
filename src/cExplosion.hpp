@@ -1,6 +1,5 @@
 #pragma once
 #include "cAni.hpp"
-#include "cTexture.hpp"
 #include "cBicho.hpp"
 struct cGame;
 

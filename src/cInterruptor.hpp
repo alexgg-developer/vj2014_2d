@@ -1,8 +1,8 @@
 #pragma once
 #include "cBicho.hpp"
-#include "cPuerta.hpp"
-
+struct cPuerta;
 struct cPlayer;
+
 /// When awake and collides with player passes to the next level
 struct cInterruptor: public cBicho {
   cInterruptor(cScene const& map, cCoordChanges const& ch, cPlayer& pl, cPuerta & pu);

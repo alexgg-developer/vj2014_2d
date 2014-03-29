@@ -2,8 +2,7 @@
 #include <memory>
 #include "Vec3.hpp"
 
-struct cPhysics
-{
+struct cPhysics {
 	Vec3 mForce, mInitialForce;
 	Vec3 mMaxSpeed, mInitialMaxSpeed;
 	Vec3 mSpeed, mInitialSpeed;	

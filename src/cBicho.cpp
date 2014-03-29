@@ -2,12 +2,11 @@
 #include "cScene.hpp"
 #include "Globals.hpp"
 #include "cState.hpp"
+#include "cCoordChanges.hpp"
 
 #define STEP_LENGTH		4
 #define JUMP_HEIGHT		96
-#define JUMP_STEP		4
-#define JUMP_HEIGHT		96
-#define JUMP_STEP		1
+#define JUMP_STEP		3
 
 cBicho::cBicho(cScene const& map, cCoordChanges const& ch) : mMap(map), mCoordChange(ch), jumping(false), w(10), h(10) {
   initStates();

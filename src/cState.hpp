@@ -1,6 +1,7 @@
 #pragma once
 #include "cBicho.hpp"
 #include "Timer.hpp"
+#include "cAni.hpp"
 
 /// State for a bicho
 struct cState {

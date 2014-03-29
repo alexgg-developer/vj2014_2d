@@ -1,18 +1,13 @@
 #pragma once
-#include <iostream>
-#include <string>
 #include <memory>
-
-#include "Globals.hpp"
-#include "cTexture.hpp"
-#include "Vec3.hpp"
-#include "cScene.hpp"
-#include "cPhysics.hpp"
 #include "cBicho.hpp"
+struct cScene;
+struct cPhysics;
+struct cPlayer;
 
 struct cEnemy: public cBicho {
-	cEnemy(cPlayer& pl, cScene const& map, cCoordChanges const& ch) :  mLife(1), cBicho(map, ch), mPlayer(pl) {};
-	cEnemy(cPlayer& pl, cScene const& map, cCoordChanges const& ch, int life) :  mLife(life), cBicho(map, ch), mPlayer(pl) {};
+	cEnemy(cPlayer& pl, cScene const& map, cCoordChanges const& ch);
+	cEnemy(cPlayer& pl, cScene const& map, cCoordChanges const& ch, int life);
 	cEnemy(cPlayer& pl, cScene const& map, cCoordChanges const& ch, int life, std::shared_ptr<cPhysics>& physics);
 	void setInitialTilePosition(Vec3 const& tilePosition);
 	virtual void Draw(float const t, float const dt) const override;

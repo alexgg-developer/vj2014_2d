@@ -2,6 +2,8 @@
 #include "cState.hpp"
 #include "cExplosion.hpp"
 #include "cPlayer.hpp"
+#include "cPuerta.hpp"
+#include "cCoordChanges.hpp"
 
 enum States { 
   STATE_CLOSED=0,

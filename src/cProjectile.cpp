@@ -1,6 +1,10 @@
 #include "cProjectile.hpp"
 #include "cExplosion.hpp"
+#include "cPhysics.hpp"
+#include "cCoordChanges.hpp"
+#include "cScene.hpp"
 
+cProjectile::cProjectile(cPlayer& pl, cScene const& map, cCoordChanges const& ch) : cEnemy(pl, map, ch) {}
 void cProjectile::Draw(float const t, float const dt) const {
 	if (mAwake) {
 		Vec3 const screen = mCoordChange.WorldToScreen(posW);
@@ -11,6 +15,7 @@ void cProjectile::Draw(float const t, float const dt) const {
 	}
 }
 
+void cProjectile::changeDirection(Vec3 const & direction) { mPhysics->changeDirection(direction);}
 void cProjectile::changePhysics(Vec3 const& force, Vec3 const& maxSpeed, Vec3 const& speed) {
 	mPhysics->mForce = force;
 	mPhysics->mMaxSpeed = maxSpeed;
@@ -30,7 +35,7 @@ void cProjectile::doLogic(float const t, float const dt)
        mLife=-1;//Delete itself
     }
     //TODO: Delete enemies
-    /* else if(mAffectsEnemies && CollidesWithPlayer()) {
+/*    else if(mAffectsEnemies && mMap.CollidesWithEnemies()) {
        cExplosion::addExplosion(mMap, mCoordChange, posW);	
        mLife=-1;//Delete itself
     }*/

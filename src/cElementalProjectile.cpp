@@ -1,4 +1,5 @@
 #include "cElementalProjectile.hpp"
+#include "cPhysics.hpp"
 #include <iostream>
 
 cElementalProjectile::cElementalProjectile(cPlayer& pl, cScene const& map, cCoordChanges const& ch, KindOfElement element)

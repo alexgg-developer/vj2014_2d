@@ -1,10 +1,5 @@
 #pragma once
 #include "cScene.hpp"
-#include "cPlayer.hpp"
-#include "cEnemy.hpp"
-#include "cNormalShip.hpp"
-#include "cWalkingBomb.hpp"
-#include "cCoordChanges.hpp"
 #include "cExplosion.hpp"
 
 #include <vector>
@@ -29,7 +24,7 @@ struct cGame {
 	//Output
 	void Render(float const t, float const dt);
 
-  void addExplosion(cExplosion expl) { mExplosions.push_back(expl); }
+  void addExplosion(cExplosion expl) { Scene.addExplosion(expl); }
 
 protected:
 	//unsigned char keys[256];
@@ -37,8 +32,4 @@ protected:
 	enum keyStatus{ KEY_OFF, KEY_ON, KEY_RELEASED, KEY_PRESSED };
 	unsigned int mKey[NUMKEYS];	
 	cScene Scene;
-	cPlayer Player;
-  cCoordChanges CoordChanges;
-	std::vector<cEnemy*> mEnemies;
-  std::vector<cExplosion> mExplosions;
 };

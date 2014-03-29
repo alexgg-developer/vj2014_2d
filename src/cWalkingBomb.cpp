@@ -1,6 +1,8 @@
 #include "cWalkingBomb.hpp"
 #include <iostream>
 #include "cExplosion.hpp"
+#include "cPhysics.hpp"
+#include "cPlayer.hpp"
 
 cWalkingBomb::cWalkingBomb(cScene const& map, cCoordChanges const& ch, int life, Vec3 const& tilePosition, bool awake, cPlayer& pl)
 : cEnemy(pl, map, ch, life)

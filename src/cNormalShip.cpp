@@ -1,5 +1,9 @@
 #include "cNormalShip.hpp"
 #include "cNormalProjectile.hpp"
+#include "cPlayer.hpp"
+#include "cPhysics.hpp"
+#include "cCoordChanges.hpp"
+#include <iostream>
 
 cNormalShip::cNormalShip(cPlayer& pl, cScene const& map, cCoordChanges const& ch, bool awake) : cEnemy(pl, map, ch)
 {

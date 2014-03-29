@@ -1,19 +1,36 @@
 #include "cScene.hpp"
 #include "Globals.hpp"
+#include "cEnemy.hpp"
+#include "cExplosion.hpp"
 #include <algorithm>
 #include <fstream>
 #include <sstream>
 #include <assert.h>
 #include <iostream>
+#include "cNormalShip.hpp"
+#include "cWalkingBomb.hpp"
+#include "cPlayer.hpp"
 
-cScene::cScene(cCoordChanges const& cc, cPlayer& pl) : mCoordChanges(cc), mExitDoor(*this, mCoordChanges, pl), mInterruptor(*this, mCoordChanges, pl, mExitDoor) {}
+cScene::cScene() : CoordChanges(), Player(*this, CoordChanges), mExitDoor(*this, CoordChanges, Player),
+ mInterruptor(*this, CoordChanges, Player, mExitDoor) {}
 cScene::~cScene() {}
 
 bool cScene::Init() {
+	//Player initialization
+	Player.Init();
+	Player.SetWidthHeight_W(40,40);
+	Player.SetPosition_T(Vec3(2,1)); //Initial tile
+
   mExitDoor.Init();
   mExitDoor.SetWidthHeight_W(32,32);
   mInterruptor.Init();
   mInterruptor.SetWidthHeight_W(32,32);
+  
+	//Enemy initialization
+	//mEnemies.push_back(new cNormalShip(Scene, CoordChanges, 1, Vec3(15, 17), true));
+	mEnemies.push_back(new cNormalShip(Player, *this, CoordChanges, 1, Vec3(22, 22), true));
+	mEnemies.push_back(new cWalkingBomb(*this, CoordChanges, 1, Vec3(35, 1), true, Player));
+
   return mText.Load("blocks.png",GL_RGBA);
 }
 bool cScene::LoadLevel(int level) {
@@ -44,8 +61,8 @@ bool cScene::LoadLevel(int level) {
   int px,py;
   for(int j=scene_height-1;j>=0;j--) {
 	char tile;
-	px=mCoordChanges.getOriginX();
-	py=mCoordChanges.getOriginY()+(j*mCoordChanges.GetTileSize());
+	px=CoordChanges.getOriginX();
+	py=CoordChanges.getOriginY()+(j*CoordChanges.GetTileSize());
 
     for(unsigned int i=0;i<scene_width;i++) {
 	  fd.get(tile);
@@ -65,11 +82,11 @@ bool cScene::LoadLevel(int level) {
 	      //BLOCK_SIZE = 24, FILE_SIZE = 64
 	      // 24 / 64 = 0.375
 	      glTexCoord2f(coordx_tile       ,coordy_tile+0.375f);	glVertex2i(px           ,py           );
-	      glTexCoord2f(coordx_tile+0.375f,coordy_tile+0.375f);	glVertex2i(px+mCoordChanges.getBlockSize(),py           );
-	      glTexCoord2f(coordx_tile+0.375f,coordy_tile       );	glVertex2i(px+mCoordChanges.getBlockSize(),py+mCoordChanges.getBlockSize());
-	      glTexCoord2f(coordx_tile       ,coordy_tile       );	glVertex2i(px           ,py+mCoordChanges.getBlockSize());
+	      glTexCoord2f(coordx_tile+0.375f,coordy_tile+0.375f);	glVertex2i(px+CoordChanges.getBlockSize(),py           );
+	      glTexCoord2f(coordx_tile+0.375f,coordy_tile       );	glVertex2i(px+CoordChanges.getBlockSize(),py+CoordChanges.getBlockSize());
+	      glTexCoord2f(coordx_tile       ,coordy_tile       );	glVertex2i(px           ,py+CoordChanges.getBlockSize());
 	  }
-	  px+=mCoordChanges.GetTileSize();
+	  px+=CoordChanges.GetTileSize();
 	}
 	fd.get(tile);//pass enter
   }
@@ -82,7 +99,7 @@ bool cScene::LoadLevel(int level) {
   mObstacles.clear();
   mObstacles.reserve(obstacles);
   for(unsigned int i=0; i<obstacles; ++i) {
-	  mObstacles.push_back(cObstacle(*this, mCoordChanges));
+	  mObstacles.push_back(cObstacle(*this, CoordChanges));
 	  fd >> mObstacles[i];
 	  mObstacles[i].Init();
 	  mObstacles[i].SetWidthHeight_W(24,24);///TODO Extract from the texture automagically.
@@ -107,14 +124,36 @@ void cScene::Draw(float const t, float const dt) const {
 	  obs.Draw(t, dt);});
   mExitDoor.Draw(t,dt);
   mInterruptor.Draw(t,dt);
+	Player.Draw(t,dt);
+	
+	for (size_t i = 0; i < mEnemies.size(); ++i) {
+		mEnemies[i]->Draw(t,dt);
+	}
+  for(auto& expl: mExplosions)
+    expl.Draw(t,dt);
 }
 void cScene::doLogic(float const t, float const dt) {
+	Player.doLogic(t,dt);
   mExitDoor.doLogic(t,dt);
   mInterruptor.doLogic(t,dt);
+
+  for(std::vector<cEnemy*>::iterator it = mEnemies.begin(); it!=mEnemies.end();) {
+    (*it)->doLogic(t,dt);
+    if ( (*it)->WantsToDestroyItself())
+      it = mEnemies.erase(it);
+    else it++;
+  }
+  for(std::vector<cExplosion>::iterator it = mExplosions.begin(); it!=mExplosions.end();) {
+    if (it->hasFinished(t) || it->WantsToDestroyItself()) {
+    //std::cout << "Una explosion menos";
+      it = mExplosions.erase(it);
+    }
+    else it++;
+  }
 }
 bool cScene::CollisionInClosedArea(cRect const& world) const {
-  Vec3 const tile0 = mCoordChanges.WorldToTile(Vec3(world.left , world.bottom, 0));
-  Vec3 const tile1 = mCoordChanges.WorldToTile(Vec3(world.right, world.top   , 0));
+  Vec3 const tile0 = CoordChanges.WorldToTile(Vec3(world.left , world.bottom, 0));
+  Vec3 const tile1 = CoordChanges.WorldToTile(Vec3(world.right, world.top   , 0));
 
   ///Scenery
   for(int i=tile0.x; i<=tile1.x; ++i) {

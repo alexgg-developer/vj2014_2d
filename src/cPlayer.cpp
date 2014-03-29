@@ -1,6 +1,7 @@
 #include "cPlayer.hpp"
 #include "cState.hpp"
 #include "cExplosion.hpp"
+#include "cCoordChanges.hpp"
 
 cPlayer::cPlayer(cScene const& map, cCoordChanges const& ch) : cBicho(map, ch) {
   mStates[STATE_LOOKLEFT ]->getAni().setNumberOfFrames(4);

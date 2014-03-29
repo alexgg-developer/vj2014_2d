@@ -1,9 +1,8 @@
 #pragma once
-
 #include "cEnemy.hpp"
-#include "cNormalProjectile.hpp"
 #include <vector>
 #include <memory>
+struct cNormalProjectile;
 
 struct cNormalShip: public cEnemy {
 	cNormalShip(cPlayer& pl, cScene const& map, cCoordChanges const& ch, bool awake);

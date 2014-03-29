@@ -1,8 +1,6 @@
 #pragma once
 #include "cTexture.hpp"
-#include "cCoordChanges.hpp"
 #include "Vec3.hpp"
-#include "cAni.hpp"
 #include <array>
 #include <memory>
 #include <functional>
@@ -10,6 +8,7 @@
 #undef max
 struct cState;
 struct cScene;
+struct cCoordChanges;
 
 enum BichoState {
   STATE_LOOKLEFT  =0,

@@ -1,17 +1,20 @@
 #pragma once
-#include <vector>
 #include "cTexture.hpp"
 #include "cObstacle.hpp"
 #include "cCoordChanges.hpp"
 #include "cPuerta.hpp"
 #include "cInterruptor.hpp"
+#include "cExplosion.hpp"
+#include "cPlayer.hpp"
 #undef max
 #undef min
 #include <algorithm>
-struct cPlayer;
+#include <vector>
+struct cEnemy;
 
+/// TODO: Separate scene and map, it's getting bigger!
 struct cScene {
-  cScene(cCoordChanges const& cc, cPlayer& pl);
+  cScene();
   virtual ~cScene();
 
   bool Init();
@@ -22,12 +25,18 @@ struct cScene {
 
   int operator()(int const x, int const y) const {
 	  return map[std::min<int>(std::max<int>(0,x),map.size()-1)][std::min<int>(std::max<int>(0,y),map[0].size()-1)]; }
+
+  void addExplosion(cExplosion expl) { mExplosions.push_back(expl); }
+  
+	cPlayer Player;
+  cCoordChanges CoordChanges;
 private:
-  cCoordChanges const& mCoordChanges;
   std::vector<std::vector<int>> map;
   std::vector<cObstacle> mObstacles;
   int id_DL;				//actual level display list
   cTexture mText;
   cPuerta mExitDoor;
   cInterruptor mInterruptor;
+	std::vector<cEnemy*> mEnemies;
+  std::vector<cExplosion> mExplosions;
 };

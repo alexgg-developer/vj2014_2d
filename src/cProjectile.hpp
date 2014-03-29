@@ -1,15 +1,14 @@
 #pragma once
 #include <memory>
-#include "cPhysics.hpp"
-#include "cTexture.hpp"
-#include "Vec3.hpp"
-#include "cCoordChanges.hpp"
 #include "cEnemy.hpp"
+struct cPhysics;
+struct cCoordChanges;
+struct cPlayer;
 
 struct cProjectile : public cEnemy {
-	cProjectile(cPlayer& pl, cScene const& map, cCoordChanges const& ch) : cEnemy(pl, map, ch) {}
+	cProjectile(cPlayer& pl, cScene const& map, cCoordChanges const& ch);
   virtual void Draw(float const t, float const dt) const override;
-  void changeDirection(Vec3 const & direction) { mPhysics->changeDirection(direction);}
+  void changeDirection(Vec3 const & direction);
 	virtual void doLogic(float const t, float const dt) override;
 	void changePhysics(Vec3 const& force, Vec3 const& maxSpeed, Vec3 const& speed);
   bool Awake() const { return mAwake; }

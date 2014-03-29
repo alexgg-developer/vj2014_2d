@@ -2,7 +2,7 @@
 #include "Globals.hpp"
 
 
-cGame::cGame(void) : CoordChanges(), Scene(CoordChanges, Player), Player(Scene, CoordChanges)
+cGame::cGame(void) : Scene()
 { 
 	for (unsigned int i = 0; i < NUMKEYS; ++i) mKey[i] = KEY_OFF;
 
@@ -24,18 +24,7 @@ bool cGame::Init() {
 	//Scene initialization
 	Scene.Init();
 	if(!Scene.LoadLevel(4)) return false;
-
-	//Player initialization
-	Player.Init();
-	Player.SetWidthHeight_W(40,40);
-	Player.SetPosition_T(Vec3(2,1)); //Initial tile
-
-	//Enemy initialization
-	//mEnemies.push_back(new cNormalShip(Scene, CoordChanges, 1, Vec3(15, 17), true));
-	mEnemies.push_back(new cNormalShip(Player, Scene, CoordChanges, 1, Vec3(22, 22), true));
-	mEnemies.push_back(new cWalkingBomb(Scene, CoordChanges, 1, Vec3(35, 1), true, Player));
 	
-
   cExplosion::initialize(this);
 
 	return true;
@@ -167,7 +156,7 @@ bool cGame::Process(float const t, float const dt) {
 		res = false;
 	}
 	if (mKey[KSPACE] == KEY_PRESSED || mKey[KSPACE] == KEY_ON) {
-		Player.Jump();
+		Scene.Player.Jump();
 	}
 	if (mKey[KUP] == KEY_PRESSED || mKey[KUP] == KEY_ON) {
 		direction.y = 1.0;
@@ -178,44 +167,29 @@ bool cGame::Process(float const t, float const dt) {
 	}
 
 	if (mKey[KLEFT] == KEY_PRESSED || mKey[KLEFT] == KEY_ON) {
-		Player.MoveLeft();
+		Scene.Player.MoveLeft();
 		direction.x = -1.0;
 	}
 	else if (mKey[KRIGHT] == KEY_PRESSED || mKey[KRIGHT] == KEY_ON)	{
-		Player.MoveRight();
+		Scene.Player.MoveRight();
 		direction.x = 1.0;
 	}
-	else Player.Stop();
+	else Scene.Player.Stop();
 
 	if (mKey[KQ] == KEY_PRESSED) {
 		mKey[KQ] = KEY_ON; //This is because process is more called than keyboard
-		Player.Attack(direction, cElementalProjectile::FIRE);
+		Scene.Player.Attack(direction, cElementalProjectile::FIRE);
 	}
 	if (mKey[KW] == KEY_PRESSED) {
 		mKey[KW] = KEY_ON;
-		Player.Attack(direction, cElementalProjectile::ICE);
+		Scene.Player.Attack(direction, cElementalProjectile::ICE);
 	}
 	if (mKey[KE] == KEY_PRESSED) {
 		mKey[KE] = KEY_ON;
-		Player.Attack(direction, cElementalProjectile::ELECTRIC);
+		Scene.Player.Attack(direction, cElementalProjectile::ELECTRIC);
 	}
 
 	//Game Logic
-	Player.doLogic(t,dt);
-  for(std::vector<cEnemy*>::iterator it = mEnemies.begin(); it!=mEnemies.end();) {
-    (*it)->doLogic(t,dt);
-    if ( (*it)->WantsToDestroyItself())
-      it = mEnemies.erase(it);
-    else it++;
-
-  }
-  for(std::vector<cExplosion>::iterator it = mExplosions.begin(); it!=mExplosions.end();) {
-    if (it->hasFinished(t) || it->WantsToDestroyItself()) {
-    //std::cout << "Una explosion menos";
-      it = mExplosions.erase(it);
-    }
-    else it++;
-  }
   Scene.doLogic(t,dt);
 
 	return res;
@@ -229,12 +203,5 @@ void cGame::Render(float const t, float const dt) {
 
 	glPushMatrix();
 	Scene.Draw(t,dt);
-	Player.Draw(t,dt);
-	
-	for (size_t i = 0; i < mEnemies.size(); ++i) {
-		mEnemies[i]->Draw(t,dt);
-	}
-  for(auto& expl: mExplosions)
-    expl.Draw(t,dt);
 	glutSwapBuffers();
 }

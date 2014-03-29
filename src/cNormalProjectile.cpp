@@ -1,4 +1,5 @@
 #include "cNormalProjectile.hpp"
+#include "cPhysics.hpp"
 #include <iostream>
 
 cNormalProjectile::cNormalProjectile(cPlayer& pl, cScene const& map, cCoordChanges const& ch)

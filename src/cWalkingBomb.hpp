@@ -1,9 +1,8 @@
 #pragma once
-
 #include <vector>
 #include <memory>
 #include "cEnemy.hpp"
-#include "cPlayer.hpp"
+struct cPlayer;
 
 struct cWalkingBomb: public cEnemy {
 	int mDamage;
