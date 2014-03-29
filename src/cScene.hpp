@@ -16,9 +16,9 @@ struct cScene {
 
   bool Init();
   bool LoadLevel(int level);
-  void Draw() const;
+  void Draw(float const t, float const dt) const;
   bool CollisionInClosedArea(cRect const& world) const;
-  void doLogic(float const dt);
+  void doLogic(float const t, float const dt);
 
   int operator()(int const x, int const y) const {
 	  return map[std::min<int>(std::max<int>(0,x),map.size()-1)][std::min<int>(std::max<int>(0,y),map[0].size()-1)]; }

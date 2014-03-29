@@ -61,7 +61,8 @@ struct cBicho {
   void AdjustOverVec(Vec3 const& v, std::function<bool()> const& cond);
   void Stop();
   void Logic();
-	virtual void doLogic(float dt) = 0;
+	virtual void doLogic(float const t, float const dt) = 0;
+	virtual void Draw(float const t, float const dt) const = 0;
 
   cState* GetState() const;
   void SetState(cState* s);

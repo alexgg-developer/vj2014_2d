@@ -12,9 +12,9 @@ struct cProjectile : public cBicho {
 	int mDamage;
 
 	cProjectile(cScene const& map, cCoordChanges const& ch) : cBicho(map, ch) {}
-	void draw();
+  virtual void Draw(float const t, float const dt) const override;
   void changeDirection(Vec3 const & direction) { mPhysics->changeDirection(direction);}
-	void doLogic(float dt);
+	virtual void doLogic(float const t, float const dt) override;
 protected:
 	std::shared_ptr<cPhysics> mPhysics;
 	void move(Vec3 const& speed, float const dt);

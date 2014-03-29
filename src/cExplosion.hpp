@@ -6,10 +6,10 @@ struct cGame;
 
 struct cExplosion : public cBicho {
   cExplosion(cScene const& map, cCoordChanges const& ch);
-  void start();
-  bool hasFinished() const;
-  void Draw();
-	virtual void doLogic(float dt) {}//TODO: Auto-destroy here
+  void start(float const t);
+  bool hasFinished(float const t) const;
+	virtual void Draw(float const t, float const dt) const override;
+	virtual void doLogic(float const t, float const dt) override {}//TODO: Auto-destroy here?
 
   static void initialize(cGame* aGame) {
     mGame=aGame; }

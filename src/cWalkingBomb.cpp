@@ -14,7 +14,7 @@ cWalkingBomb::cWalkingBomb(cScene const& map, cCoordChanges const& ch, int life,
 	mDamage = 2;
 }
 
-void cWalkingBomb::doLogic(float dt)
+void cWalkingBomb::doLogic(float const t, float const dt)
 {
 	if (mAwake) {	
 		move(mPhysics->mSpeed, dt);

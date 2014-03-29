@@ -31,18 +31,22 @@ cPlayer::cPlayer(cScene const& map, cCoordChanges const& ch) : cBicho(map, ch) {
   mStates[STATE_JUMPLEFT ]->getAni().setFrameSize(Vec3(55.0f / 740.0f, -87.0f / 300.0f));
   mStates[STATE_JUMPRIGHT]->getAni().setFrameSize(Vec3(50.0f / 740.0f, -87.0f / 300.0f));
   
-  mStates[STATE_JUMPLEFT ]->getAni().setFrameDelay(9);
-  mStates[STATE_JUMPRIGHT]->getAni().setFrameDelay(10);
+  static float const delay = 1000000;
+  mStates[STATE_JUMPLEFT ]->getAni().setFrameDelay(delay);
+  mStates[STATE_JUMPRIGHT]->getAni().setFrameDelay(delay);
+  mStates[STATE_WALKLEFT ]->getAni().setFrameDelay(delay);
+  mStates[STATE_WALKRIGHT]->getAni().setFrameDelay(delay);
+  mStates[STATE_LOOKLEFT ]->getAni().setFrameDelay(delay);
+  mStates[STATE_LOOKRIGHT]->getAni().setFrameDelay(delay);
 }
 cPlayer::~cPlayer(){}
 
-void cPlayer::Draw() {
-  cFrame const fr = mActualState->getAni().Generate();
-  mActualState->getAni().NextFrame();
+void cPlayer::Draw(float const t, float const dt) const {
+  cFrame const fr = mActualState->getAni().Generate(t);
 
   DrawRect(fr, mCoordChange.WorldToScreen(posW));
   for (std::size_t i = 0; i < mAttacks.size(); ++i) {
-	  mAttacks[i].draw();
+	  mAttacks[i].Draw(t,dt);
   }
 }
 bool cPlayer::Init() {
@@ -60,9 +64,9 @@ bool cPlayer::Init() {
 	 mAttacks.push_back(eProjectile);
  }
 
- void cPlayer::doLogic(float dt) {
+ void cPlayer::doLogic(float const t, float const dt) {
 	 Logic();
 	 for (std::size_t i = 0; i < mAttacks.size(); ++i) {
-		 mAttacks[i].doLogic(dt);
+		 mAttacks[i].doLogic(t,dt);
 	 }
  }

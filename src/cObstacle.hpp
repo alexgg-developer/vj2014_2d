@@ -5,8 +5,8 @@
 struct cObstacle : public cBicho {
   cObstacle(cScene const& map, cCoordChanges const& ch);
 	bool Init();
-	void Draw() const;
-	virtual void doLogic(float dt) override {} //TODO Make it destructable
+	virtual void Draw(float const t, float const dt) const override;
+	virtual void doLogic(float const t, float const dt) override {} //TODO Make it destructable
 
 	friend std::istream& operator>>(std::istream& is, cObstacle& obs) {
 	  int mPosX, mPosY;

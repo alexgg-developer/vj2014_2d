@@ -3,25 +3,26 @@
 
 struct cAni {
   cAni();
-  void reset();
-  //cFrame Generate(float time) const;//In near future, I swear.
-  cFrame Generate() const;
+  void reset(float const t);
+  cFrame Generate(float const t) const;
 
-  void NextFrame();
-  int  GetFrame() const;
+  int  GetFrame(float const t) const;
   void setDeltaFrame(Vec3 const& av);
   void setInitialFrame(Vec3 const& ini);
-  void setNumberOfFrames(unsigned int const aMax) { mMax = aMax; }
+  void setNumberOfFrames(unsigned int const aMax) { mNumberOfFrames = aMax; }
   void setFrameSize(Vec3 const& fs) { mFrameSize = fs;  }
-  void setFrameDelay(unsigned int const del) { mFrameDelay = del; }
+  void setFrameDelay(float const del) { mDelayBetweenFrames = del; }
+  float getDuration() const;
 
-  bool isInLastFrame() const { return seq==(mMax-1); }
+  bool isInLastFrame(float const t) const { return (mInitT>=0) && (GetFrame(t)>=mNumberOfFrames); }
+  void setRepeat(bool const b) { mRepeat = b;}
 protected:
-  int seq,delay;
-  unsigned int mFrameDelay;
   Vec3 mTex0;
   Vec3 mTexIncrement;
   Vec3 mFrameSize;
-  unsigned int mMax;
+  int mNumberOfFrames;
+  mutable float mInitT;
+  float mDelayBetweenFrames;
+  bool mRepeat=true;
   //  Vec3
 };

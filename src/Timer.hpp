@@ -8,9 +8,11 @@ struct Timer
 	steady_clock::time_point mStartTime;
 
 	Timer() : mStartTime(steady_clock::duration::zero()) {};
-	void startTime();
-	float getDeltaTime();
+	float getDeltaTime() const;
 	void reset();
+  float getActualTime() const;
 
+  static float getTNow();
+  static steady_clock::time_point sBeginTime;
 };
 

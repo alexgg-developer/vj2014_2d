@@ -43,7 +43,7 @@ cNormalShip::cNormalShip(cScene const& map, cCoordChanges const& ch, int life, V
 	mProjectiles.push_back(std::make_shared<cNormalProjectile>(map, ch));
 }
 
-void cNormalShip::doLogic(float dt)
+void cNormalShip::doLogic(float const t, float const dt)
 {
 	if (mAwake) {
 		if (!mProjectiles[0]->mAwake) {
@@ -57,21 +57,19 @@ void cNormalShip::doLogic(float dt)
 		}		
 		move(mPhysics->mSpeed, dt);
 		mPhysics->update(dt);
-		mProjectiles[0]->doLogic(dt); mProjectiles[1]->doLogic(dt); mProjectiles[2]->doLogic(dt);
+		mProjectiles[0]->doLogic(t,dt); mProjectiles[1]->doLogic(t,dt); mProjectiles[2]->doLogic(t,dt);
 	}
 }
 
 
-void cNormalShip::draw()
-{
+void cNormalShip::Draw(float const t, float const dt) const {
 	if (mAwake) {
-		Vec3 const screen = mCoordChange.WorldToScreen(posW);
+  	Vec3 const screen = mCoordChange.WorldToScreen(posW);
 		glPushMatrix();
 		glTranslatef(screen.x, screen.y, 0);
 		mText.drawAlternative(Vec3(0, 0), Vec3(1, 1), Vec3(0, 0), Vec3(w, h));
 		glPopMatrix();
-		mProjectiles[0]->draw(); mProjectiles[1]->draw(); mProjectiles[2]->draw();
-
+		mProjectiles[0]->Draw(t,dt); mProjectiles[1]->Draw(t,dt); mProjectiles[2]->Draw(t,dt);
 	}
 }
 

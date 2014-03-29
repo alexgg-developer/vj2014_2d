@@ -28,9 +28,8 @@ cInterruptor::cInterruptor(cScene const& map, cCoordChanges const& ch, cPlayer& 
 }
 cInterruptor::~cInterruptor(){}
 
-void cInterruptor::Draw() const {
-  cFrame const fr = mActualState->getAni().Generate();
-  mActualState->getAni().NextFrame();
+void cInterruptor::Draw(float const t, float const dt) const {
+  cFrame const fr = mActualState->getAni().Generate(t);
 
   DrawRect(fr, mCoordChange.WorldToScreen(posW));
 }
@@ -38,7 +37,7 @@ bool cInterruptor::Init() {
   return mText.Load("Switch.png",GL_RGBA); }
 
   #include <iostream>
-void cInterruptor::doLogic(float dt) {
+void cInterruptor::doLogic(float const t, float const dt) {
   ///Check collision with player
   if(mActive) {
     if(mPlayer.GetBBox().collides(this->GetBBox())) {

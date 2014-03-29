@@ -9,8 +9,8 @@ struct cInterruptor: public cBicho {
   ~cInterruptor();
 
   bool Init();
-  virtual void doLogic(float dt) override;
-  void Draw() const;
+  virtual void doLogic(float const t, float const dt) override;
+  virtual void Draw(float const t, float const dt) const override;
 protected:
   bool mActive;
   cPuerta& mPuerta;

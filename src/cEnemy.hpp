@@ -15,7 +15,8 @@ struct cEnemy: public cBicho {
 	cEnemy(cScene const& map, cCoordChanges const& ch, int life) :  mLife(life), cBicho(map, ch) {};
 	cEnemy(cScene const& map, cCoordChanges const& ch, int life, std::shared_ptr<cPhysics>& physics);
 	void setInitialTilePosition(Vec3 const& tilePosition);
-	virtual void draw();
+	virtual void Draw(float const t, float const dt) const override;
+
 protected:
 	void move(Vec3 const& speed, float dt);
 	int mLife;

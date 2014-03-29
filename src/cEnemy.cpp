@@ -10,7 +10,7 @@ void cEnemy::setInitialTilePosition(Vec3 const& tilePosition)
 {
 	posW = mCoordChange.TileToWorld(tilePosition);
 }
-void cEnemy::draw()
+void cEnemy::Draw(float const t, float const dt) const
 {
 	if (mAwake) {
 		Vec3 const screen = mCoordChange.WorldToScreen(posW);

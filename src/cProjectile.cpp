@@ -1,6 +1,6 @@
 #include "cProjectile.hpp"
 
-void cProjectile::draw() {
+void cProjectile::Draw(float const t, float const dt) const {
 	if (mAwake) {
 		Vec3 const screen = mCoordChange.WorldToScreen(posW);
 		glPushMatrix();
@@ -19,7 +19,7 @@ void cProjectile::changePhysics(Vec3 const& force, Vec3 const& maxSpeed, Vec3 co
 void cProjectile::move(Vec3 const& speed, float const dt) {
 	posW += (speed * dt);
 }
-void cProjectile::doLogic(float dt)
+void cProjectile::doLogic(float const t, float const dt)
 {
 	if (mAwake) {
 		move(mPhysics->mSpeed, dt);

@@ -50,6 +50,11 @@ void cBicho::initStates() {
   mStates[STATE_JUMPRIGHT]->setNextOnUnJump(mStates[STATE_LOOKRIGHT].get());
 
   mActualState = mStates[STATE_LOOKLEFT].get();
+
+  float const t = Timer::getTNow();
+  for(auto& s : mStates) {
+    s->getAni().reset(t);
+  }
 }
 void cBicho::SetPosition_W(Vec3 apos) {
   posW = apos;
@@ -178,5 +183,5 @@ cState* cBicho::GetState() const {
   return mActualState; }
 void cBicho::SetState(cState* s) {
   mActualState = s;
-  mActualState->reset();
+  mActualState->reset(Timer::getTNow());
 }

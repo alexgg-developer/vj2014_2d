@@ -11,11 +11,17 @@
 
 cGame Game;
 Timer t;
-float timeElapsed;
 
 void AppRender()
 {
-	Game.Render();
+  auto const ti = t.getActualTime();
+  auto const dt = t.getDeltaTime();
+  t.reset();
+	//Game.Render(ti, dt);
+  std::cout << "render with " << ti << " and " << dt << std::endl;
+
+	if (!Game.Loop(t.getActualTime(), dt)) exit(0);
+  glutPostRedisplay();
 }
 void AppKeyboard(unsigned char key, int x, int y)
 {
@@ -39,11 +45,6 @@ void AppMouse(int button, int state, int x, int y)
 }
 void AppIdle()
 {
-	float dt = t.getDeltaTime();
-	if (!Game.Loop(dt)) exit(0);
-	timeElapsed += dt;
-
-	//std::cout << "Time elapsed: " << dt << std::endl;
 
 }
 
@@ -85,8 +86,7 @@ void main(int argc, char** argv)
 	//Game initializations
 	Game.Init();
 	//StartTimer
-	timeElapsed = 0.0f;
-	t.startTime();
+	t.reset();
 	//Application loop
 	glutMainLoop();	
 }

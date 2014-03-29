@@ -1,9 +1,11 @@
 #pragma once
 #include "cBicho.hpp"
+#include "Timer.hpp"
 
 /// State for a bicho
 struct cState {
-  cState(cBicho& csm) : mStateMachine(csm), mNextOnUnJump(nullptr), mNextOnStop(nullptr), mNextOnLeft(nullptr), mNextOnRight(nullptr), mNextOnJump(nullptr), mNextOnAnimationFinished(nullptr), mNextOnActivate(nullptr) {}
+  cState(cBicho& csm) : mStateMachine(csm), mNextOnUnJump(nullptr), mNextOnStop(nullptr), mNextOnLeft(nullptr),
+   mNextOnRight(nullptr), mNextOnJump(nullptr), mNextOnAnimationFinished(nullptr), mNextOnActivate(nullptr) {}
   void setNextOnStop(cState* cs) { mNextOnStop = cs; }
   void setNextOnRight(cState* cs) { mNextOnRight = cs; }
   void setNextOnLeft(cState* cs) { mNextOnLeft = cs; }
@@ -30,13 +32,14 @@ struct cState {
   virtual void Activate() {
     if(mNextOnActivate!=nullptr)
       mStateMachine.SetState(mNextOnActivate); }
-  virtual void reset() { mAnimation.reset(); }
-  cFrame getFrame() { 
-    if(mNextOnAnimationFinished && mAnimation.isInLastFrame()) {
+  virtual void reset(float const t) { mAnimation.reset(t); }
+  cFrame getFrame(float const t) { 
+    if(mNextOnAnimationFinished && mAnimation.isInLastFrame(t)) {
       mStateMachine.SetState(mNextOnAnimationFinished);
     }
-    return mAnimation.Generate(); }
-  cAni& getAni() { return mAnimation; }
+    return mAnimation.Generate(t); }
+  cAni& getAni() {
+    return mAnimation; }
 
 protected:
   cBicho& mStateMachine;

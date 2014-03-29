@@ -97,20 +97,20 @@ bool cScene::LoadLevel(int level) {
   return true;
 }
 
-void cScene::Draw() const {
+void cScene::Draw(float const t, float const dt) const {
   int tex_id = mText.GetID();
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D,tex_id);
   glCallList(id_DL);
   glDisable(GL_TEXTURE_2D);
   std::for_each(mObstacles.begin(), mObstacles.end(), [&](cObstacle const& obs){
-	  obs.Draw();});
-  mExitDoor.Draw();
-  mInterruptor.Draw();
+	  obs.Draw(t, dt);});
+  mExitDoor.Draw(t,dt);
+  mInterruptor.Draw(t,dt);
 }
-void cScene::doLogic(float const dt) {
-  mExitDoor.doLogic(dt);
-  mInterruptor.doLogic(dt);
+void cScene::doLogic(float const t, float const dt) {
+  mExitDoor.doLogic(t,dt);
+  mInterruptor.doLogic(t,dt);
 }
 bool cScene::CollisionInClosedArea(cRect const& world) const {
   Vec3 const tile0 = mCoordChanges.WorldToTile(Vec3(world.left , world.bottom, 0));

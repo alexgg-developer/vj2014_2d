@@ -41,9 +41,9 @@ bool cGame::Init() {
 	return true;
 }
 
-bool cGame::Loop(float dt) {
-	bool res = Process(dt);
-	if(res) Render();
+bool cGame::Loop(float const t, float const dt) {
+	bool res = Process(t, dt);
+	if(res) Render(t,dt);
 
 	return res;
 }
@@ -157,7 +157,7 @@ void cGame::ReadMouse(int button, int state, int x, int y) {
 }
 
 //Process
-bool cGame::Process(float dt) {
+bool cGame::Process(float const t, float const dt) {
 	bool res=true;
 	
 	//Process Input
@@ -201,32 +201,32 @@ bool cGame::Process(float dt) {
 	}
 
 	//Game Logic
-	Player.doLogic(dt);
-	for (std::size_t i = 0; i < mEnemies.size(); ++i) mEnemies[i]->doLogic(dt);
+	Player.doLogic(t,dt);
+	for (std::size_t i = 0; i < mEnemies.size(); ++i) mEnemies[i]->doLogic(t,dt);
   for(std::vector<cExplosion>::iterator it = mExplosions.begin(); it!=mExplosions.end();) {
-    if (it->hasFinished())
+    if (it->hasFinished(t))
       it = mExplosions.erase(it);
     else it++;
   }
-  Scene.doLogic(dt);
+  Scene.doLogic(t,dt);
 
 	return res;
 }
 
 //Output
-void cGame::Render() {
+void cGame::Render(float const t, float const dt) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	
 	glLoadIdentity();
 
 	glPushMatrix();
-	Scene.Draw();
-	Player.Draw();
+	Scene.Draw(t,dt);
+	Player.Draw(t,dt);
 	
 	for (size_t i = 0; i < mEnemies.size(); ++i) {
-		mEnemies[i]->draw();
+		mEnemies[i]->Draw(t,dt);
 	}
   for(auto& expl: mExplosions)
-    expl.Draw();
+    expl.Draw(t,dt);
 	glutSwapBuffers();
 }

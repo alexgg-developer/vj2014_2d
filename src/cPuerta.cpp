@@ -24,23 +24,25 @@ cPuerta::cPuerta(cScene const& map, cCoordChanges const& ch, cPlayer& player) : 
   mStates[STATE_OPENING]->getAni().setInitialFrame(Vec3(0.0f, 56.0f/p_h));
   mStates[STATE_OPENING]->getAni().setFrameSize(Vec3(34.0f/p_w, 56.0f/p_h));
   mStates[STATE_OPENING]->getAni().setDeltaFrame(Vec3(34.0f/p_w, 56.0f/p_h));
-  mStates[STATE_OPENING]->getAni().setFrameDelay(9);
+  mStates[STATE_OPENING]->getAni().setFrameDelay(2000000);
 
   mStates[STATE_CLOSED ]->setNextOnActivate(&*mStates[STATE_OPENING]);
   mStates[STATE_OPENING]->setNextOnAnimationFinished(&*mStates[STATE_OPENED]);
+  
+  mStates[STATE_OPENING]->getAni().setRepeat(false);
+  mStates[STATE_OPENED ]->getAni().setRepeat(false);
+  mStates[STATE_CLOSED ]->getAni().setRepeat(false);
 }
 cPuerta::~cPuerta(){}
 
-void cPuerta::Draw() const {
-  cFrame const fr = mActualState->getAni().Generate();
-  mActualState->getAni().NextFrame();
-
+void cPuerta::Draw(float const t, float const dt) const {
+  cFrame const fr = mActualState->getAni().Generate(t);
   DrawRect(fr, mCoordChange.WorldToScreen(posW));
 }
 bool cPuerta::Init() {
   return mText.Load("Door.png",GL_RGBA); }
 #include <iostream>
-void cPuerta::doLogic(float dt) {
+void cPuerta::doLogic(float const t, float const dt) {
   ///Check collision with player
   if(mActive) {
     if(mPlayer.GetBBox().collides(this->GetBBox())) {

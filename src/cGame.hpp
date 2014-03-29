@@ -17,7 +17,7 @@ struct cGame {
 	virtual ~cGame();
 
 	bool Init();
-	bool Loop(float dt);
+	bool Loop(float const t, float const dt);
 	void Finalize();
 
 	//Input
@@ -25,9 +25,9 @@ struct cGame {
 	void ReadKeyboardEspecial(unsigned char key, int x, int y, bool press);
 	void ReadMouse(int button, int state, int x, int y);
 	//Process
-	bool Process(float dt);
+	bool Process(float const t, float const dt);
 	//Output
-	void Render();
+	void Render(float const t, float const dt);
 
   void addExplosion(cExplosion expl) { mExplosions.push_back(expl); }
 

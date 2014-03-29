@@ -9,7 +9,7 @@ cObstacle::cObstacle(cScene const& map, cCoordChanges const& ch) : cBicho(map, c
 bool cObstacle::Init() {
 	return mText.Load(mFilename.c_str(), GL_RGBA);
 }
-void cObstacle::Draw() const {
+void cObstacle::Draw(float const t, float const dt) const {
 	Vec3 const screen = mCoordChange.WorldToScreen(posW);
 	mText.Draw(Vec3(0,0), Vec3(1,1),  screen, Vec3(screen.x+w, screen.y+h));
 }
