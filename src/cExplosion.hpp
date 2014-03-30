@@ -2,6 +2,7 @@
 #include "cAni.hpp"
 #include "cBicho.hpp"
 struct cGame;
+struct cScene;
 
 struct cExplosion : public cBicho {
   cExplosion(cScene const& map, cCoordChanges const& ch);
@@ -10,10 +11,10 @@ struct cExplosion : public cBicho {
 	virtual void Draw(float const t, float const dt) const override;
 	virtual void doLogic(float const t, float const dt) override {}//TODO: Auto-destroy here?
 
-  static void initialize(cGame* aGame) {
-    mGame=aGame; }
+  static void initialize(cScene* aGame) {
+    mScene=aGame; }
   static void addExplosion(cScene const& map, cCoordChanges const& ch, Vec3 const& posW);
-  static cGame* mGame;
+  static cScene* mScene;
   
 protected:
   cAni mAnimation;

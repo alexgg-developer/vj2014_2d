@@ -21,12 +21,12 @@ cBicho::cBicho(cScene const& map, cCoordChanges const& ch, int posxW,int posyW,i
   initStates();
 }
 void cBicho::initStates() {
-  mStates[STATE_LOOKLEFT ] = std::make_shared<cState>(*this);
-  mStates[STATE_LOOKRIGHT] = std::make_shared<cState>(*this);
-  mStates[STATE_WALKLEFT ] = std::make_shared<cState>(*this);
-  mStates[STATE_WALKRIGHT] = std::make_shared<cState>(*this);
-  mStates[STATE_JUMPLEFT ] = std::make_shared<cState>(*this);
-  mStates[STATE_JUMPRIGHT] = std::make_shared<cState>(*this);
+  mStates[STATE_LOOKLEFT ] = std::make_shared<cState>(this);
+  mStates[STATE_LOOKRIGHT] = std::make_shared<cState>(this);
+  mStates[STATE_WALKLEFT ] = std::make_shared<cState>(this);
+  mStates[STATE_WALKRIGHT] = std::make_shared<cState>(this);
+  mStates[STATE_JUMPLEFT ] = std::make_shared<cState>(this);
+  mStates[STATE_JUMPRIGHT] = std::make_shared<cState>(this);
 
   mStates[STATE_WALKLEFT]->setNextOnStop(mStates[STATE_LOOKLEFT].get());
   mStates[STATE_WALKRIGHT]->setNextOnStop(mStates[STATE_LOOKRIGHT].get());
@@ -93,6 +93,9 @@ bool cBicho::CollidesMapWall(bool right) const {
 bool cBicho::CollidesMapFloor() const {
   return mMap.CollisionInClosedArea(cRect(posW.x, posW.x+w-1, posW.y-1, posW.y-1));
 }
+bool cBicho::CollidesMapFloorRestricted() const {
+  return mMap.CollisionInClosedArea(cRect(posW.x+w*0.1, posW.x+w*0.9, posW.y-1, posW.y-1));
+}
 
 cRect cBicho::GetArea_W() const {
   return cRect(posW.x, posW.x+w, posW.y, posW.y+h);
@@ -132,7 +135,7 @@ void cBicho::Jump() {
 }
 #include <iostream>
 void cBicho::AdjustOverEarth() { 
-  AdjustOverVec(Vec3(0, 1), [&]() { return this->CollidesMapFloor(); }); }
+  AdjustOverVec(Vec3(0, 1), [&]() { return this->CollidesMapFloorRestricted(); }); }
 void cBicho::AdjustOverLeft() { 
   AdjustOverVec(Vec3( 1,0), [&]() { return this->CollidesMapWall(false)
    || this->mMap.CollisionInClosedArea(cRect(posW.x, posW.x+w-1, posW.y, posW.y  )); }); }
@@ -140,11 +143,16 @@ void cBicho::AdjustOverRight() {
   AdjustOverVec(Vec3(-1,0), [&]() { return this->CollidesMapWall(true)
    || this->mMap.CollisionInClosedArea(cRect(posW.x, posW.x+w-1, posW.y, posW.y  )); }); }
 void cBicho::AdjustOverVec(Vec3 const& v, std::function<bool()> const& cond) {
+  Vec3 const posWBak = posW;
   int executed_times = 0;
-  while(cond()) {
+  while(cond() && executed_times<10000) { //TODO: Solve the bug instead of that
 	  posW += v;
     executed_times++;
 	}
+  if(executed_times>=10000) {
+    std::cout << "Some error ocurred with position adjustment" << std::endl;
+    posW = posWBak;
+  }
   if(executed_times>0) {
     posW += -v;
     if(executed_times>1)
@@ -186,10 +194,4 @@ void cBicho::Logic() {
     } else mActualState->UnJump();
     
   }
-}
-cState* cBicho::GetState() const {
-  return mActualState; }
-void cBicho::SetState(cState* s) {
-  mActualState = s;
-  mActualState->reset(Timer::getTNow());
 }

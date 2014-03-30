@@ -10,8 +10,98 @@
 #include "cNormalShip.hpp"
 #include "cWalkingBomb.hpp"
 #include "cPlayer.hpp"
+#include "cState.hpp"
+#include "cGame.hpp"
 
-cScene::cScene() : CoordChanges(), Player(*this, CoordChanges), mExitDoor(*this, CoordChanges, Player),
+void cMenu::UpKey() { mActualState->Jump(); }
+void cMenu::DownKey() { mActualState->UnJump(); }
+void cMenu::LeftKey() { }
+void cMenu::RightKey() { }
+void cMenu::doLogic(float const t, float const dt) { 
+  
+}
+void cMenu::Draw(float const t, float const dt) const {
+  bool const EnterSelected = (mActualState==&*mStates[MenuState::ENTER]);
+  bool const Lev0Selected = (mActualState==&*mStates[MenuState::LEVEL0]);
+  bool const Lev1Selected = (mActualState==&*mStates[MenuState::LEVEL1]);
+  bool const ExitSelected = (mActualState==&*mStates[MenuState::EXIT  ]);
+  
+  Vec3 const delta(150, -75);
+  Vec3 const next(0.0, delta.y*1.25);
+
+
+  Vec3 const enterScreen(200, 450);
+  mTextures[ENTER*2+EnterSelected].Draw(Vec3(0,0), Vec3(1,1), enterScreen, enterScreen+delta);
+
+  Vec3 const lev0 = enterScreen+next;
+  mTextures[LEVEL0*2+Lev0Selected].Draw(Vec3(0,0), Vec3(1,1), lev0, lev0+delta);
+
+  Vec3 const lev1 = lev0+next;
+  mTextures[LEVEL1*2+Lev1Selected].Draw(Vec3(0,0), Vec3(1,1), lev1, lev1+delta);
+
+  Vec3 const exit = lev1+next;
+  mTextures[EXIT*2+ExitSelected].Draw(Vec3(0,0), Vec3(1,1), exit, exit+delta);
+
+  Vec3 const cred = exit+next;
+  mTextures[CREDITS*2].Draw(Vec3(0,0), Vec3(1,1), cred, cred+delta);
+}
+bool cMenu::Init() {
+  // Load states
+  mStates[ENTER ] = std::make_shared<cState>(this);
+  mStates[LEVEL0] = std::make_shared<cState>(this);
+  mStates[LEVEL1] = std::make_shared<cState>(this);
+  mStates[EXIT  ] = std::make_shared<cState>(this);
+
+  mStates[ENTER ]->setNextOnJump(mStates[EXIT  ].get());
+  mStates[LEVEL0]->setNextOnJump(mStates[ENTER ].get());
+  mStates[LEVEL1]->setNextOnJump(mStates[LEVEL0].get());
+  mStates[EXIT  ]->setNextOnJump(mStates[LEVEL1].get());
+
+  mStates[ENTER ]->setNextOnUnJump(mStates[LEVEL0].get());
+  mStates[LEVEL0]->setNextOnUnJump(mStates[LEVEL1].get());
+  mStates[LEVEL1]->setNextOnUnJump(mStates[EXIT  ].get());
+  mStates[EXIT  ]->setNextOnUnJump(mStates[ENTER ].get());
+
+  mActualState = mStates[ENTER].get();
+
+  // Load textures
+  mTextures[ENTER*2].Load("StartGame.png");
+  mTextures[ENTER*2+1].Load("StartGameSelected.png");
+  mTextures[LEVEL0*2].Load("Level0.png");
+  mTextures[LEVEL0*2+1].Load("Level0Selected.png");
+  mTextures[LEVEL1*2].Load("Level1.png");
+  mTextures[LEVEL1*2+1].Load("Level1Selected.png");
+  mTextures[EXIT*2].Load("Exit.png");
+  mTextures[EXIT*2+1].Load("ExitSelected.png");
+  mTextures[CREDITS*2].Load("Creditos.png");
+  return true;
+}
+bool cMenu::LoadLevel(int level) {
+//??
+  return true;
+}
+void cMenu::PressedEnter() {
+  if(mActualState==&*mStates[MenuState::ENTER] || mActualState==&*mStates[MenuState::LEVEL0]) {
+    cScene* cs = new cScene(mGame,1);
+    cs->Init();
+    cs->LoadLevel(0);
+    mGame->changeLevel(cs);
+  } else if(mActualState==&*mStates[MenuState::LEVEL1]) {
+    cScene* cs = new cScene(mGame,2);
+    cs->Init();
+    cs->LoadLevel(1);
+    mGame->changeLevel(cs);
+  } else if(mActualState==&*mStates[MenuState::EXIT]) {
+    exit(0);//TODO: Delete everything correctly
+  } else {
+    std::cout << "WTF?!?!?!" << std::endl;
+    exit(0);
+  }
+}
+
+
+cScene::cScene(cGame* aGame, int const nextLev) : iScene(aGame), CoordChanges(), Player(*this, CoordChanges),
+ mExitDoor(*this, CoordChanges, Player, aGame, nextLev),
  mInterruptor(*this, CoordChanges, Player, mExitDoor) {}
 cScene::~cScene() {}
 
@@ -22,7 +112,7 @@ bool cScene::Init() {
 	Player.SetPosition_T(Vec3(2,1)); //Initial tile
 
   mExitDoor.Init();
-  mExitDoor.SetWidthHeight_W(32,32);
+  mExitDoor.SetWidthHeight_W(32,64);
   mInterruptor.Init();
   mInterruptor.SetWidthHeight_W(32,32);
   
@@ -30,6 +120,8 @@ bool cScene::Init() {
 	//mEnemies.push_back(new cNormalShip(Scene, CoordChanges, 1, Vec3(15, 17), true));
 	mEnemies.push_back(new cNormalShip(Player, *this, CoordChanges, 1, Vec3(22, 22), true));
 	mEnemies.push_back(new cWalkingBomb(*this, CoordChanges, 1, Vec3(35, 1), true, Player));
+	
+  cExplosion::initialize(this);
 
   return mText.Load("blocks.png",GL_RGBA);
 }
@@ -134,7 +226,6 @@ void cScene::Draw(float const t, float const dt) const {
 }
 void cScene::doLogic(float const t, float const dt) {
 	Player.doLogic(t,dt);
-  mExitDoor.doLogic(t,dt);
   mInterruptor.doLogic(t,dt);
 
   for(std::vector<cEnemy*>::iterator it = mEnemies.begin(); it!=mEnemies.end();) {
@@ -150,6 +241,8 @@ void cScene::doLogic(float const t, float const dt) {
     }
     else it++;
   }
+  //Exit door may delete the scene, it's convenient to have it as the last one to update ;-)
+  mExitDoor.doLogic(t,dt);
 }
 bool cScene::CollisionInClosedArea(cRect const& world) const {
   Vec3 const tile0 = CoordChanges.WorldToTile(Vec3(world.left , world.bottom, 0));
