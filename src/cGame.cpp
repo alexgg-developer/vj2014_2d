@@ -177,7 +177,7 @@ bool cGame::Process(float const t, float const dt) {
 	else Scene.Player.Stop();
 
 	if (mKey[KQ] == KEY_PRESSED) {
-		mKey[KQ] = KEY_ON; //This is because process is more called than keyboard
+		mKey[KQ] = KEY_ON; //This is because process is called more often than keyboard
 		Scene.Player.Attack(direction, cElementalProjectile::FIRE);
 	}
 	if (mKey[KW] == KEY_PRESSED) {

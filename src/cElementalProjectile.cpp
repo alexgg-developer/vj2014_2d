@@ -24,5 +24,5 @@ cElementalProjectile::cElementalProjectile(cPlayer& pl, cScene const& map, cCoor
 			break;
 	}
   static const float mult = 30.0f;
-	mPhysics = std::make_shared<cPhysics>(Vec3(-0.5f, -0.5f)*mult, Vec3(-5.0f, -5.0f)*mult, Vec3(-2.5f, -2.5f)*mult);
+	mPhysics = std::make_shared<cPhysics>(Vec3(-0.5f, -0.5f)*mult, Vec3(-5.0f, -5.0f)*mult, Vec3(-10.0f, -10.0f)*mult);
 }

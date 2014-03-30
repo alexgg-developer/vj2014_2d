@@ -11,7 +11,7 @@ struct cPlayer: public cBicho {
   virtual void doLogic(float const t, float const dt) override;
   virtual void Draw(float const t, float const dt) const override;
   void Attack();
-  void Attack(Vec3 const & direction, cElementalProjectile::KindOfElement element);
+  void Attack(Vec3& direction, cElementalProjectile::KindOfElement element);
 
 	std::vector<cElementalProjectile> mAttacks;
 };

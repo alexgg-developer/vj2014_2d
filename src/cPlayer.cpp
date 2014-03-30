@@ -58,9 +58,18 @@ bool cPlayer::Init() {
  void cPlayer::Attack() {
    cExplosion::addExplosion(mMap, mCoordChange, posW);		
  }
-
- void cPlayer::Attack(Vec3 const & direction, cElementalProjectile::KindOfElement element) {
+#include <iostream>
+ void cPlayer::Attack(Vec3 & direction, cElementalProjectile::KindOfElement element) {
 	 cElementalProjectile eProjectile = cElementalProjectile(*this, mMap, mCoordChange, element);
+	 if (direction == Vec3(0, 0, 0)) {
+		 //std::cout << "Wow that happened" << std::endl;
+		 if (mStates[STATE_LOOKLEFT].get() == mActualState) {
+			 direction.x = -1.0f;
+		 }
+		 else if (mStates[STATE_LOOKRIGHT].get() == mActualState) {
+			 direction.x = 1.0f;
+		 }
+	 }
 	 eProjectile.changeDirection(direction);
 	 eProjectile.SetPosition_W(this->GetPosition_W());
    eProjectile.AffectsProta (false);
