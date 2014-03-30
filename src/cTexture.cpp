@@ -27,7 +27,8 @@ bool cTexture::Load(char const*const filename,int const type,int const wraps,int
 	  }
 	  else return false;
 
-	  if(img==NULL) return false;
+	  if(img==NULL)
+     return false;
 
 	  widthW  = img->getWidth();
 	  heightW = img->getHeight();

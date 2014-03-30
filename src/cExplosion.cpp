@@ -26,6 +26,6 @@ void cExplosion::addExplosion(cScene const& map, cCoordChanges const& ch, Vec3 c
   cExplosion expl(map, ch);
   expl.SetPosition_W(posW);
   expl.SetWidthHeight_W(24,48);
-  mGame->addExplosion(expl);
+  mScene->addExplosion(expl);
 }
- cGame* cExplosion::mGame = nullptr;
+ cScene* cExplosion::mScene = nullptr;

@@ -1,10 +1,12 @@
 #pragma once
 #include "cBicho.hpp"
 struct cPlayer;
+struct cGame;
 
 /// When awake and collides with player passes to the next level
+/// TODO: cPuerta no puede controlar el cambio de nivel. No hay tiempo para hacerlo mejor. Mierda.
 struct cPuerta: public cBicho {
-  cPuerta(cScene const& map, cCoordChanges const& ch, cPlayer& player);
+  cPuerta(cScene const& map, cCoordChanges const& ch, cPlayer& player, cGame* const aGame, int const nextLev);
   ~cPuerta();
 
   bool Init();
@@ -14,4 +16,8 @@ struct cPuerta: public cBicho {
 protected:
   bool mActive;
   cPlayer& mPlayer;
+  cGame* mGame;
+  int const mNextLev;
+  float mNextLevTime=-1;
+  cTexture mWin, mWin2;
 };

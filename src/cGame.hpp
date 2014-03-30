@@ -24,12 +24,11 @@ struct cGame {
 	//Output
 	void Render(float const t, float const dt);
 
-  void addExplosion(cExplosion expl) { Scene.addExplosion(expl); }
+  void changeLevel(iScene* s);
 
 protected:
-	//unsigned char keys[256];
 	enum keysDefined { KUP, KDOWN, KRIGHT, KLEFT, KQ, KW, KE, KA, KS, KD, KESC, KSPACE, NUMKEYS };
 	enum keyStatus{ KEY_OFF, KEY_ON, KEY_RELEASED, KEY_PRESSED };
 	unsigned int mKey[NUMKEYS];	
-	cScene Scene;
+	std::shared_ptr<iScene> Scene;
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include "cTexture.hpp"
 #include "Vec3.hpp"
+#include "cStateMachine.hpp"
 #include <array>
 #include <memory>
 #include <functional>
@@ -31,7 +32,7 @@ struct cRect {
   }
 };
 
-struct cBicho {
+struct cBicho : public cStateMachine {
   cBicho(cScene const& map, cCoordChanges const& ch);
   cBicho(cScene const& map, cCoordChanges const& ch, int x,int y,int w,int h);
   ~cBicho();
@@ -46,6 +47,7 @@ struct cBicho {
 
   bool CollidesMapWall(bool right) const;
   bool CollidesMapFloor() const;
+  bool CollidesMapFloorRestricted() const;
   cRect GetArea_W() const;
   cRect GetBBox() const { return GetArea_W();}
   void DrawRect(cFrame const& fr,
@@ -63,9 +65,6 @@ struct cBicho {
 	virtual void doLogic(float const t, float const dt) = 0;
 	virtual void Draw(float const t, float const dt) const = 0;
   virtual bool WantsToDestroyItself() const { return false; }
-
-  cState* GetState() const;
-  void SetState(cState* s);
 
   cBicho& operator=(cBicho const& other) {
     mText=other.mText;
@@ -91,7 +90,6 @@ protected:
   bool jumping;
   int jump_alfa;
   int jump_y;
-  cState* mActualState;
   std::array<std::shared_ptr<cState>, 6> mStates;
 private:
   void initStates();

@@ -1,8 +1,8 @@
 #include "cGame.hpp"
 #include "Globals.hpp"
+#include <memory>
 
-
-cGame::cGame(void) : Scene()
+cGame::cGame(void) : Scene(new cMenu(this))
 { 
 	for (unsigned int i = 0; i < NUMKEYS; ++i) mKey[i] = KEY_OFF;
 
@@ -22,12 +22,8 @@ bool cGame::Init() {
 	glEnable(GL_ALPHA_TEST);
 
 	//Scene initialization
-	Scene.Init();
-	if(!Scene.LoadLevel(4)) return false;
-	
-  cExplosion::initialize(this);
-
-	return true;
+	Scene->Init();
+	return Scene->LoadLevel(4);
 }
 
 bool cGame::Loop(float const t, float const dt) {
@@ -64,6 +60,12 @@ void cGame::ReadKeyboard(unsigned char key, int x, int y, bool press) {
 			break;
 
 		case 's':
+			if (mKey[KS] != KEY_ON) {
+				mKey[KS] = KEY_PRESSED;
+			}
+			break;
+
+		case ' ':
 			if (mKey[KSPACE] != KEY_ON) {
 				mKey[KSPACE] = KEY_PRESSED;
 			}
@@ -88,6 +90,9 @@ void cGame::ReadKeyboard(unsigned char key, int x, int y, bool press) {
 			mKey[KE] = KEY_OFF;
 			break;
 		case 's':
+			mKey[KS] = KEY_OFF;
+			break;
+		case ' ':
 			mKey[KSPACE] = KEY_OFF;
 			break;
 		}
@@ -155,8 +160,17 @@ bool cGame::Process(float const t, float const dt) {
 	if (mKey[KESC] == KEY_PRESSED) {
 		res = false;
 	}
+	if (mKey[KS] == KEY_PRESSED || mKey[KS] == KEY_ON) {
+    if(Scene->AvoidRepetitionsS()) {
+	    if (mKey[KS] == KEY_PRESSED) {
+		    mKey[KS] = KEY_ON; //This is because process is more called than keyboard
+        Scene->UpKey();
+      }
+    } else 
+        Scene->UpKey();
+	}
 	if (mKey[KSPACE] == KEY_PRESSED || mKey[KSPACE] == KEY_ON) {
-		Scene.Player.Jump();
+		Scene->PressedEnter();
 	}
 	if (mKey[KUP] == KEY_PRESSED || mKey[KUP] == KEY_ON) {
 		direction.y = 1.0;
@@ -167,30 +181,30 @@ bool cGame::Process(float const t, float const dt) {
 	}
 
 	if (mKey[KLEFT] == KEY_PRESSED || mKey[KLEFT] == KEY_ON) {
-		Scene.Player.MoveLeft();
+		Scene->LeftKey();
 		direction.x = -1.0;
 	}
 	else if (mKey[KRIGHT] == KEY_PRESSED || mKey[KRIGHT] == KEY_ON)	{
-		Scene.Player.MoveRight();
+		Scene->RightKey();
 		direction.x = 1.0;
 	}
-	else Scene.Player.Stop();
+	else Scene->Stop();
 
 	if (mKey[KQ] == KEY_PRESSED) {
 		mKey[KQ] = KEY_ON; //This is because process is more called than keyboard
-		Scene.Player.Attack(direction, cElementalProjectile::FIRE);
+		Scene->Attack(direction, cElementalProjectile::FIRE);
 	}
 	if (mKey[KW] == KEY_PRESSED) {
 		mKey[KW] = KEY_ON;
-		Scene.Player.Attack(direction, cElementalProjectile::ICE);
+		Scene->Attack(direction, cElementalProjectile::ICE);
 	}
 	if (mKey[KE] == KEY_PRESSED) {
 		mKey[KE] = KEY_ON;
-		Scene.Player.Attack(direction, cElementalProjectile::ELECTRIC);
+		Scene->Attack(direction, cElementalProjectile::ELECTRIC);
 	}
 
 	//Game Logic
-  Scene.doLogic(t,dt);
+  Scene->doLogic(t,dt);
 
 	return res;
 }
@@ -198,10 +212,12 @@ bool cGame::Process(float const t, float const dt) {
 //Output
 void cGame::Render(float const t, float const dt) {
 	glClear(GL_COLOR_BUFFER_BIT);
-	
 	glLoadIdentity();
 
-	glPushMatrix();
-	Scene.Draw(t,dt);
+	Scene->Draw(t,dt);
 	glutSwapBuffers();
+}
+
+void cGame::changeLevel(iScene* s) {
+  Scene = std::shared_ptr<iScene>(s);
 }
