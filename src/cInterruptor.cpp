@@ -14,24 +14,28 @@ cInterruptor::cInterruptor(cScene const& map, cCoordChanges const& ch, cPlayer& 
   float const p_w = 130;
   float const p_h = 21;
   mStates[STATE_CLOSED ]->getAni().setNumberOfFrames(1); //Closed
-  mStates[STATE_OPENING]->getAni().setNumberOfFrames(5); //Opening
+  mStates[STATE_OPENING]->getAni().setNumberOfFrames(4); //Opening
   mStates[STATE_OPENED ]->getAni().setNumberOfFrames(1); //Opened
 
-  mStates[STATE_CLOSED ]->getAni().setInitialFrame(Vec3(0.0f, 0.0f/p_h));
-  mStates[STATE_CLOSED ]->getAni().setFrameSize(Vec3(34.0f/p_w, 56.0f/p_h));
+  mStates[STATE_CLOSED ]->getAni().setInitialFrame(Vec3(0.0f, 1.0f));
+  mStates[STATE_CLOSED ]->getAni().setFrameSize(Vec3(22.0f/p_w, -1.0f));
 
-  mStates[STATE_OPENED ]->getAni().setInitialFrame(Vec3(26.0f/p_w, 0.0f/p_h));
-  mStates[STATE_OPENED ]->getAni().setFrameSize(Vec3(26.0f/p_w, p_h/p_h));
+  mStates[STATE_OPENED ]->getAni().setInitialFrame(Vec3(110.0f/p_w, p_h/p_h));
+  mStates[STATE_OPENED ]->getAni().setFrameSize(Vec3(22.0f/p_w, -1.0f));
 
-  mStates[STATE_OPENING]->getAni().setInitialFrame(Vec3(0.0f, 0.0f/p_h));
-  mStates[STATE_OPENING]->getAni().setFrameSize(Vec3(26.0f/p_w, p_h/p_h));
-  mStates[STATE_OPENING]->getAni().setDeltaFrame(Vec3(26.0f/p_w, p_h/p_h));
-  mStates[STATE_OPENING]->getAni().setFrameDelay(9);
+  mStates[STATE_OPENING]->getAni().setInitialFrame(Vec3(0.0f, p_h/p_h));
+  mStates[STATE_OPENING]->getAni().setFrameSize(Vec3(22.0f/p_w, -1.0f));
+  mStates[STATE_OPENING]->getAni().setDeltaFrame(Vec3(26.5f/p_w, 0.0f));
+  
+  mStates[STATE_OPENING]->getAni().setRepeat(cAni::AnimationType::SINGLE);
+  mStates[STATE_OPENING]->setNextOnAnimationFinished(&*mStates[STATE_OPENED]);
+  mStates[STATE_OPENED ]->getAni().setRepeat(cAni::AnimationType::SINGLE);
+  mStates[STATE_CLOSED ]->getAni().setRepeat(cAni::AnimationType::SINGLE);
 }
 cInterruptor::~cInterruptor(){}
 
 void cInterruptor::Draw(float const t, float const dt) const {
-  cFrame const fr = mActualState->getAni().Generate(t);
+  cFrame const fr = mActualState->getFrame(t);
 
   DrawRect(fr, mCoordChange.WorldToScreen(posW));
 }
@@ -45,6 +49,7 @@ void cInterruptor::doLogic(float const t, float const dt) {
     if(mPlayer.GetBBox().collides(this->GetBBox())) {
       mPuerta.activate();
       mActive=false;
+      this->SetState(&*mStates[STATE_OPENING]);
       std::cout << "switch activated!" << std::endl;
     }
   }

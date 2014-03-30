@@ -45,7 +45,7 @@ cPlayer::cPlayer(cScene const& map, cCoordChanges const& ch) : cBicho(map, ch) {
 cPlayer::~cPlayer(){}
 
 void cPlayer::Draw(float const t, float const dt) const {
-  cFrame const fr = mActualState->getAni().Generate(t);
+  cFrame const fr = mActualState->getFrame(t);
 
   DrawRect(fr, mCoordChange.WorldToScreen(posW));
   for (std::size_t i = 0; i < mAttacks.size(); ++i) {

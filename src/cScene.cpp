@@ -22,7 +22,7 @@ bool cScene::Init() {
 	Player.SetPosition_T(Vec3(2,1)); //Initial tile
 
   mExitDoor.Init();
-  mExitDoor.SetWidthHeight_W(32,32);
+  mExitDoor.SetWidthHeight_W(32,64);
   mInterruptor.Init();
   mInterruptor.SetWidthHeight_W(32,32);
   

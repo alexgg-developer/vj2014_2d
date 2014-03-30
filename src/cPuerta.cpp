@@ -16,16 +16,16 @@ cPuerta::cPuerta(cScene const& map, cCoordChanges const& ch, cPlayer& player) : 
   mStates[STATE_OPENING]->getAni().setNumberOfFrames(4); //Opening
   mStates[STATE_OPENED ]->getAni().setNumberOfFrames(1); //Opened
 
-  mStates[STATE_CLOSED ]->getAni().setInitialFrame(Vec3(0.0f, 0.0f/p_h));
-  mStates[STATE_CLOSED ]->getAni().setFrameSize(Vec3(34.0f/p_w, 56.0f/p_h));
+  mStates[STATE_CLOSED ]->getAni().setInitialFrame(Vec3(0.0f, 56.0f/p_h));
+  mStates[STATE_CLOSED ]->getAni().setFrameSize(Vec3(32.0f/p_w, -56.0f/p_h));
 
-  mStates[STATE_OPENED ]->getAni().setInitialFrame(Vec3(34.0f/p_w, (p_h-1.0f)/p_h));
-  mStates[STATE_OPENED ]->getAni().setFrameSize(Vec3(34.0f/p_w, 56.0f/p_h));
+  mStates[STATE_OPENED ]->getAni().setInitialFrame(Vec3(97.0f/p_w, 1.0f));
+  mStates[STATE_OPENED ]->getAni().setFrameSize(Vec3(32.0f/p_w, -56.0f/p_h));
 
   mStates[STATE_OPENING]->getAni().setInitialFrame(Vec3(0.0f, 56.0f/p_h));
-  mStates[STATE_OPENING]->getAni().setFrameSize(Vec3(34.0f/p_w, 56.0f/p_h));
-  mStates[STATE_OPENING]->getAni().setDeltaFrame(Vec3(34.0f/p_w, 56.0f/p_h));
-  mStates[STATE_OPENING]->getAni().setFrameDelay(2000000);
+  mStates[STATE_OPENING]->getAni().setFrameSize(Vec3(32.0f/p_w, -56.0f/p_h));
+  mStates[STATE_OPENING]->getAni().setDeltaFrame(Vec3(32.0f/p_w, 0.0f));
+  mStates[STATE_OPENING]->getAni().setFrameDelay(2300000);
 
   mStates[STATE_CLOSED ]->setNextOnActivate(&*mStates[STATE_OPENING]);
   mStates[STATE_OPENING]->setNextOnAnimationFinished(&*mStates[STATE_OPENED]);
@@ -37,10 +37,11 @@ cPuerta::cPuerta(cScene const& map, cCoordChanges const& ch, cPlayer& player) : 
 cPuerta::~cPuerta(){}
 
 void cPuerta::Draw(float const t, float const dt) const {
-  cFrame const fr = mActualState->getAni().Generate(t);
+  cFrame const fr = mActualState->getFrame(t);
   DrawRect(fr, mCoordChange.WorldToScreen(posW));
 }
 bool cPuerta::Init() {
+
   return mText.Load("Door.png",GL_RGBA); }
 #include <iostream>
 void cPuerta::doLogic(float const t, float const dt) {
