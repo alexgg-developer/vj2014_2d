@@ -170,14 +170,25 @@ bool cGame::Process(float const t, float const dt) {
         Scene->UpKey();
 	}
 	if (mKey[KSPACE] == KEY_PRESSED || mKey[KSPACE] == KEY_ON) {
-		Scene->PressedEnter();
+	  if (mKey[KSPACE] == KEY_PRESSED) {
+		  mKey[KSPACE] = KEY_ON; //This is because process is more called than keyboard
+		  Scene->PressedEnter();
+    }
 	}
 	if (mKey[KUP] == KEY_PRESSED || mKey[KUP] == KEY_ON) {
 		direction.y = 1.0;
 		//Player.Jump();
-	}
+	    if (mKey[KUP] == KEY_PRESSED) {
+		    mKey[KUP] = KEY_ON; //This is because process is more called than keyboard
+        Scene->UpKeyReal();
+      }
+  }
 	if (mKey[KDOWN] == KEY_PRESSED || mKey[KDOWN] == KEY_ON) {
 		direction.y = -1.0;
+	    if (mKey[KDOWN] == KEY_PRESSED) {
+		    mKey[KDOWN] = KEY_ON; //This is because process is more called than keyboard
+        Scene->DownKeyReal();
+      }
 	}
 
 	if (mKey[KLEFT] == KEY_PRESSED || mKey[KLEFT] == KEY_ON) {
