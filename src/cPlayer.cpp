@@ -63,10 +63,10 @@ bool cPlayer::Init() {
 	 cElementalProjectile eProjectile = cElementalProjectile(*this, mMap, mCoordChange, element);
 	 if (direction == Vec3(0, 0, 0)) {
 		 //std::cout << "Wow that happened" << std::endl;
-		 if (mStates[STATE_LOOKLEFT].get() == mActualState) {
+		 if (mStates[STATE_LOOKLEFT].get() == mActualState || mStates[STATE_JUMPLEFT].get() == mActualState) {
 			 direction.x = -1.0f;
 		 }
-		 else if (mStates[STATE_LOOKRIGHT].get() == mActualState) {
+		 else if (mStates[STATE_LOOKRIGHT].get() == mActualState || mStates[STATE_JUMPRIGHT].get() == mActualState) {
 			 direction.x = 1.0f;
 		 }
 	 }

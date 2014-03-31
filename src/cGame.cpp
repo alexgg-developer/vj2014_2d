@@ -43,9 +43,9 @@ void cGame::ReadKeyboard(unsigned char key, int x, int y, bool press) {
 
 	if (press) {
 		switch (key) {
-		case 'q':
-			if (mKey[KQ] != KEY_ON) {
-				mKey[KQ] = KEY_PRESSED;
+		case 'a':
+			if (mKey[KA] != KEY_ON) {
+				mKey[KA] = KEY_PRESSED;
 			}
 			break;
 		case 'w':
@@ -80,8 +80,8 @@ void cGame::ReadKeyboard(unsigned char key, int x, int y, bool press) {
 	else {
 		//I'll do key_off directly because we dont need if it's been recently released. So we can avoid a verification
 		switch (key) {
-		case 'q':
-			mKey[KQ] = KEY_OFF;
+		case 'a':
+			mKey[KA] = KEY_OFF;
 			break;
 		case 'w':
 			mKey[KW] = KEY_OFF;
@@ -101,7 +101,7 @@ void cGame::ReadKeyboard(unsigned char key, int x, int y, bool press) {
 
 void cGame::ReadKeyboardEspecial(unsigned char key, int x, int y, bool press) 
 {
-	for (unsigned int i = 0; i < KQ; ++i) mKey[i] = mKey[i] & 0x0001;
+	for (unsigned int i = 0; i < KA; ++i) mKey[i] = mKey[i] & 0x0001;
 	if (press) {
 		switch (key) {
 		case GLUT_KEY_LEFT:
@@ -190,17 +190,17 @@ bool cGame::Process(float const t, float const dt) {
 	}
 	else Scene->Stop();
 
-	if (mKey[KQ] == KEY_PRESSED) {
-		mKey[KQ] = KEY_ON; //This is because process is called more often than keyboard
+	if (mKey[KA] == KEY_PRESSED) {
+		mKey[KA] = KEY_ON; //This is because process is called more often than keyboard
 		Scene->Attack(direction, cElementalProjectile::FIRE);
 	}
 	if (mKey[KW] == KEY_PRESSED) {
 		mKey[KW] = KEY_ON;
-		Scene->Attack(direction, cElementalProjectile::ICE);
+		//Scene->Attack(direction, cElementalProjectile::ICE);
 	}
 	if (mKey[KE] == KEY_PRESSED) {
 		mKey[KE] = KEY_ON;
-		Scene->Attack(direction, cElementalProjectile::ELECTRIC);
+		//Scene->Attack(direction, cElementalProjectile::ELECTRIC);
 	}
 
 	//Game Logic
