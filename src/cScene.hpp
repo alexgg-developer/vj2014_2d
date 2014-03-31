@@ -15,10 +15,12 @@
 struct cEnemy;
 struct cState;
 struct cGame;
-
+#include <iostream>
 struct iScene {
 	iScene(cGame* aGame) : mGame(aGame) , mCamPosition(0.0f) {}
-  virtual ~iScene(){}
+  virtual ~iScene(){
+    std::cout << "Deleting iScene" << std::endl;
+  }
   virtual void UpKey() {}
   virtual void DownKey() {}
   virtual void LeftKey() {}
@@ -27,6 +29,8 @@ struct iScene {
   virtual void Attack(Vec3& direction, cElementalProjectile::KindOfElement el) {}
   virtual void doLogic(float const t, float const dt) =0;
   virtual void Draw(float const t, float const dt) const =0;
+  virtual void DrawScreen(float const t, float const dt) const {}
+  virtual void DrawScreenPre(float const t, float const dt) const {}
   virtual bool Init() =0;
   virtual bool LoadLevel(int level)=0;
   virtual void PressedEnter() {}
@@ -74,6 +78,8 @@ struct cScene : public iScene {
   bool Init();
   bool LoadLevel(int level);
   virtual void Draw(float const t, float const dt) const override;
+  virtual void DrawScreen(float const t, float const dt) const override;
+  virtual void DrawScreenPre(float const t, float const dt) const override;
   bool CollisionInClosedArea(cRect const& world) const;
   void doLogic(float const t, float const dt) override;
 
@@ -99,5 +105,6 @@ private:
   cInterruptor mInterruptor;
   std::vector<cEnemy*> mEnemies;
   std::vector<cExplosion> mExplosions;
-  
+  int mLevel=-1;
+  cTexture mFondo, mForeground;
 };

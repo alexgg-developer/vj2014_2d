@@ -65,6 +65,7 @@ struct cBicho : public cStateMachine {
 	virtual void doLogic(float const t, float const dt) = 0;
 	virtual void Draw(float const t, float const dt) const = 0;
   virtual bool WantsToDestroyItself() const { return false; }
+  virtual void reset();
 
   cBicho& operator=(cBicho const& other) {
     mText=other.mText;

@@ -43,7 +43,7 @@ void cPuerta::Draw(float const t, float const dt) const {
   cFrame const fr = mActualState->getFrame(t);
   DrawRect(fr, mCoordChange.WorldToScreen(posW));
   if(mNextLevTime>0) {
-      if(mNextLev<0) {
+      if(mNextLev<0 || mNextLev>2) {
         mWin2.Draw(Vec3(0,0), Vec3(1,1), Vec3(50,450), Vec3(500, -100));
       } else {
         mWin.Draw(Vec3(0,0), Vec3(1,1), Vec3(50,450), Vec3(500, -100));

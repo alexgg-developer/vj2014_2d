@@ -143,7 +143,9 @@ void cMenu::PressedEnter() {
 cScene::cScene(cGame* aGame, int const nextLev) : iScene(aGame), CoordChanges(), Player(*this, CoordChanges),
  mExitDoor(*this, CoordChanges, Player, aGame, nextLev),
  mInterruptor(*this, CoordChanges, Player, mExitDoor),
- mHud(*this, CoordChanges) {}
+ mHud(*this, CoordChanges) {
+   //mBackup=*this;
+ }
 
 cScene::~cScene() {}
 
@@ -161,24 +163,25 @@ bool cScene::Init() {
   mExitDoor.SetWidthHeight_W(32,64);
   mInterruptor.Init();
   mInterruptor.SetWidthHeight_W(32,32);
-  
-	//Enemy initialization
-	//mEnemies.push_back(new cNormalShip(Scene, CoordChanges, 1, Vec3(15, 17), true));
-	mEnemies.push_back(new cNormalShip(Player, *this, CoordChanges, 1, Vec3(22, 22), true));
-	mEnemies.push_back(new cWalkingBomb(*this, CoordChanges, 1, Vec3(35, 1), true, Player));
 	
   cExplosion::initialize(this);
 
   return mText.Load("blocks.png",GL_RGBA);
 }
 bool cScene::LoadLevel(int level) {
+  mLevel = level;
   // get filename
 	mLevel = level;
   std::stringstream stream;
+  std::stringstream stream, stream2;
   stream << "level";
   if(level<10) stream << "0";
   stream << level << ".txt";
   std::string file = stream.str();
+
+  stream2 << "Depth" << level << ".png";
+  mFondo.Load(stream2.str().c_str());
+  mForeground.Load("Foreground.png");
   
   //open file and get dimensions
   std::fstream fd(file);
@@ -248,9 +251,46 @@ bool cScene::LoadLevel(int level) {
   mExitDoor.SetPosition_T(Vec3(puerta_tile_x, puerta_tile_y,0));
   fd >> puerta_tile_x >> puerta_tile_y;
   mInterruptor.SetPosition_T(Vec3(puerta_tile_x, puerta_tile_y,0));
+
+  //Enemies
+  unsigned int walkingBombs;
+  fd >> walkingBombs;
+  for(unsigned int i=0; i<walkingBombs; ++i) {
+    int life;
+    int posX, posY;
+    fd >> life >> posX >> posY;
+    mEnemies.push_back(new cWalkingBomb(*this, CoordChanges, life, Vec3(posX, posY), true, Player));
+  }
+
+  unsigned int normalShips;
+  fd >> normalShips;
+  for(unsigned int i=0; i<normalShips; ++i) {
+    int life;
+    int posX, posY;
+    fd >> life >> posX >> posY;
+    mEnemies.push_back(new cNormalShip(Player, *this, CoordChanges, life, Vec3(posX, posY), true));
+  }
+  
   fd.close();
 
   return true;
+}
+
+void cScene::DrawScreen(float const t, float const dt) const {
+  mHud.Draw(t, dt);
+  Vec3 const enterScreen(0, 480);
+  Vec3 const delta(640, -480);
+  Vec3 const enterScreenFondo(enterScreen.x, enterScreen.y, -10);
+  Vec3 const enterScreenForeground(enterScreen.x, enterScreen.y, 10);
+  mForeground.Draw(Vec3(0,0), Vec3(1,1), enterScreenForeground, enterScreenForeground+delta);
+}
+void cScene::DrawScreenPre(float const t, float const dt) const {
+  mHud.Draw(t, dt);
+  Vec3 const enterScreen(0, 480);
+  Vec3 const delta(640, -480);
+  Vec3 const enterScreenFondo(enterScreen.x, enterScreen.y, -10);
+  Vec3 const enterScreenForeground(enterScreen.x, enterScreen.y, 10);
+  mFondo.Draw(Vec3(0,0), Vec3(1,1), enterScreenFondo, enterScreenFondo+delta);
 }
 
 void cScene::Draw(float const t, float const dt) const {
@@ -270,8 +310,8 @@ void cScene::Draw(float const t, float const dt) const {
 	}
   for(auto& expl: mExplosions)
     expl.Draw(t,dt);
-  mHud.Draw(t, dt);
 }
+//cScene cScene::mBackup(nullptr,0);
 void cScene::doLogic(float const t, float const dt) {
 	Player.doLogic(t,dt);
   mInterruptor.doLogic(t,dt);
@@ -291,8 +331,20 @@ void cScene::doLogic(float const t, float const dt) {
   }
   mHud.update(Player.mLife);
   mCamPosition = std::fmax(0.0f, Player.GetPosition_W().x - GAME_WIDTH / 2.0f);
-  //Exit door may delete the scene, it's convenient to have it as the last one to update ;-)
-  mExitDoor.doLogic(t,dt);
+
+  if(Player.mLife<=0) {
+    //Resetea el mismo nivel.
+    iScene* sc = new cMenu(mGame);
+    sc->Init();
+    mGame->changeLevel(sc);
+    /*Player.reset();
+    mExitDoor.reset();
+    mInterruptor.reset();
+    LoadLevel(mLevel);*/
+  } else {
+    //Exit door may delete the scene, it's convenient to have it as the last one to update ;-)
+    mExitDoor.doLogic(t,dt);
+  }
 
 }
 bool cScene::CollisionInClosedArea(cRect const& world) const {

@@ -29,3 +29,8 @@ CrateScaled.png 120 3
 CrateScaled.png 2 11
 120 4
 123 1
+2
+1 35 1
+1 33 10
+1
+1 22 22
