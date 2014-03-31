@@ -72,9 +72,7 @@ void cMenu::Draw(float const t, float const dt) const {
     Vec3 const cred2(exit.x+delta.x*1.1f, exit.y);
     mTextures[12].Draw(Vec3(0,0), Vec3(1,1), cred2, cred2+delta);
   } else {
-    Vec3 const enterScreen(50, 500);
-    Vec3 const delta(500, -400);
-    mTextures[13].Draw(Vec3(0,0), Vec3(1,1), enterScreen, enterScreen+delta);
+    mTextures[13].drawAlternative(Vec3(0,0), Vec3(1,1), Vec3(0,0), Vec3(GAME_WIDTH, GAME_HEIGHT));
   }
 }
 bool cMenu::Init() {
