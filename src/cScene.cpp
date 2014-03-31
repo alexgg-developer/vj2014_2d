@@ -170,11 +170,15 @@ bool cScene::Init() {
 bool cScene::LoadLevel(int level) {
   mLevel = level;
   // get filename
-  std::stringstream stream;
+  std::stringstream stream, stream2;
   stream << "level";
   if(level<10) stream << "0";
   stream << level << ".txt";
   std::string file = stream.str();
+
+  stream2 << "Depth" << level << ".png";
+  mFondo.Load(stream2.str().c_str());
+  mForeground.Load("Foreground.png");
   
   //open file and get dimensions
   std::fstream fd(file);
@@ -269,6 +273,23 @@ bool cScene::LoadLevel(int level) {
   return true;
 }
 
+void cScene::DrawScreen(float const t, float const dt) const {
+  mHud.Draw(t, dt);
+  Vec3 const enterScreen(0, 480);
+  Vec3 const delta(640, -480);
+  Vec3 const enterScreenFondo(enterScreen.x, enterScreen.y, -10);
+  Vec3 const enterScreenForeground(enterScreen.x, enterScreen.y, 10);
+  mForeground.Draw(Vec3(0,0), Vec3(1,1), enterScreenForeground, enterScreenForeground+delta);
+}
+void cScene::DrawScreenPre(float const t, float const dt) const {
+  mHud.Draw(t, dt);
+  Vec3 const enterScreen(0, 480);
+  Vec3 const delta(640, -480);
+  Vec3 const enterScreenFondo(enterScreen.x, enterScreen.y, -10);
+  Vec3 const enterScreenForeground(enterScreen.x, enterScreen.y, 10);
+  mFondo.Draw(Vec3(0,0), Vec3(1,1), enterScreenFondo, enterScreenFondo+delta);
+}
+
 void cScene::Draw(float const t, float const dt) const {
   int tex_id = mText.GetID();
   glEnable(GL_TEXTURE_2D);
@@ -286,7 +307,6 @@ void cScene::Draw(float const t, float const dt) const {
 	}
   for(auto& expl: mExplosions)
     expl.Draw(t,dt);
-  mHud.Draw(t, dt);
 }
 //cScene cScene::mBackup(nullptr,0);
 void cScene::doLogic(float const t, float const dt) {

@@ -220,14 +220,30 @@ bool cGame::Process(float const t, float const dt) {
 //Output
 void cGame::Render(float const t, float const dt) {
 	glClear(GL_COLOR_BUFFER_BIT);
+
+  //Draw on screen "directly"
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+  glOrtho(0,GAME_WIDTH,0,GAME_HEIGHT,0,1);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+  Scene->DrawScreenPre(t,dt);
+
+  //Draw level with camera moved
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(Scene->mCamPosition, Scene->mCamPosition + GAME_WIDTH, 0, GAME_HEIGHT, 0, 1);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
-	//Bstd::cout << Scene->mCamPosition << std::endl;
 	Scene->Draw(t,dt);
+
+  //Draw on screen "directly"
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+  glOrtho(0,GAME_WIDTH,0,GAME_HEIGHT,0,1);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+  Scene->DrawScreen(t,dt);
 	glutSwapBuffers();
 }
 
