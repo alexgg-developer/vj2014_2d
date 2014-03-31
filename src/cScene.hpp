@@ -23,7 +23,7 @@ struct iScene {
   virtual void LeftKey() {}
   virtual void RightKey() {}
   virtual void Stop() {}
-  virtual void Attack(Vec3 const& direction, cElementalProjectile::KindOfElement el) {}
+  virtual void Attack(Vec3& direction, cElementalProjectile::KindOfElement el) {}
   virtual void doLogic(float const t, float const dt) =0;
   virtual void Draw(float const t, float const dt) const =0;
   virtual bool Init() =0;
@@ -76,7 +76,7 @@ struct cScene : public iScene {
   virtual void LeftKey() override {Player.MoveLeft();}
   virtual void RightKey() override {Player.MoveRight();}
   virtual void Stop() override { Player.Stop(); }
-  virtual void Attack(Vec3 const& direction, cElementalProjectile::KindOfElement el) override {Player.Attack(direction, el); }
+  virtual void Attack(Vec3& direction, cElementalProjectile::KindOfElement el) override {Player.Attack(direction, el); }
   
   cPlayer Player;
   cCoordChanges CoordChanges;

@@ -1,0 +1,56 @@
+123 28
+                                                                          
+                                                                          
+                                                                          
+                                                                          
+                                                                          
+                                                                          
+                                                                          
+                                                                                                                               
+                                                                                                                               
+                                                                                                                               
+                                                                                                                               
+                                                                                                                               
+                                                                                                                               
+                                                                                                                               
+                                                                                                                               
+                                                                                                                               
+                                                                                                                               
+                                                                                                                               
+                                                                                                                               
+                                                                                                                               
+                                                                                                                               
+                                                                                                                               
+                                                                                                                               
+                                                                                                                               
+                                                                                                                               
+                                                                                                                               
+                                                                                                                             
+111111111111111111111111111111111111  111111111111111111111111111111111111             111111111111111111111111111111111111 
+24
+CrateScaled.png 20 1
+CrateScaled.png 21 1
+CrateScaled.png 21 2
+CrateScaled.png 22 1
+CrateScaled.png 22 2
+CrateScaled.png 22 3
+CrateScaled.png 60 1
+CrateScaled.png 61 1
+CrateScaled.png 61 2
+CrateScaled.png 62 1
+CrateScaled.png 62 2
+CrateScaled.png 62 3
+CrateScaled.png 77 1
+CrateScaled.png 79 2
+CrateScaled.png 81 1
+CrateScaled.png 81 2
+CrateScaled.png 81 3
+CrateScaled.png 118 1
+CrateScaled.png 119 1
+CrateScaled.png 119 2
+CrateScaled.png 120 1
+CrateScaled.png 120 2
+CrateScaled.png 120 3
+CrateScaled.png 2 11
+120 4
+123 1
