@@ -33,11 +33,14 @@ void cProjectile::doLogic(float const t, float const dt)
     if(mAffectsProta && CollidesWithPlayer()) {
        cExplosion::addExplosion(mMap, mCoordChange, posW);	
        mLife=-1;//Delete itself
+       mPlayer.mLife -= this->mDamage;
     }
-    //TODO: Delete enemies
-/*    else if(mAffectsEnemies && mMap.CollidesWithEnemies()) {
+    else if(mAffectsEnemies) {
+      if(cEnemy* en = CollidesWithEnemies()) {
+       en->mLife-=mDamage;
        cExplosion::addExplosion(mMap, mCoordChange, posW);	
        mLife=-1;//Delete itself
-    }*/
+      }
+    }
 	}
 }

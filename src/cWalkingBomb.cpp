@@ -26,6 +26,7 @@ void cWalkingBomb::doLogic(float const t, float const dt)
     if(CollidesWithPlayer()) {
        cExplosion::addExplosion(mMap, mCoordChange, posW);	
        mLife=-1;//Delete itself
+       mPlayer.mLife -= this->mDamage;
     }
 	}
 }

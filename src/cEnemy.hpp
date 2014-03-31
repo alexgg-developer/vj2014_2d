@@ -12,11 +12,11 @@ struct cEnemy: public cBicho {
 	void setInitialTilePosition(Vec3 const& tilePosition);
 	virtual void Draw(float const t, float const dt) const override;
   bool CollidesWithPlayer() const;
+  cEnemy* CollidesWithEnemies();
   virtual bool WantsToDestroyItself() const override { return mLife<=0; }
 
 protected:
 	void move(Vec3 const& speed, float dt);
-	int mLife;
 	float mOrientation;
 	std::shared_ptr<cPhysics> mPhysics;
 	bool mAwake;
