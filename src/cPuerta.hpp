@@ -13,6 +13,7 @@ struct cPuerta: public cBicho {
   virtual void doLogic(float const t, float const dt) override;
   virtual void Draw(float const t, float const dt) const override;
   void activate() { mActive=true; }
+  void setActive(bool const b) { mActive = b; }
 protected:
   bool mActive;
   cPlayer& mPlayer;

@@ -142,7 +142,9 @@ void cMenu::PressedEnter() {
 cScene::cScene(cGame* aGame, int const nextLev) : iScene(aGame), CoordChanges(), Player(*this, CoordChanges),
  mExitDoor(*this, CoordChanges, Player, aGame, nextLev),
  mInterruptor(*this, CoordChanges, Player, mExitDoor),
- mHud(*this, CoordChanges) {}
+ mHud(*this, CoordChanges) {
+   //mBackup=*this;
+ }
 
 cScene::~cScene() {}
 
@@ -171,6 +173,7 @@ bool cScene::Init() {
   return mText.Load("blocks.png",GL_RGBA);
 }
 bool cScene::LoadLevel(int level) {
+  mLevel = level;
   // get filename
   std::stringstream stream;
   stream << "level";
@@ -270,6 +273,7 @@ void cScene::Draw(float const t, float const dt) const {
     expl.Draw(t,dt);
   mHud.Draw(t, dt);
 }
+//cScene cScene::mBackup(nullptr,0);
 void cScene::doLogic(float const t, float const dt) {
 	Player.doLogic(t,dt);
   mInterruptor.doLogic(t,dt);
@@ -288,6 +292,13 @@ void cScene::doLogic(float const t, float const dt) {
     else it++;
   }
   mHud.update(Player.mLife);
+
+  if(Player.mLife<=0) {
+    //Resetea el mismo nivel.
+    mExitDoor.setActive(false);
+    mInterruptor.setActive(true);
+    LoadLevel(mLevel);
+  }
   //Exit door may delete the scene, it's convenient to have it as the last one to update ;-)
   mExitDoor.doLogic(t,dt);
 }

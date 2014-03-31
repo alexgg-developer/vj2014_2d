@@ -87,6 +87,18 @@ struct cScene : public iScene {
   virtual std::vector<cEnemy*> const& EnemiesList() const { return mEnemies; }
   cPlayer Player;
   cCoordChanges CoordChanges;
+  /*cScene& operator=(cScene const& ot) {
+    map = ot.map;
+    mObstacles = ot.mObstacles;
+    id_DL = ot.id_DL;
+    mText = ot.mText;
+    mExitDoor = ot.mExitDoor;
+    mHud = ot.mHud;
+    mInterruptor = ot.mInterruptor;
+    mEnemies = ot.mEnemies;
+    mExplosions = ot.mExplosions;
+    mGame = ot.mGame;
+  }*/
 private:
   std::vector<std::vector<int>> map;
   std::vector<cObstacle> mObstacles;
@@ -97,5 +109,6 @@ private:
   cInterruptor mInterruptor;
   std::vector<cEnemy*> mEnemies;
   std::vector<cExplosion> mExplosions;
+  int mLevel=-1;
   
 };
