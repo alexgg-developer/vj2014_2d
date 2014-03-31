@@ -162,11 +162,6 @@ bool cScene::Init() {
   mExitDoor.SetWidthHeight_W(32,64);
   mInterruptor.Init();
   mInterruptor.SetWidthHeight_W(32,32);
-  
-	//Enemy initialization
-	//mEnemies.push_back(new cNormalShip(Scene, CoordChanges, 1, Vec3(15, 17), true));
-	mEnemies.push_back(new cNormalShip(Player, *this, CoordChanges, 1, Vec3(22, 22), true));
-	mEnemies.push_back(new cWalkingBomb(*this, CoordChanges, 1, Vec3(35, 1), true, Player));
 	
   cExplosion::initialize(this);
 
@@ -249,6 +244,26 @@ bool cScene::LoadLevel(int level) {
   mExitDoor.SetPosition_T(Vec3(puerta_tile_x, puerta_tile_y,0));
   fd >> puerta_tile_x >> puerta_tile_y;
   mInterruptor.SetPosition_T(Vec3(puerta_tile_x, puerta_tile_y,0));
+
+  //Enemies
+  unsigned int walkingBombs;
+  fd >> walkingBombs;
+  for(unsigned int i=0; i<walkingBombs; ++i) {
+    int life;
+    int posX, posY;
+    fd >> life >> posX >> posY;
+    mEnemies.push_back(new cWalkingBomb(*this, CoordChanges, life, Vec3(posX, posY), true, Player));
+  }
+
+  unsigned int normalShips;
+  fd >> normalShips;
+  for(unsigned int i=0; i<normalShips; ++i) {
+    int life;
+    int posX, posY;
+    fd >> life >> posX >> posY;
+    mEnemies.push_back(new cNormalShip(Player, *this, CoordChanges, life, Vec3(posX, posY), true));
+  }
+  
   fd.close();
 
   return true;
