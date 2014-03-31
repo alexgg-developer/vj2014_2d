@@ -23,7 +23,7 @@ bool cGame::Init() {
 
 	//Scene initialization
 	Scene->Init();
-	return Scene->LoadLevel(4);
+	return Scene->LoadLevel(0);
 }
 
 bool cGame::Loop(float const t, float const dt) {

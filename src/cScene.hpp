@@ -6,6 +6,7 @@
 #include "cInterruptor.hpp"
 #include "cExplosion.hpp"
 #include "cPlayer.hpp"
+#include "cHud.hpp"
 #include "cStateMachine.hpp"
 #undef max
 #undef min
@@ -86,7 +87,9 @@ private:
   int id_DL;				//actual level display list
   cTexture mText;
   cPuerta mExitDoor;
+  cHud mHud;
   cInterruptor mInterruptor;
   std::vector<cEnemy*> mEnemies;
   std::vector<cExplosion> mExplosions;
+  
 };

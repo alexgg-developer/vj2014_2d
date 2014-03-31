@@ -79,6 +79,8 @@ struct cBicho : public cStateMachine {
     jump_y = other.jump_y;
     return *this;
   }
+
+  int mLife;
 	
 protected:
   cScene const& mMap;
