@@ -84,7 +84,7 @@ struct cScene : public iScene {
   virtual void RightKey() override {Player.MoveRight();}
   virtual void Stop() override { Player.Stop(); }
   virtual void Attack(Vec3& direction, cElementalProjectile::KindOfElement el) override {Player.Attack(direction, el); }
-  
+  virtual std::vector<cEnemy*> const& EnemiesList() const { return mEnemies; }
   cPlayer Player;
   cCoordChanges CoordChanges;
 private:

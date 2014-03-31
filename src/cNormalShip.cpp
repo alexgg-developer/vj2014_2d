@@ -57,11 +57,23 @@ void cNormalShip::doLogic(float const t, float const dt)
 			mProjectiles[0]->changePhysics(Vec3( 0.5f, -0.5f)*10.0f, Vec3( 30.0f, -30.0f), Vec3( 1.0f, -1.0f)*20.0f);
 			mProjectiles[1]->changePhysics(Vec3( 0.0f, -0.5f)*10.0f, Vec3(  0.0f, -30.0f), Vec3( 0.0f, -1.0f)*20.0f);
 			mProjectiles[2]->changePhysics(Vec3(-0.5f, -0.5f)*10.0f, Vec3(-30.0f, -30.0f), Vec3(-1.0f, -1.0f)*20.0f);
+      for(auto& pr:mProjectiles) {
+        pr->AffectsProta(true);
+      }
 		}		
 		move(mPhysics->mSpeed, dt);
 		mPhysics->update(dt);
-		mProjectiles[0]->doLogic(t,dt); mProjectiles[1]->doLogic(t,dt); mProjectiles[2]->doLogic(t,dt);
+    
+    for (auto& pr : mProjectiles)
+      if (pr)
+        pr->doLogic(t, dt);
 	}
+  
+  for(auto& pr:mProjectiles) {
+    if(pr && pr->WantsToDestroyItself()) {
+      pr.reset();
+    }
+  }
 }
 
 
@@ -72,7 +84,9 @@ void cNormalShip::Draw(float const t, float const dt) const {
 		glTranslatef(screen.x, screen.y, 0);
 		mText.drawAlternative(Vec3(0, 0), Vec3(1, 1), Vec3(0, 0), Vec3(w, h));
 		glPopMatrix();
-		mProjectiles[0]->Draw(t,dt); mProjectiles[1]->Draw(t,dt); mProjectiles[2]->Draw(t,dt);
+    for(auto& pr : mProjectiles)
+      if(pr)
+        pr->Draw(t, dt);
 	}
 }
 

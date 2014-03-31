@@ -4,12 +4,14 @@
 #include "cScene.hpp"
 
 cEnemy::cEnemy(cPlayer& pl, cScene const& map, cCoordChanges const& ch, int life, std::shared_ptr<cPhysics>& physics)
- : mLife(life), mPhysics(physics), cBicho(map, ch), mPlayer(pl)
+ : mPhysics(physics), cBicho(map, ch), mPlayer(pl)
 {
+  mLife = life;
 	//mInitialWPosition = mCoordChanges.TileToWorld(Vec3(10, 10));
 }
-cEnemy::cEnemy(cPlayer& pl, cScene const& map, cCoordChanges const& ch) :  mLife(1), cBicho(map, ch), mPlayer(pl) {};
-cEnemy::cEnemy(cPlayer& pl, cScene const& map, cCoordChanges const& ch, int life) :  mLife(life), cBicho(map, ch), mPlayer(pl) {};
+cEnemy::cEnemy(cPlayer& pl, cScene const& map, cCoordChanges const& ch) :  cBicho(map, ch), mPlayer(pl) { mLife=1;};
+cEnemy::cEnemy(cPlayer& pl, cScene const& map, cCoordChanges const& ch, int life) : cBicho(map, ch), mPlayer(pl) {
+  mLife = life;};
 
 void cEnemy::setInitialTilePosition(Vec3 const& tilePosition)
 {
@@ -37,4 +39,13 @@ void cEnemy::move(Vec3 const& speed, float dt) {
 }
 bool cEnemy::CollidesWithPlayer() const {
   return mPlayer.GetBBox().collides(GetBBox());
+}
+cEnemy* cEnemy::CollidesWithEnemies() {
+  auto& enL = mMap.EnemiesList();
+  for(auto& en : enL) {
+    if(en->GetBBox().collides(GetBBox())) {
+      return en;
+    }
+  }
+  return nullptr;
 }
