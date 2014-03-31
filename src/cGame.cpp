@@ -12,11 +12,7 @@ cGame::~cGame(void) { }
 
 bool cGame::Init() {
 	//Graphics initialization
-	glClearColor(0.5f,0.5f,0.5f,1.0f);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0,GAME_WIDTH,0,GAME_HEIGHT,0,1);
-	glMatrixMode(GL_MODELVIEW);
+	glClearColor(1.0f,1.0f,1.0f,1.0f);
 	
 	glAlphaFunc(GL_GREATER, 0.05f);
 	glEnable(GL_ALPHA_TEST);
@@ -150,6 +146,7 @@ void cGame::ReadKeyboardEspecial(unsigned char key, int x, int y, bool press)
 void cGame::ReadMouse(int button, int state, int x, int y) {
 }
 
+#include <iostream>
 //Process
 bool cGame::Process(float const t, float const dt) {
 	bool res=true;
@@ -216,15 +213,20 @@ bool cGame::Process(float const t, float const dt) {
 
 	//Game Logic
   Scene->doLogic(t,dt);
-
+  //std::cout << Scene->mCamPosition << std::endl;
 	return res;
 }
 
 //Output
 void cGame::Render(float const t, float const dt) {
 	glClear(GL_COLOR_BUFFER_BIT);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(Scene->mCamPosition, Scene->mCamPosition + GAME_WIDTH, 0, GAME_HEIGHT, 0, 1);
+	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
+	//Bstd::cout << Scene->mCamPosition << std::endl;
 	Scene->Draw(t,dt);
 	glutSwapBuffers();
 }

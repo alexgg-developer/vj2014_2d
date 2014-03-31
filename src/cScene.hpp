@@ -15,10 +15,12 @@
 struct cEnemy;
 struct cState;
 struct cGame;
-
+#include <iostream>
 struct iScene {
-  iScene(cGame* aGame) : mGame(aGame) {}
-  virtual ~iScene(){}
+	iScene(cGame* aGame) : mGame(aGame) , mCamPosition(0.0f) {}
+  virtual ~iScene(){
+    std::cout << "Deleting iScene" << std::endl;
+  }
   virtual void UpKey() {}
   virtual void DownKey() {}
   virtual void LeftKey() {}
@@ -34,6 +36,7 @@ struct iScene {
   
   virtual void UpKeyReal() {}
   virtual void DownKeyReal() {}
+  float mCamPosition;
 protected:
   cGame* mGame;
 };
@@ -87,18 +90,6 @@ struct cScene : public iScene {
   virtual std::vector<cEnemy*> const& EnemiesList() const { return mEnemies; }
   cPlayer Player;
   cCoordChanges CoordChanges;
-  /*cScene& operator=(cScene const& ot) {
-    map = ot.map;
-    mObstacles = ot.mObstacles;
-    id_DL = ot.id_DL;
-    mText = ot.mText;
-    mExitDoor = ot.mExitDoor;
-    mHud = ot.mHud;
-    mInterruptor = ot.mInterruptor;
-    mEnemies = ot.mEnemies;
-    mExplosions = ot.mExplosions;
-    mGame = ot.mGame;
-  }*/
 private:
   std::vector<std::vector<int>> map;
   std::vector<cObstacle> mObstacles;

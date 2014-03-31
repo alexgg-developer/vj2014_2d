@@ -12,6 +12,10 @@ struct cInterruptor: public cBicho {
   virtual void doLogic(float const t, float const dt) override;
   virtual void Draw(float const t, float const dt) const override;
   virtual void setActive(bool const b) { mActive = b; }
+  virtual void reset() override {
+    setActive(true);
+    cBicho::reset();
+  }
 protected:
   bool mActive;
   cPuerta& mPuerta;

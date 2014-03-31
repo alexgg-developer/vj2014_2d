@@ -14,6 +14,11 @@ struct cPuerta: public cBicho {
   virtual void Draw(float const t, float const dt) const override;
   void activate() { mActive=true; }
   void setActive(bool const b) { mActive = b; }
+  virtual void reset() override { 
+    setActive(false);
+    cBicho::reset();
+    mNextLevTime=-1;
+  }
 protected:
   bool mActive;
   cPlayer& mPlayer;

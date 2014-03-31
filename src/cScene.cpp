@@ -292,15 +292,22 @@ void cScene::doLogic(float const t, float const dt) {
     else it++;
   }
   mHud.update(Player.mLife);
+  mCamPosition = std::fmax(0.0f, Player.GetPosition_W().x - GAME_WIDTH / 2.0f);
 
   if(Player.mLife<=0) {
     //Resetea el mismo nivel.
-    mExitDoor.setActive(false);
-    mInterruptor.setActive(true);
-    LoadLevel(mLevel);
+    iScene* sc = new cMenu(mGame);
+    sc->Init();
+    mGame->changeLevel(sc);
+    /*Player.reset();
+    mExitDoor.reset();
+    mInterruptor.reset();
+    LoadLevel(mLevel);*/
+  } else {
+    //Exit door may delete the scene, it's convenient to have it as the last one to update ;-)
+    mExitDoor.doLogic(t,dt);
   }
-  //Exit door may delete the scene, it's convenient to have it as the last one to update ;-)
-  mExitDoor.doLogic(t,dt);
+
 }
 bool cScene::CollisionInClosedArea(cRect const& world) const {
   Vec3 const tile0 = CoordChanges.WorldToTile(Vec3(world.left , world.bottom, 0));

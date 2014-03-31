@@ -8,10 +8,16 @@
 #define JUMP_HEIGHT		96
 #define JUMP_STEP		3
 
-cBicho::cBicho(cScene const& map, cCoordChanges const& ch) : mMap(map), mCoordChange(ch), jumping(false), w(10), h(10) {
+cBicho::cBicho(cScene const& map, cCoordChanges const& ch) : mMap(map), mCoordChange(ch), jumping(false), w(10), h(10), mLife(3) {
   initStates();
 }
 cBicho::~cBicho(void){}
+
+void cBicho::reset() {
+  initStates();
+  jumping =false;
+  mLife=3;
+}
 
 cBicho::cBicho(cScene const& map, cCoordChanges const& ch, int posxW,int posyW,int width,int height) : mMap(map), mCoordChange(ch) {
   posW.x = posxW;

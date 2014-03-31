@@ -16,16 +16,16 @@ bool cHud::Init() {
 }
 void cHud::update(int life)
 {
-	mLife = life;
+	mLife = std::max(life, 0);
 }
 
 void cHud::Draw(float const t, float const dt) const {
 	Vec3 const screen = mCoordChange.WorldToScreen(posW);
 	int padding = 40;
-	for (size_t i = 0; i < mLife; ++i) {
+	for (int i = 0; i < mLife; ++i) {
 		mHeartFull.drawAlternative(Vec3(0, 0), Vec3(1, 1), screen + Vec3(i * padding, 0), Vec3(screen.x + mHeartWidth + i * padding, screen.y + mHeartHeight));
 	}
-	for (size_t i = mLife; i < 3; ++i) {
+	for (int i = mLife; i < 3; ++i) {
 		mHeartEmpty.drawAlternative(Vec3(0, 0), Vec3(1, 1), screen + Vec3(i * padding, 0), Vec3(screen.x + mHeartWidth + i * padding, screen.y + mHeartHeight));
 	}
 }

@@ -12,6 +12,10 @@ struct cPlayer: public cBicho {
   virtual void Draw(float const t, float const dt) const override;
   void Attack();
   void Attack(Vec3& direction, cElementalProjectile::KindOfElement element);
+  virtual void reset() override {
+    mAttacks.clear();
+    cBicho::reset();
+  }
 
 	std::vector<cElementalProjectile> mAttacks;
 };
