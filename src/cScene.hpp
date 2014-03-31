@@ -39,6 +39,7 @@ struct iScene {
   virtual void UpKeyReal() {}
   virtual void DownKeyReal() {}
   float mCamPosition;
+  int mLevel;
 protected:
   cGame* mGame;
 };
