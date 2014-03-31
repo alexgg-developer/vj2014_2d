@@ -213,7 +213,7 @@ bool cGame::Process(float const t, float const dt) {
 
 	//Game Logic
   Scene->doLogic(t,dt);
-  std::cout << Scene->mCamPosition << std::endl;
+  //std::cout << Scene->mCamPosition << std::endl;
 	return res;
 }
 
@@ -226,7 +226,7 @@ void cGame::Render(float const t, float const dt) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	std::cout << Scene->mCamPosition << std::endl;
+	//std::cout << Scene->mCamPosition << std::endl;
 	Scene->Draw(t,dt);
 	glutSwapBuffers();
 }

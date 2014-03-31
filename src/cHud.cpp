@@ -21,7 +21,7 @@ void cHud::update(int life)
 
 void cHud::Draw(float const t, float const dt) const {
 	Vec3 const screen = mCoordChange.WorldToScreen(posW);
-	int padding = 40;
+	int padding = 40; // 16 -> half a heart x 2 (from half heart i to half heart i+1, + 8 padding)
 	for (int i = 0; i < mLife; ++i) {
 		mHeartFull.drawAlternative(Vec3(0, 0), Vec3(1, 1), screen + Vec3(i * padding, 0), Vec3(screen.x + mHeartWidth + i * padding, screen.y + mHeartHeight));
 	}
