@@ -47,8 +47,8 @@ void cMenu::Draw(float const t, float const dt) const {
     bool const ExitSelected = (mActualState==&*mStates[MenuState::EXIT  ]);
     bool const InstrSelected = (mActualState==&*mStates[MenuState::INSTRUCTIONS]);
   
-    Vec3 const delta(150, -75);
-    Vec3 const next(0.0, delta.y*1.25);
+    Vec3 const delta(150, -70);
+    Vec3 const next(0.0, delta.y*1.05);
 
 
     Vec3 const enterScreen(200, 450);

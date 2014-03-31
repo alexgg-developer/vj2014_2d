@@ -82,4 +82,6 @@ bool cPlayer::Init() {
 	 for (std::size_t i = 0; i < mAttacks.size(); ++i) {
 		 mAttacks[i].doLogic(t,dt);
 	 }
+   Vec3 const tilePos = mCoordChange.WorldToTile(posW);
+   if(tilePos.y<0) mLife = 0;
  }
