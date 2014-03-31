@@ -171,8 +171,6 @@ bool cScene::Init() {
 bool cScene::LoadLevel(int level) {
   mLevel = level;
   // get filename
-	mLevel = level;
-  std::stringstream stream;
   std::stringstream stream, stream2;
   stream << "level";
   if(level<10) stream << "0";
