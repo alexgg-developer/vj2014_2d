@@ -31,6 +31,9 @@ struct iScene {
   virtual bool LoadLevel(int level)=0;
   virtual void PressedEnter() {}
   virtual bool AvoidRepetitionsS() { return false; }
+  
+  virtual void UpKeyReal() {}
+  virtual void DownKeyReal() {}
 protected:
   cGame* mGame;
 };
@@ -47,15 +50,18 @@ struct cMenu : public iScene, public cStateMachine {
   virtual bool LoadLevel(int level) override;
   virtual void PressedEnter() override;
   virtual bool AvoidRepetitionsS() override { return true; }
+  virtual void UpKeyReal() override;
+  virtual void DownKeyReal() override;
 protected:
   enum MenuState {
     ENTER=0,
     LEVEL0=1,
     LEVEL1=2,
     EXIT=3,
-    CREDITS=4};
-  std::array<std::shared_ptr<cState>, 4> mStates;
-  std::array<cTexture,9> mTextures;
+    INSTRUCTIONS=4};
+  std::array<std::shared_ptr<cState>, 5> mStates;
+  std::array<cTexture,12> mTextures;
+  bool mShowingInstr=false;
 };
 
 /// TODO: Separate scene and map, it's getting bigger!
