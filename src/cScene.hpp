@@ -63,9 +63,10 @@ protected:
     LEVEL0=1,
     LEVEL1=2,
     EXIT=3,
-    INSTRUCTIONS=4};
-  std::array<std::shared_ptr<cState>, 5> mStates;
-  std::array<cTexture,12> mTextures;
+    INSTRUCTIONS=4,
+    LEVEL2=5};
+  std::array<std::shared_ptr<cState>, 6> mStates;
+  std::array<cTexture,14> mTextures;
   bool mShowingInstr=false;
 };
 

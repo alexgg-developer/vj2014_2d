@@ -43,6 +43,7 @@ void cMenu::Draw(float const t, float const dt) const {
     bool const EnterSelected = (mActualState==&*mStates[MenuState::ENTER]);
     bool const Lev0Selected = (mActualState==&*mStates[MenuState::LEVEL0]);
     bool const Lev1Selected = (mActualState==&*mStates[MenuState::LEVEL1]);
+    bool const Lev2Selected = (mActualState==&*mStates[MenuState::LEVEL2]);
     bool const ExitSelected = (mActualState==&*mStates[MenuState::EXIT  ]);
     bool const InstrSelected = (mActualState==&*mStates[MenuState::INSTRUCTIONS]);
   
@@ -58,19 +59,22 @@ void cMenu::Draw(float const t, float const dt) const {
 
     Vec3 const lev1 = lev0+next;
     mTextures[LEVEL1*2+Lev1Selected].Draw(Vec3(0,0), Vec3(1,1), lev1, lev1+delta);
+
+    Vec3 const lev2 = lev1+next;
+    mTextures[LEVEL2*2+Lev2Selected].Draw(Vec3(0,0), Vec3(1,1), lev2, lev2+delta);
   
-    Vec3 const cred = lev1+next;
+    Vec3 const cred = lev2+next;
     mTextures[INSTRUCTIONS*2+InstrSelected].Draw(Vec3(0,0), Vec3(1,1), cred, cred+delta);
 
     Vec3 const exit = cred+next;
     mTextures[EXIT*2+ExitSelected].Draw(Vec3(0,0), Vec3(1,1), exit, exit+delta);
   
     Vec3 const cred2(exit.x+delta.x*1.1f, exit.y);
-    mTextures[10].Draw(Vec3(0,0), Vec3(1,1), cred2, cred2+delta);
+    mTextures[12].Draw(Vec3(0,0), Vec3(1,1), cred2, cred2+delta);
   } else {
     Vec3 const enterScreen(50, 500);
     Vec3 const delta(500, -400);
-    mTextures[11].Draw(Vec3(0,0), Vec3(1,1), enterScreen, enterScreen+delta);
+    mTextures[13].Draw(Vec3(0,0), Vec3(1,1), enterScreen, enterScreen+delta);
   }
 }
 bool cMenu::Init() {
@@ -78,18 +82,21 @@ bool cMenu::Init() {
   mStates[ENTER ] = std::make_shared<cState>(this);
   mStates[LEVEL0] = std::make_shared<cState>(this);
   mStates[LEVEL1] = std::make_shared<cState>(this);
+  mStates[LEVEL2] = std::make_shared<cState>(this);
   mStates[INSTRUCTIONS] = std::make_shared<cState>(this);
   mStates[EXIT  ] = std::make_shared<cState>(this);
 
   mStates[ENTER ]->setNextOnJump(mStates[EXIT  ].get());
   mStates[LEVEL0]->setNextOnJump(mStates[ENTER ].get());
   mStates[LEVEL1]->setNextOnJump(mStates[LEVEL0].get());
-  mStates[INSTRUCTIONS]->setNextOnJump(mStates[LEVEL1].get());
+  mStates[LEVEL2]->setNextOnJump(mStates[LEVEL1].get());
+  mStates[INSTRUCTIONS]->setNextOnJump(mStates[LEVEL2].get());
   mStates[EXIT  ]->setNextOnJump(mStates[INSTRUCTIONS].get());
 
   mStates[ENTER ]->setNextOnUnJump(mStates[LEVEL0].get());
   mStates[LEVEL0]->setNextOnUnJump(mStates[LEVEL1].get());
-  mStates[LEVEL1]->setNextOnUnJump(mStates[INSTRUCTIONS].get());
+  mStates[LEVEL1]->setNextOnUnJump(mStates[LEVEL2].get());
+  mStates[LEVEL2]->setNextOnUnJump(mStates[INSTRUCTIONS].get());
   mStates[INSTRUCTIONS]->setNextOnUnJump(mStates[EXIT ].get());
   mStates[EXIT  ]->setNextOnUnJump(mStates[ENTER ].get());
 
@@ -102,12 +109,14 @@ bool cMenu::Init() {
   mTextures[LEVEL0*2+1].Load("Level0Selected.png");
   mTextures[LEVEL1*2].Load("Level1.png");
   mTextures[LEVEL1*2+1].Load("Level1Selected.png");
+  mTextures[LEVEL2*2].Load("Level2.png");
+  mTextures[LEVEL2*2+1].Load("Level2Selected.png");
   mTextures[INSTRUCTIONS*2].Load("InstrMenu.png");
   mTextures[INSTRUCTIONS*2+1].Load("InstrMenuSelected.png");
   mTextures[EXIT*2].Load("Exit.png");
   mTextures[EXIT*2+1].Load("ExitSelected.png");
-  mTextures[10].Load("Creditos.png");
-  mTextures[11].Load("instruccions.png");
+  mTextures[12].Load("Creditos.png");
+  mTextures[13].Load("instruccions.png");
   return true;
 }
 bool cMenu::LoadLevel(int level) {
@@ -126,6 +135,11 @@ void cMenu::PressedEnter() {
       cScene* cs = new cScene(mGame,2);
       cs->Init();
       cs->LoadLevel(1);
+      mGame->changeLevel(cs);
+    } else if(mActualState==&*mStates[MenuState::LEVEL2]) {
+      cScene* cs = new cScene(mGame,3);
+      cs->Init();
+      cs->LoadLevel(2);
       mGame->changeLevel(cs);
     } else if(mActualState==&*mStates[MenuState::INSTRUCTIONS]) {
       mShowingInstr = true;
