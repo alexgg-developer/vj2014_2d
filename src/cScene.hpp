@@ -17,7 +17,7 @@ struct cState;
 struct cGame;
 
 struct iScene {
-  iScene(cGame* aGame) : mGame(aGame) {}
+	iScene(cGame* aGame) : mGame(aGame) , mCamPosition(0.0f) {}
   virtual ~iScene(){}
   virtual void UpKey() {}
   virtual void DownKey() {}
@@ -34,6 +34,7 @@ struct iScene {
   
   virtual void UpKeyReal() {}
   virtual void DownKeyReal() {}
+  float mCamPosition;
 protected:
   cGame* mGame;
 };

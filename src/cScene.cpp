@@ -290,6 +290,8 @@ void cScene::doLogic(float const t, float const dt) {
   //Exit door may delete the scene, it's convenient to have it as the last one to update ;-)
   mExitDoor.doLogic(t,dt);
   mHud.update(Player.mLife);
+
+  mCamPosition = std::fmax(0.0f, Player.GetPosition_W().x - GAME_WIDTH / 2.0f);
 }
 bool cScene::CollisionInClosedArea(cRect const& world) const {
   Vec3 const tile0 = CoordChanges.WorldToTile(Vec3(world.left , world.bottom, 0));
